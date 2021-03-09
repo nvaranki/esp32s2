@@ -4,6 +4,8 @@ idf_component_register(
                         "MicroControllerUnit.cpp"
                         "PowerManagementUnit.cpp"
                         "SleepAndWakeupController.cpp"
+                        "RegisterRO.cpp"
+                        "RegisterRW.cpp"
                     INCLUDE_DIRS ""
                     REQUIRES soc nvs_flash ulp)
 
