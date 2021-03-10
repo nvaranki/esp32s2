@@ -1,6 +1,7 @@
 #include "MicroControllerUnit.hpp"
 
-MicroControllerUnit::MicroControllerUnit(/* args */)
+MicroControllerUnit::MicroControllerUnit(/* args */) :
+    pmu( nullptr )
 {
 }
 

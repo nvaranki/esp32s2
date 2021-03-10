@@ -32,7 +32,6 @@ void app_main( void )
     MicroControllerUnit* mcu = new MicroControllerUnit();
     PowerManagementUnit* pmu = mcu->getPowerManagementUnit();
     SleepAndWakeupController* swc = pmu->getSleepAndWakeupController();
-    swc = new SleepAndWakeupController();
 
     if( swc->isSleepToWakeupCause( SleepAndWakeupController::Peripherals::FSM ) ) 
     {

@@ -12,7 +12,7 @@ private:
     PowerManagementUnit* pmu;
 public:
     MicroControllerUnit(/* args */);
-    ~MicroControllerUnit();
+    virtual ~MicroControllerUnit();
 public:
     PowerManagementUnit* getPowerManagementUnit();
 };

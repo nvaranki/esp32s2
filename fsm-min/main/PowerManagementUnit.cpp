@@ -7,7 +7,8 @@ SleepAndWakeupController* PowerManagementUnit::getSleepAndWakeupController()
     return sw_ctrl;
 }
 
-PowerManagementUnit::PowerManagementUnit(/* args */)
+PowerManagementUnit::PowerManagementUnit(/* args */) :
+    sw_ctrl( nullptr )
 {
 }
 

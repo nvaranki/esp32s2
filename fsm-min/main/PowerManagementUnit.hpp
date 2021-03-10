@@ -11,7 +11,7 @@ private:
     SleepAndWakeupController* sw_ctrl;
 public:
     PowerManagementUnit(/* args */);
-    ~PowerManagementUnit();
+    virtual ~PowerManagementUnit();
 public:
     SleepAndWakeupController* getSleepAndWakeupController();
 };
