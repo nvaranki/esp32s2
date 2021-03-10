@@ -26,55 +26,38 @@ extern const uint8_t ulp_main_bin_end[]   asm("_binary_ulp_main_bin_end");
 static void init_ulp_program(void);
 static void update_pulse_count(void);
 
-/*static const char* const  w_cause[16] = {
-    "00 EXT0",         //!< Wakeup caused by external signal using RTC_IO
-    "01 EXT1",         //!< Wakeup caused by external signal using RTC_CNTL
-    "02 GPIO",         //!< Wakeup caused by GPIO (light sleep only)
-    "03 TIMER",        //!< Wakeup caused by timer
-    "04 SDIO",         //!< SDIO wakeup (light sleep only)
-    "05 WIFI",         //!< Wakeup caused by WIFI (light sleep only)
-    "06 UART0",        //!< UART0 wakeup (light sleep only)
-    "07 UART1",        //!< UART1 wakeup (light sleep only)
-    "08 TOUCH",        //!< Touch wakeup
-    "09 ULP",          //!< ULP FSM wakeup
-    "0A BT",           //!< BT wakeup (light sleep only)
-    "0B COCPU",
-    "0C XTAL32K_DEAD",
-    "0D COCPU_TRAP",   //!< ULP RISC-V wakeup
-    "0E USB",
-    "0F bit 15",
-} ;*/
-
 extern "C" 
-void app_main(void)
+void app_main( void )
 {
     MicroControllerUnit* mcu = new MicroControllerUnit();
     PowerManagementUnit* pmu = mcu->getPowerManagementUnit();
     SleepAndWakeupController* swc = pmu->getSleepAndWakeupController();
-    if( swc == nullptr )
-    {
-        printf("CPP failed\n");
-        return;
-    }
+    swc = new SleepAndWakeupController();
 
-    esp_sleep_wakeup_cause_t cause = esp_sleep_get_wakeup_cause();
-    // :) printf("%s wakeup detected:\n", w_cause[cause&0xf]);
-    if (cause == ESP_SLEEP_WAKEUP_TIMER) {
-        printf("TIMER wakeup, saving pulse count\n");
+    if( swc->isSleepToWakeupCause( SleepAndWakeupController::Peripherals::FSM ) ) 
+    {
+        printf("FSM ULP wakeup, saving pulse count\n");
         update_pulse_count();
-    } else if (cause == ESP_SLEEP_WAKEUP_ULP) {
-        printf("ULP wakeup, saving pulse count\n");
-        update_pulse_count();
-    } else {
-        printf("Not ULP wakeup, initializing ULP\n");
+    } 
+    else if( swc->isSleepToWakeupCause( SleepAndWakeupController::Peripherals::TIMER ) ) 
+    {
+        printf("TIMER wakeup, do nothing\n");
+    } 
+    else 
+    {
+        printf("Not an ULP wakeup, initializing ULP\n");
         init_ulp_program();
     }
 
     printf("Entering deep sleep\n\n");
-//TODO NV    ESP_ERROR_CHECK( esp_sleep_enable_ulp_wakeup() );
+    swc->setWakeupEnabled( SleepAndWakeupController::WakeupEnable::FSM, true );
+    swc->setWakeupEnabled( SleepAndWakeupController::WakeupEnable::TIMER, true );
+//TODO NV    
+    // ESP_ERROR_CHECK( esp_sleep_enable_ulp_wakeup() );
     ESP_ERROR_CHECK( esp_sleep_enable_timer_wakeup(0x000000001000000) );
     esp_deep_sleep_start();
 
+    delete swc;
     delete mcu;
 }
 
