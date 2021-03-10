@@ -6,6 +6,8 @@ idf_component_register(
                         "SleepAndWakeupController.cpp"
                         "RegisterRO.cpp"
                         "RegisterRW.cpp"
+                        "ValueRO.cpp"
+                        "ValueRW.cpp"
                     INCLUDE_DIRS ""
                     REQUIRES soc nvs_flash ulp)
 
