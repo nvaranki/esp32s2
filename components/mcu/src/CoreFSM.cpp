@@ -6,7 +6,7 @@
 #include "CoreFSM.hpp"
 
 CoreFSM::CoreFSM() :
-    cfg( new RegisterRW( RTC_CNTL_ULP_CP_CTRL_REG, 0xF0000000 ) ) //TODO predefined constants
+    cfg( new BitSetRW( RTC_CNTL_ULP_CP_CTRL_REG, 0xF0000000 ) ) //TODO predefined constants
 {
 }
 

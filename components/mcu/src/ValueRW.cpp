@@ -3,9 +3,9 @@
 // © 2021 Nikolai Varankine
 
 #include "soc/soc.h"
-#include "ValueRW.hpp"
+#include "SubValueRW.hpp"
 
-void ValueRW::set( const uint32_t value )
+void SubValueRW::set( const uint32_t value )
 {
     REG_CLR_BIT( this->addr, this->view );
     REG_SET_BIT( this->addr, ( value << this->shift ) & this->view );

@@ -3,9 +3,9 @@
 // © 2021 Nikolai Varankine
 
 #include "soc/soc.h"
-#include "RegisterRW.hpp"
+#include "BitSetRW.hpp"
 
-void RegisterRW::set( const uint32_t mask, const bool value )
+void BitSetRW::set( const uint32_t mask, const bool value )
 {
     uint32_t m = mask & this->view;
     if( m )

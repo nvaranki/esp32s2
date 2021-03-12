@@ -8,8 +8,8 @@
 #include "CoreRISCV.hpp"
 
 TimerULP::TimerULP() :
-    cfg( new RegisterRW( RTC_CNTL_ULP_CP_TIMER_REG, 0x06402001 ) ), //TODO predefined constants
-    sleep(  new ValueRW( RTC_CNTL_ULP_CP_TIMER_1_REG, 0xFFFFFFF0, 8 ) ) //TODO predefined constants
+    cfg( new BitSetRW( RTC_CNTL_ULP_CP_TIMER_REG, 0x06402001 ) ), //TODO predefined constants
+    sleep(  new SubValueRW( RTC_CNTL_ULP_CP_TIMER_1_REG, 0xFFFFFFF0, 8 ) ) //TODO predefined constants
 {
 }
 

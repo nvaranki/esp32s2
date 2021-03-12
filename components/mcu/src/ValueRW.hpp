@@ -2,12 +2,12 @@
 //
 // © 2021 Nikolai Varankine
 
-#ifndef H_ValueRW
-#define H_ValueRW
+#ifndef H_SubValueRW
+#define H_SubValueRW
 
-#include "ValueRO.hpp"
+#include "SubValueRO.hpp"
 
-class ValueRW : public ValueRO
+class SubValueRW : public SubValueRO
 {
 public:
     /**
@@ -15,8 +15,8 @@ public:
      * @param v continuous mask of participating bits
      * @param s shift of the mask relative to bit #0
      */
-    ValueRW( const uint32_t a, const uint32_t v, const uint8_t s ) : ValueRO( a, v, s ) {}
-    virtual ~ValueRW() {}
+    SubValueRW( const uint32_t a, const uint32_t v, const uint8_t s ) : SubValueRO( a, v, s ) {}
+    virtual ~SubValueRW() {}
 public:
     /**
      * Shifts left specified value to align it with bit mask and then inserts masked result into register.

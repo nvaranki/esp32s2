@@ -6,10 +6,10 @@
 #include "CoreRISCV.hpp"
 
 CoreRISCV::CoreRISCV() :
-    cfg( new RegisterRW( RTC_CNTL_COCPU_CTRL_REG, 0x06402001 ) ), //TODO predefined constants
-    s2r(  new ValueRW( RTC_CNTL_COCPU_CTRL_REG, 0x3F<<1, 1 ) ), //TODO predefined constants
-    s2i(  new ValueRW( RTC_CNTL_COCPU_CTRL_REG, 0x3F<<7, 7 ) ), //TODO predefined constants
-    s2dc( new ValueRW( RTC_CNTL_COCPU_CTRL_REG, 0xFF<<14, 14 ) ) //TODO predefined constants
+    cfg( new BitSetRW( RTC_CNTL_COCPU_CTRL_REG, 0x06402001 ) ), //TODO predefined constants
+    s2r(  new SubValueRW( RTC_CNTL_COCPU_CTRL_REG, 0x3F<<1, 1 ) ), //TODO predefined constants
+    s2i(  new SubValueRW( RTC_CNTL_COCPU_CTRL_REG, 0x3F<<7, 7 ) ), //TODO predefined constants
+    s2dc( new SubValueRW( RTC_CNTL_COCPU_CTRL_REG, 0xFF<<14, 14 ) ) //TODO predefined constants
 {
 }
 

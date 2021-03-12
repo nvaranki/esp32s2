@@ -6,18 +6,18 @@
 #define H_SleepAndWakeupController
 
 #include "esp_bit_defs.h"
-#include "RegisterRW.hpp"
+#include "BitSetRW.hpp"
 
 class SleepAndWakeupController
 {
 private:
-    RegisterRW* const we; //!< Wakeup bitmap enabling register
-    RegisterRW* const wcGPIO; //!< GPIO wakeup configuration register
-    RegisterRW* const sro; //!< Sleep / reject options register
-    RegisterRW* const wcEXT1; //!< EXT1 wakeup configuration register
-    RegisterRO* const wsEXT1; //!< EXT1 wakeup source register
-    RegisterRO* const r2sc; //!< Reject-to-sleep cause register
-    RegisterRO* const s2wc; //!< Sleep-to-wakeup cause register
+    BitSetRW* const we; //!< Wakeup bitmap enabling register
+    BitSetRW* const wcGPIO; //!< GPIO wakeup configuration register
+    BitSetRW* const sro; //!< Sleep / reject options register
+    BitSetRW* const wcEXT1; //!< EXT1 wakeup configuration register
+    BitSetRO* const wsEXT1; //!< EXT1 wakeup source register
+    BitSetRO* const r2sc; //!< Reject-to-sleep cause register
+    BitSetRO* const s2wc; //!< Sleep-to-wakeup cause register
 public:
     SleepAndWakeupController();
     virtual ~SleepAndWakeupController();

@@ -6,16 +6,16 @@
 #define H_CoreRISCV
 
 #include "esp_bit_defs.h"
-#include "RegisterRW.hpp"
-#include "ValueRW.hpp"
+#include "BitSetRW.hpp"
+#include "SubValueRW.hpp"
 
 class CoreRISCV
 {
 private:
-    RegisterRW* const cfg; //!< configuration register
-    ValueRW* const s2r; //!< Time from startup to pull down reset.
-    ValueRW* const s2i; //!< Time from startup to send out RISCV_START_INT interrupt.
-    ValueRW* const s2dc; //!< Time from shut down to disable clock.
+    BitSetRW* const cfg; //!< configuration register
+    SubValueRW* const s2r; //!< Time from startup to pull down reset.
+    SubValueRW* const s2i; //!< Time from startup to send out RISCV_START_INT interrupt.
+    SubValueRW* const s2dc; //!< Time from shut down to disable clock.
 public:
     CoreRISCV();
     virtual ~CoreRISCV();

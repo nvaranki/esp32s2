@@ -6,12 +6,12 @@
 #define H_CoreFSM
 
 #include "esp_bit_defs.h"
-#include "RegisterRW.hpp"
+#include "BitSetRW.hpp"
 
 class CoreFSM
 {
 private:
-    RegisterRW* const cfg; //!< configuration register
+    BitSetRW* const cfg; //!< configuration register
 public:
     CoreFSM();
     virtual ~CoreFSM();

@@ -8,7 +8,8 @@
 #include "esp_err.h"
 #include "CoreFSM.hpp"
 #include "CoreRISCV.hpp"
-#include "RegisterRW.hpp"
+#include "BitSetRW.hpp"
+#include "SubValueRW.hpp"
 #include "TimerULP.hpp"
 
 class CoprocessorULP 
@@ -17,9 +18,9 @@ private:
     CoreFSM* const fsm;
     CoreRISCV* const riscv;
     TimerULP* const timer;
-    RegisterRW* const cfgCore; //!< configuration register
-    RegisterRW* const cfgGPIO; //!< configuration register
-    ValueRW* const addr; //!< ULP coprocessor PC initial address
+    BitSetRW* const cfgCore; //!< configuration register
+    BitSetRW* const cfgGPIO; //!< configuration register
+    SubValueRW* const addr; //!< ULP coprocessor PC initial address
 public:
     CoprocessorULP();
     virtual ~CoprocessorULP();

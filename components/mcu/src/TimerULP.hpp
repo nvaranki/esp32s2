@@ -6,14 +6,14 @@
 #define H_TimerULP
 
 #include "esp_bit_defs.h"
-#include "RegisterRW.hpp"
-#include "ValueRW.hpp"
+#include "BitSetRW.hpp"
+#include "SubValueRW.hpp"
 
 class TimerULP
 {
 private:
-    RegisterRW* const cfg; //!< configuration register
-    ValueRW* const sleep; //!< sleep cycles for ULP coprocessor timer
+    BitSetRW* const cfg; //!< configuration register
+    SubValueRW* const sleep; //!< sleep cycles for ULP coprocessor timer
 public:
     TimerULP();
     virtual ~TimerULP();

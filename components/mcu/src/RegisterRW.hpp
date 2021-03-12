@@ -2,20 +2,20 @@
 //
 // © 2021 Nikolai Varankine
 
-#ifndef H_RegisterRW
-#define H_RegisterRW
+#ifndef H_BitSetRW
+#define H_BitSetRW
 
-#include "RegisterRO.hpp"
+#include "BitSetRO.hpp"
 
-class RegisterRW : public RegisterRO
+class BitSetRW : public BitSetRO
 {
 public:
     /**
      * @param a address of the register
      * @param v mask of participating bits
      */
-    RegisterRW( const uint32_t a, const uint32_t v ) : RegisterRO( a, v ) {}
-    virtual ~RegisterRW() {}
+    BitSetRW( const uint32_t a, const uint32_t v ) : BitSetRO( a, v ) {}
+    virtual ~BitSetRW() {}
 public:
     /**
      * Sets or clears all specified bits same way.
