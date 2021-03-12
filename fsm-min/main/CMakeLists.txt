@@ -1,23 +1,7 @@
 idf_component_register(
-                    SRCS 
-                        "ulp_example_main.cpp"
-                        "MicroControllerUnit.cpp"
-                        "PowerManagementUnit.cpp"
-                        "SleepAndWakeupController.cpp"
-                        "RegisterRO.cpp"
-                        "RegisterRW.cpp"
-                        "CoprocessorULP.cpp"
-                        "CoreFSM.cpp"
-                        "CoreRISCV.cpp"
-                        "TimerULP.cpp"
-                        "ValueRO.cpp"
-                        "ValueRW.cpp"
+                    SRCS "ulp_example_main.cpp"
                     INCLUDE_DIRS ""
-                    REQUIRES soc nvs_flash ulp)
-
-#add_subdirectory(esp32s2)
-#list(APPEND EXTRA_LIBS esp32s2)
-#list(APPEND EXTRA_COMPONENT_DIRS esp32s2)
+                    REQUIRES soc nvs_flash ulp mcu)
 #
 # ULP support additions to component CMakeLists.txt.
 #

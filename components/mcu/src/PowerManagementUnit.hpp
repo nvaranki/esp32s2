@@ -14,7 +14,7 @@ class PowerManagementUnit
 private:
     SleepAndWakeupController* swc;
 public:
-    PowerManagementUnit(;
+    PowerManagementUnit();
     virtual ~PowerManagementUnit();
 public:
     SleepAndWakeupController* getSleepAndWakeupController();

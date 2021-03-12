@@ -17,8 +17,8 @@
 #include "driver/gpio.h"
 #include "driver/rtc_io.h"
 #include "esp32/ulp.h"
+#include "mcu.h"
 #include "ulp_main.h"
-#include "MicroControllerUnit.hpp"
 
 extern const uint8_t ulp_main_bin_start[] asm("_binary_ulp_main_bin_start");
 extern const uint8_t ulp_main_bin_end[]   asm("_binary_ulp_main_bin_end");
