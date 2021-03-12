@@ -1,0 +1,67 @@
+// Ultra low power (ULP) co-processor.
+//
+// © 2021 Nikolai Varankine
+
+#ifndef H_CoprocessorULP
+#define H_CoprocessorULP
+
+#include "esp_err.h"
+#include "CoreFSM.hpp"
+#include "CoreRISCV.hpp"
+#include "RegisterRW.hpp"
+#include "TimerULP.hpp"
+
+class CoprocessorULP 
+{
+private:
+    CoreFSM* const fsm;
+    CoreRISCV* const riscv;
+    TimerULP* const timer;
+    RegisterRW* const cfgCore; //!< configuration register
+    RegisterRW* const cfgGPIO; //!< configuration register
+    ValueRW* const addr; //!< ULP coprocessor PC initial address
+public:
+    CoprocessorULP();
+    virtual ~CoprocessorULP();
+public:
+    enum class Core : bool
+    {
+        RISCV = false,
+        FSM   = true,
+    };
+    enum class ConfigCore : uint32_t
+    {
+        // RTC_CNTL_COCPU_CTRL_REG (0x0100)
+        // see missing bits and values in separate registers
+        CORE  = BIT23, //!< 0: select ULP-RISC-V; 1(default): select ULP-FSM
+        DONE  = BIT24, //!< 0: select ULP-FSM DONE signal; 1: select ULP-RISC-V DONE signal
+    };
+    enum class ConfigGPIO : uint32_t
+    {
+        // RTC_CNTL_ULP_CP_TIMER_REG (0x00F8)
+        // see missing bits and values in separate registers
+        ENABLE = BIT29, //!< Enable the option of ULP coprocessor woken up by RTC GPIO
+        RESET  = BIT30, //!< Disable the option of ULP coprocessor woken up by RTC GPIO. (WO) //TODO write only
+    };
+public:
+    CoreFSM* getCoreFSM() { return fsm; }
+    CoreRISCV* getCoreRISCV() { return riscv; }
+    TimerULP* getTimerULP() { return timer; }
+    bool getConfig( const ConfigCore test ) const { return cfgCore->get( static_cast<uint32_t>( test ) ); };
+    void setConfig( const ConfigCore mask, bool value ) { cfgCore->set( static_cast<uint32_t>( mask ), value ); };
+    bool getConfig( const ConfigGPIO test ) const { return cfgGPIO->get( static_cast<uint32_t>( test ) ); };
+    void setConfig( const ConfigGPIO mask, bool value ) { cfgGPIO->set( static_cast<uint32_t>( mask ), value ); };
+    /**
+     * @param addr offset from the beginning of RTC slow memory (RTC_SLOW_MEM).
+     * @param code compiled code.
+     * @param size of the code, in 32 bit words.
+     * @return completion code.
+     */
+    esp_err_t loadExecCode( const uint32_t addr, const uint8_t code[] , const size_t size );
+    /**
+     * @param addr offset from the beginning of RTC slow memory (RTC_SLOW_MEM).
+     */
+    void setEntryPoint( const uint32_t addr ) { this->addr->set( addr ); }
+};
+
+#endif
