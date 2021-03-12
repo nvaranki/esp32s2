@@ -1,7 +1,8 @@
-// Sleep and wake-up controller.
+// Sleep and wake-up controller of the MCU.
 //
 // © 2021 Nikolai Varankine
 
+#include "soc/rtc_cntl_reg.h"
 #include "SleepAndWakeupController.hpp"
 
 SleepAndWakeupController::SleepAndWakeupController() :

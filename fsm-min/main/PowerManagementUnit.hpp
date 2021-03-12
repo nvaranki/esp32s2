@@ -1,5 +1,9 @@
 // RTC_CNTL
 
+// Power management unit of the MCU.
+//
+// © 2021 Nikolai Varankine
+
 #ifndef H_PowerManagementUnit
 #define H_PowerManagementUnit
 
@@ -8,9 +12,9 @@
 class PowerManagementUnit
 {
 private:
-    SleepAndWakeupController* sw_ctrl;
+    SleepAndWakeupController* swc;
 public:
-    PowerManagementUnit(/* args */);
+    PowerManagementUnit(;
     virtual ~PowerManagementUnit();
 public:
     SleepAndWakeupController* getSleepAndWakeupController();

@@ -1,19 +1,22 @@
+// Power management unit of the MCU.
+//
+// © 2021 Nikolai Varankine
+
 #include "PowerManagementUnit.hpp"
 
-SleepAndWakeupController* PowerManagementUnit::getSleepAndWakeupController()
-{
-    if( sw_ctrl == nullptr )
-        sw_ctrl = new SleepAndWakeupController();
-    return sw_ctrl;
-}
-
-PowerManagementUnit::PowerManagementUnit(/* args */) :
-    sw_ctrl( nullptr )
+PowerManagementUnit::PowerManagementUnit() :
+    swc( nullptr )
 {
 }
 
 PowerManagementUnit::~PowerManagementUnit()
 {
-    if( sw_ctrl != nullptr )
-        delete sw_ctrl;
+    if( swc != nullptr ) delete swc;
+}
+
+SleepAndWakeupController* PowerManagementUnit::getSleepAndWakeupController()
+{
+    if( swc == nullptr )
+        swc = new SleepAndWakeupController();
+    return swc;
 }

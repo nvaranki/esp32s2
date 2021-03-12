@@ -1,23 +1,23 @@
-// Sleep and wake-up controller.
+// Sleep and wake-up controller of the MCU.
 //
 // © 2021 Nikolai Varankine
 
 #ifndef H_SleepAndWakeupController
 #define H_SleepAndWakeupController
 
-#include "soc/rtc_cntl_reg.h"
+#include "esp_bit_defs.h"
 #include "RegisterRW.hpp"
 
 class SleepAndWakeupController
 {
 private:
-    RegisterRW* we; //!< Wakeup bitmap enabling register
-    RegisterRW* wcGPIO; //!< GPIO wakeup configuration register
-    RegisterRW* sro; //!< Sleep / reject options register
-    RegisterRW* wcEXT1; //!< EXT1 wakeup configuration register
-    RegisterRO* wsEXT1; //!< EXT1 wakeup source register
-    RegisterRO* r2sc; //!< Reject-to-sleep cause register
-    RegisterRO* s2wc; //!< Sleep-to-wakeup cause register
+    RegisterRW* const we; //!< Wakeup bitmap enabling register
+    RegisterRW* const wcGPIO; //!< GPIO wakeup configuration register
+    RegisterRW* const sro; //!< Sleep / reject options register
+    RegisterRW* const wcEXT1; //!< EXT1 wakeup configuration register
+    RegisterRO* const wsEXT1; //!< EXT1 wakeup source register
+    RegisterRO* const r2sc; //!< Reject-to-sleep cause register
+    RegisterRO* const s2wc; //!< Sleep-to-wakeup cause register
 public:
     SleepAndWakeupController();
     virtual ~SleepAndWakeupController();
@@ -42,6 +42,7 @@ public:
         RISCV   = BIT28, //!< Y Y - 9
         //        BIT29,
         USB     = BIT30, //!< Y - - 10
+        //        BIT31,
     };
     enum class WakeupConfigGPIO : uint32_t
     {
