@@ -21,11 +21,16 @@ public:
     virtual ~BitSetRO() {};
 public:
     /**
-     * Returns presence of all specified bits.
+     * Returns presence of all specified test bits.
      * @param test one or combination of bits.
      * @return true if all specified bits were set to 1.
      */
     bool get( const uint32_t test ) const;
+    /**
+     * Returns presence of all declared bits.
+     * @return all bits of the bit set view.
+     */
+    uint32_t getAll() const;
 };
 
 #endif

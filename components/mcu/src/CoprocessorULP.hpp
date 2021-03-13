@@ -60,7 +60,7 @@ public:
      */
     esp_err_t loadExecCode( const uint32_t addr, const uint8_t code[] , const size_t size );
     /**
-     * @param addr offset from the beginning of RTC slow memory (RTC_SLOW_MEM).
+     * @param addr offset (in 32b words) from the beginning of RTC slow memory (RTC_SLOW_MEM).
      */
     void setEntryPoint( const uint32_t addr ) { this->addr->set( addr ); }
 };

@@ -2,10 +2,11 @@
 //
 // © 2021 Nikolai Varankine
 
-#include "soc/rtc_cntl_reg.h"
 #include "SleepAndWakeupController.hpp"
 
 SleepAndWakeupController::SleepAndWakeupController() :
+    cmd( new BitSetWO( RTC_CNTL_STATE0_REG, 0x00000003 ) ), //TODO mask
+    sts( new BitSetRW( RTC_CNTL_STATE0_REG, 0xE0000000 ) ), //TODO mask
     we( new BitSetRW( RTC_CNTL_WAKEUP_STATE_REG, RTC_CNTL_WAKEUP_ENA_M ) ),
     wcGPIO( new BitSetRW( RTC_CNTL_EXT_WAKEUP_CONF_REG, RTC_CNTL_EXT_WAKEUP0_LV_M | RTC_CNTL_EXT_WAKEUP1_LV_M ) ),
     sro( new BitSetRW( RTC_CNTL_SLP_REJECT_CONF_REG, RTC_CNTL_DEEP_SLP_REJECT_EN_M | RTC_CNTL_LIGHT_SLP_REJECT_EN_M | RTC_CNTL_SLEEP_REJECT_ENA_M ) ),
@@ -18,6 +19,8 @@ SleepAndWakeupController::SleepAndWakeupController() :
 
 SleepAndWakeupController::~SleepAndWakeupController()
 {
+    delete cmd;
+    delete sts;
     delete we;
     delete wcGPIO;
     delete sro;

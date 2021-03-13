@@ -6,11 +6,15 @@
 #define H_SleepAndWakeupController
 
 #include "esp_bit_defs.h"
+#include "soc/rtc_cntl_reg.h"
 #include "BitSetRW.hpp"
+#include "BitSetWO.hpp"
 
 class SleepAndWakeupController
 {
 private:
+    BitSetWO* const cmd; //!< wakeup state control register
+    BitSetRW* const sts; //!< ....Wakeup bitmap enabling register
     BitSetRW* const we; //!< Wakeup bitmap enabling register
     BitSetRW* const wcGPIO; //!< GPIO wakeup configuration register
     BitSetRW* const sro; //!< Sleep / reject options register
@@ -22,6 +26,14 @@ public:
     SleepAndWakeupController();
     virtual ~SleepAndWakeupController();
 public:
+    enum Status : uint32_t
+    {
+        //  RTC_CNTL_STATE0_REG (0x0018)
+        //TODO there are many other bits in API 4.2
+        WAKEUP = RTC_CNTL_SLP_WAKEUP, //!< sleep wakeup
+        REJECT = RTC_CNTL_SLP_REJECT, //!< 0: sleep reject
+        SLEEP  = RTC_CNTL_SLEEP_EN, //!< Sends the chip to sleep
+    };
     enum class WakeupEnable : uint32_t
     {
         // RTC_CNTL_WAKEUP_STATE_REG (0x003C)
@@ -93,6 +105,10 @@ public:
         USB     = BIT14,
     };
 public:
+    void sendInterruptRTC() { cmd->set( RTC_CNTL_SW_CPU_INT, true ); };
+    void clearCauseR2S() { cmd->set( RTC_CNTL_SLP_REJECT_CAUSE_CLR, true ); };
+    bool getStatus( const Status test ) const { return sts->get( static_cast<uint32_t>( test ) ); };
+    void setStatus( const Status mask, bool value ) { sts->set( static_cast<uint32_t>( mask ), value ); };
     bool isWakeupEnabled( const WakeupEnable test ) const { return we->get( static_cast<uint32_t>( test ) ); };
     void setWakeupEnabled( const WakeupEnable mask, bool value ) { we->set( static_cast<uint32_t>( mask ), value ); };
     bool getConfigGPIO( const WakeupConfigGPIO test ) const { return wcGPIO->get( static_cast<uint32_t>( test ) ); };
@@ -104,6 +120,7 @@ public:
     bool isSleepToWakeupCause( const WakeupStatusEXT1 test ) const { return wsEXT1->get( static_cast<uint32_t>( test ) ); };
     bool isRejectToSleepCause( const Peripherals test ) const { return r2sc->get( static_cast<uint32_t>( test ) ); };
     bool isSleepToWakeupCause( const Peripherals test ) const { return s2wc->get( static_cast<uint32_t>( test ) ); };
+    uint32_t getSleepToWakeupCause() const { return s2wc->getAll(); };
     //TODO XOR? bool hasAnySleepToWakeupCause() const { return s2wc->get( RTC_CNTL_WAKEUP_CAUSE_M ); };
 };
 
