@@ -111,6 +111,7 @@ public:
     void setStatus( const Status mask, bool value ) { sts->set( static_cast<uint32_t>( mask ), value ); };
     bool isWakeupEnabled( const WakeupEnable test ) const { return we->get( static_cast<uint32_t>( test ) ); };
     void setWakeupEnabled( const WakeupEnable mask, bool value ) { we->set( static_cast<uint32_t>( mask ), value ); };
+    uint32_t getWakeupEnabled() const { return we->getAll(); };
     bool getConfigGPIO( const WakeupConfigGPIO test ) const { return wcGPIO->get( static_cast<uint32_t>( test ) ); };
     void setConfigGPIO( const WakeupConfigGPIO mask, bool value ) { wcGPIO->set( static_cast<uint32_t>( mask ), value ); };
     bool getRejectConfig( const RejectConfig test ) const { return sro->get( static_cast<uint32_t>( test ) ); };

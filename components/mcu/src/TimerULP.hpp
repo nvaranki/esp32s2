@@ -6,6 +6,7 @@
 #define H_TimerULP
 
 #include "esp_bit_defs.h"
+#include "soc/rtc_cntl_reg.h"
 #include "BitSetRW.hpp"
 #include "SubValueRW.hpp"
 
@@ -22,7 +23,7 @@ public:
     {
         // RTC_CNTL_ULP_CP_TIMER_REG (0x00F8)
         // see missing bits and values in separate registers
-        TIMER  = BIT31, //!< 0: Disable hardware timer; 1: Enable hardware timer
+        TIMER  = RTC_CNTL_ULP_CP_SLP_TIMER_EN, //!< ULP co-processor timer enable, 0: Disable hardware timer; 1: Enable hardware timer
     };
 public:
     bool getConfig( const Configuration test ) const { return cfg->get( static_cast<uint32_t>( test ) ); };
