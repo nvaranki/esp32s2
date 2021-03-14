@@ -6,6 +6,7 @@
 #define H_CoprocessorULP
 
 #include "esp_err.h"
+#include "soc/rtc_cntl_reg.h"
 #include "CoreFSM.hpp"
 #include "CoreRISCV.hpp"
 #include "BitSetRW.hpp"
@@ -34,8 +35,8 @@ public:
     {
         // RTC_CNTL_COCPU_CTRL_REG (0x0100)
         // see missing bits and values in separate registers
-        CORE  = BIT23, //!< 0: select ULP-RISC-V; 1(default): select ULP-FSM
-        DONE  = BIT24, //!< 0: select ULP-FSM DONE signal; 1: select ULP-RISC-V DONE signal
+        CORE  = RTC_CNTL_COCPU_SEL, //!< 0: select ULP-RISC-V; 1(default): select ULP-FSM
+        DONE  = RTC_CNTL_COCPU_DONE_FORCE, //!< 0: select ULP-FSM DONE signal; 1: select ULP-RISC-V DONE signal
     };
     enum class ConfigGPIO : uint32_t
     {
