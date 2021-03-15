@@ -10,7 +10,7 @@
 class SubValueRO
 {
 protected:
-    const uint32_t addr; //!< address of the register
+    volatile uint32_t* const addr; //!< address of the register
     const uint32_t view; //!< continuous mask of participating bits
     const uint8_t shift; //!< shift of the mask relative to bit #0
 public:

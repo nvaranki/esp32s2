@@ -6,7 +6,7 @@
 #include "SubValueRO.hpp"
 
 SubValueRO::SubValueRO( const uint32_t a, const uint32_t v, const uint8_t s ) : 
-    addr( a ), view( v ), shift( s ) 
+    addr( (volatile uint32_t*) a ), view( v ), shift( s ) 
 {
     //TODO check shift vs view
 }

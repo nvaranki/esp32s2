@@ -10,14 +10,14 @@
 class BitSetRO
 {
 protected:
-    const uint32_t addr; //!< address of the register
+    volatile uint32_t* const addr; //!< address of the register
     const uint32_t view; //!< mask of participating bits
 public:
     /**
      * @param a address of the register
      * @param v mask of participating bits
      */
-    BitSetRO( const uint32_t a, const uint32_t v ) : addr( a ), view( v ) {};
+    BitSetRO( const uint32_t a, const uint32_t v ) : addr( (volatile uint32_t*) a ), view( v ) {};
     virtual ~BitSetRO() {};
 public:
     /**
