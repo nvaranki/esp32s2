@@ -27,34 +27,40 @@ extern "C"
 void app_main( void )
 {
     MicroControllerUnit* mcu = new MicroControllerUnit();
-    
     CoprocessorULP* ulp = mcu->getCoprocessorULP();
+    CoreFSM* fsm = ulp->getCoreFSM();
+    
+    // cancel next timer run if any
+    ulp->getTimerULP()->setConfig( TimerULP::Configuration::TIMER, false ); 
+    
+    // load code
     if( ulp->loadExecCode( 0, ulp_main_bin_start,
         (ulp_main_bin_end - ulp_main_bin_start) / sizeof(uint32_t) ) != ESP_OK )
     {
         printf("Failed to load ULP program, aborting...\n");
         mcu->stop();
     }
+    ulp->setEntryPoint( &ulp_entry - RTC_SLOW_MEM );
+    
+    // select FSM to run
+    ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );
+    fsm->setConfig( CoreFSM::Configuration::STARTH, true );
+    fsm->setConfig( CoreFSM::Configuration::STARTS, false );
+    fsm->setConfig( CoreFSM::Configuration::CLKFO, true );
 
+    // init shared vars
     ulp_edge_count = 500; // not earlier than the program has been loaded 
 
-    ulp->setEntryPoint( &ulp_entry - RTC_SLOW_MEM );
-    ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );
-
-    CoreFSM* fsm = ulp->getCoreFSM();
-    printf("MemoryAddressSize: %d\n", fsm->getMemoryAddressSize() );
-    printf("MemoryAddressInit: %d\n", fsm->getMemoryAddressInit() );
-    fsm->setConfig( CoreFSM::Configuration::STARTH, true );
-    fsm->setConfig( CoreFSM::Configuration::CLKFO, true );
-   
+    // go!
     const TickType_t delay = 1000 / portTICK_PERIOD_MS;
     printf("Delay %d task ticks\n", delay);
     for( int i = 0; i < 6; i++ ) 
     {
+        fsm->setConfig( CoreFSM::Configuration::STARTS, true );
+        fsm->setConfig( CoreFSM::Configuration::STARTS, false );
+        vTaskDelay( delay ); // single pass run should finish within delay
         printf("Edge count %3d from ULP: %10d\n", i, ulp_edge_count);
-        ulp_edge_count += 1000;
-        fsm->start(); // single pass run should finish within delay
-        vTaskDelay( delay );
+        ulp_edge_count += 1000000;
     }
 
     delete mcu;
