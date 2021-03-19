@@ -6,8 +6,8 @@
 #define H_CoreRISCV
 
 #include "esp_bit_defs.h"
-#include "BitSetRW.hpp"
-#include "SubValueRW.hpp"
+#include "bits/BitSetRW.hpp"
+#include "bits/SubValueRW.hpp"
 
 class CoreRISCV
 {

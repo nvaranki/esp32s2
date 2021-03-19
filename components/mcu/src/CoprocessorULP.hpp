@@ -9,8 +9,8 @@
 #include "soc/rtc_cntl_reg.h"
 #include "CoreFSM.hpp"
 #include "CoreRISCV.hpp"
-#include "BitSetRW.hpp"
-#include "SubValueRW.hpp"
+#include "bits/BitSetRW.hpp"
+#include "bits/SubValueRW.hpp"
 #include "TimerULP.hpp"
 
 class CoprocessorULP 

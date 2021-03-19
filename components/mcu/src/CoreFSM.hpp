@@ -7,9 +7,9 @@
 
 #include "esp_bit_defs.h"
 #include "soc/rtc_cntl_reg.h"
-#include "BitSetRW.hpp"
-#include "BitSetWO.hpp"
-#include "SubValueRW.hpp"
+#include "bits/BitSetRW.hpp"
+#include "bits/BitSetWO.hpp"
+#include "bits/SubValueRW.hpp"
 
 class CoreFSM
 {
