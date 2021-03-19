@@ -8,13 +8,14 @@
 #include "CoreRISCV.hpp"
 
 TimerULP::TimerULP() :
-    cfg( new BitSetRW( RTC_CNTL_ULP_CP_TIMER_REG, 0x06402001 ) ), //TODO predefined constants
-    sleep(  new SubValueRW( RTC_CNTL_ULP_CP_TIMER_1_REG, 0xFFFFFFF0, 8 ) ) //TODO predefined constants
+    active( new FlagRW( RTC_CNTL_ULP_CP_TIMER_REG, RTC_CNTL_ULP_CP_SLP_TIMER_EN_S ) ),
+    sleep(  new SubValueRW( RTC_CNTL_ULP_CP_TIMER_1_REG, RTC_CNTL_ULP_CP_TIMER_SLP_CYCLE_M, 
+        RTC_CNTL_ULP_CP_TIMER_SLP_CYCLE_S ) )
 {
 }
 
 TimerULP::~TimerULP()
 {
-    delete cfg;
+    delete active;
     delete sleep;
 }

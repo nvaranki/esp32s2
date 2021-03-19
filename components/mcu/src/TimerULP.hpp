@@ -7,29 +7,28 @@
 
 #include "esp_bit_defs.h"
 #include "soc/rtc_cntl_reg.h"
-#include "bits/BitSetRW.hpp"
+#include "bits/FlagRW.hpp"
 #include "bits/SubValueRW.hpp"
 
 class TimerULP
 {
-private:
-    BitSetRW* const cfg; //!< configuration register
-    SubValueRW* const sleep; //!< sleep cycles for ULP coprocessor timer
+public:
+    /**
+     * Contains work status of the timer.
+     * When set to true (active), the timer starts counting immediately. After counter expires, timer signals 
+     * current ULP processor to wake up and start their program to run. After processor ends and 
+     * shuts down, the timer repeats counting again with fresh counter but only if the processor or
+     * GPIO is assigned to restart timer.
+     * When set to false (passive), the timer just ignores next attempts to (re)start it by other means.
+     */
+    FlagRW* const active;
+    /**
+     * Contains initial number of counter's sleep cycles.
+     */
+    SubValueRW* const sleep;
 public:
     TimerULP();
     virtual ~TimerULP();
-public:
-    enum class Configuration : uint32_t
-    {
-        // RTC_CNTL_ULP_CP_TIMER_REG (0x00F8)
-        // see missing bits and values in separate registers
-        TIMER  = RTC_CNTL_ULP_CP_SLP_TIMER_EN, //!< ULP co-processor timer enable, 0: Disable hardware timer; 1: Enable hardware timer
-    };
-public:
-    bool getConfig( const Configuration test ) const { return cfg->get( static_cast<uint32_t>( test ) ); };
-    void setConfig( const Configuration mask, bool value ) { cfg->set( static_cast<uint32_t>( mask ), value ); };
-    void setSleepCycles( uint32_t value ) { sleep->set( value ); }
-    uint32_t getSleepCycles() { return sleep->get(); }
 };
 
 #endif

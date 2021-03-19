@@ -26,12 +26,13 @@ extern const uint8_t ulp_main_bin_end[]   asm("_binary_ulp_main_bin_end");
 extern "C" 
 void app_main( void )
 {
-    MicroControllerUnit* mcu = new MicroControllerUnit();
-    CoprocessorULP* ulp = mcu->getCoprocessorULP();
-    CoreFSM* fsm = ulp->getCoreFSM();
+    MicroControllerUnit* const mcu = new MicroControllerUnit();
+    CoprocessorULP* const ulp = mcu->getCoprocessorULP();
+    CoreFSM* const fsm = ulp->getCoreFSM();
+    TimerULP* const tmr = ulp->getTimerULP();
     
     // cancel next timer run if any
-    ulp->getTimerULP()->setConfig( TimerULP::Configuration::TIMER, false ); 
+    tmr->active->set( false ); 
     
     // load code
     if( ulp->loadExecCode( 0, ulp_main_bin_start,

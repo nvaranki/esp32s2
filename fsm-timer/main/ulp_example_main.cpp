@@ -27,12 +27,13 @@ extern const uint8_t ulp_main_bin_end[]   asm("_binary_ulp_main_bin_end");
 extern "C" 
 void app_main( void )
 {
-    MicroControllerUnit* mcu = new MicroControllerUnit();
-    CoprocessorULP* ulp = mcu->getCoprocessorULP();
-    CoreFSM* fsm = ulp->getCoreFSM();
+    MicroControllerUnit* const mcu = new MicroControllerUnit();
+    CoprocessorULP* const ulp = mcu->getCoprocessorULP();
+    CoreFSM* const fsm = ulp->getCoreFSM();
+    TimerULP* const tmr = ulp->getTimerULP();
     
     // cancel next timer run if any
-    ulp->getTimerULP()->setConfig( TimerULP::Configuration::TIMER, false ); 
+    tmr->active->set( false ); 
     
     // load code
     if( ulp->loadExecCode( 0, ulp_main_bin_start,
@@ -54,8 +55,8 @@ void app_main( void )
     ulp_edge_count = 500; // not earlier than the program has been loaded 
 
     // start timer
-    ulp->getTimerULP()->setSleepCycles( 2000 );
-    ulp->getTimerULP()->setConfig( TimerULP::Configuration::TIMER, true );
+    tmr->sleep->set( 2000 );
+    tmr->active->set( true );
 
     // go!
     const TickType_t delay = 1000 / portTICK_PERIOD_MS;
@@ -67,7 +68,7 @@ void app_main( void )
         ulp_edge_count += 1000000;
     }
 
-    ulp->getTimerULP()->setConfig( TimerULP::Configuration::TIMER, false );
+    tmr->active->set( false );
     delete mcu;
     printf("Exit main program\n");
 }
