@@ -45,9 +45,10 @@ void app_main( void )
     
     // select FSM to run
     ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );
-    fsm->setConfig( CoreFSM::Configuration::STARTH, true );
-    fsm->setConfig( CoreFSM::Configuration::STARTS, false );
-    fsm->setConfig( CoreFSM::Configuration::CLKFO, true );
+    fsm->startOn->set( true );
+    fsm->start->set( false );
+    fsm->clockOn->set( true );
+    fsm->clockOff->set( false );
 
     // init shared vars
     ulp_edge_count = 500; // not earlier than the program has been loaded 
@@ -57,13 +58,14 @@ void app_main( void )
     printf("Delay %d task ticks\n", delay);
     for( int i = 0; i < 6; i++ ) 
     {
-        fsm->setConfig( CoreFSM::Configuration::STARTS, true );
-        fsm->setConfig( CoreFSM::Configuration::STARTS, false );
+        fsm->start->set( true );
         vTaskDelay( delay ); // single pass run should finish within delay
         printf("Edge count %3d from ULP: %10d\n", i, ulp_edge_count);
         ulp_edge_count += 1000000;
+        fsm->start->set( false ); // it possibly can be applied right after "true"
     }
 
+    fsm->clockOn->set( false );
     delete mcu;
     printf("Exit main program\n");
 }

@@ -7,39 +7,42 @@
 
 #include "esp_bit_defs.h"
 #include "soc/rtc_cntl_reg.h"
-#include "bits/BitSetRW.hpp"
-#include "bits/BitSetWO.hpp"
+#include "bits/FlagRW.hpp"
+#include "bits/FlagWO.hpp"
 #include "bits/SubValueRW.hpp"
 
 class CoreFSM
 {
-private:
-    SubValueRW* const isz; //!< TODO undocumented init memory address size?
-    BitSetWO* const cmd; //!< TODO undocumented
-    SubValueRW* const asz; //!< TODO undocumented memory address size
-    BitSetRW* const cfg; //!< configuration register
+public:
+    /**
+     * When turned to true, it provides clock ticks for the core. Property
+     * "clockOff" should be false to allow ticks to reach the core.
+     */
+    FlagRW* const clockOn;
+    /**
+     * When turned to true, it blocks clock ticks for the core. Property
+     * "clockOn" should be true to allow ticks to reach the core.
+     */
+    FlagRW* const clockOff;
+    /**
+     * When turned to true, it allows the core to start execution of a program. This 
+     * property controls ability of the core to start only by manupulation with 
+     * "start" property. It has no effect on how and when a timer starts the core.
+     */
+    FlagRW* const startOn;
+    /**
+     * When turned from false to true, it immediately forces the core to run 
+     * program from entry point, provided that such start is allowed by "startOn"
+     * property.
+     */
+    FlagRW* const start;
+    // TODO undocumented:
+    SubValueRW* const memoryAddressSize; //!< memory address size
+    SubValueRW* const memoryAddressInit; //!< init memory address size?
+    FlagWO*     const memoryOffsetClear; //!< unknown?
 public:
     CoreFSM();
     virtual ~CoreFSM();
-public:
-    enum class Configuration : uint32_t
-    {
-        // RTC_CNTL_ULP_CP_CTRL_REG (0x00FC)
-        //TODO reserved bits found described in software, see undocumented registers in the class
-        CLKFO  = RTC_CNTL_ULP_CP_CLK_FO, //!< processor clock force on
-        CLKRST = RTC_CNTL_ULP_CP_RESET, //!< software reset the processor clock
-        STARTS = RTC_CNTL_ULP_CP_FORCE_START_TOP, //!< 0->1: to start processor by software
-        STARTH = RTC_CNTL_ULP_CP_START_TOP, //!< 1: to start processor by hardware
-    };
-public:
-    uint32_t getMemoryAddressInit() { return isz->get(); }; //TODO unspecified
-    void setMemoryAddressInit( uint32_t v ) { isz->set( v ); }; //TODO unspecified
-    uint32_t getMemoryAddressSize() { return asz->get(); }; //TODO unspecified
-    void setMemoryAddressSize( uint32_t v ) { asz->set( v ); }; //TODO unspecified
-    void clearMemoryOffset() { cmd->set( RTC_CNTL_ULP_CP_MEM_OFFST_CLR_M, true ); }; //TODO unspecified
-    bool getConfig( const Configuration test ) const { return cfg->get( static_cast<uint32_t>( test ) ); };
-    void setConfig( const Configuration mask, bool value ) { cfg->set( static_cast<uint32_t>( mask ), value ); };
-    void start();
 };
 
 #endif

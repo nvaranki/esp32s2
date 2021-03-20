@@ -48,8 +48,9 @@ void app_main( void )
     // select FSM to run
     ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );
     ulp->setConfig( CoprocessorULP::ConfigCore::DONE, 0/*static_cast<bool>( CoprocessorULP::Core::FSM )*/ ); // in: ULP trigger source
-    fsm->setConfig( CoreFSM::Configuration::STARTS, false ); // use timer instead of software to start
-    fsm->setConfig( CoreFSM::Configuration::CLKFO, true );
+    fsm->startOn->set( false ); // block software start
+    fsm->clockOn->set( true );
+    fsm->clockOff->set( false );
 
     // init shared vars
     ulp_edge_count = 500; // not earlier than the program has been loaded 
@@ -69,6 +70,7 @@ void app_main( void )
     }
 
     tmr->active->set( false );
+    fsm->clockOn->set( false );
     delete mcu;
     printf("Exit main program\n");
 }
