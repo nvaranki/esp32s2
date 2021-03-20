@@ -1,5 +1,5 @@
 idf_component_register(
-                    SRCS "ulp_example_main.cpp"
+                    SRCS "ulp_timer.cpp"
                     INCLUDE_DIRS ""
                     REQUIRES ulp mcu)
 #
