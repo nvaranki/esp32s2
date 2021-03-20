@@ -21,7 +21,12 @@ private:
     TimerULP* const timer;
     BitSetRW* const cfgCore; //!< configuration register
     BitSetRW* const cfgGPIO; //!< configuration register
-    SubValueRW* const addr; //!< ULP coprocessor PC initial address
+public:
+    /**
+     * Relative, to RTC_SLOW_MEM, an address of first program instruction,
+     * expressed in 32 bit words.
+     */
+    SubValueRW* const entry;
 public:
     CoprocessorULP();
     virtual ~CoprocessorULP();
@@ -54,16 +59,17 @@ public:
     bool getConfig( const ConfigGPIO test ) const { return cfgGPIO->get( static_cast<uint32_t>( test ) ); };
     void setConfig( const ConfigGPIO mask, bool value ) { cfgGPIO->set( static_cast<uint32_t>( mask ), value ); };
     /**
-     * @param addr offset from the beginning of RTC slow memory (RTC_SLOW_MEM).
-     * @param code compiled code.
-     * @param size of the code, in 32 bit words.
+     * @param address memory location to load binary at, usually beginning of RTC slow memory (RTC_SLOW_MEM) with optional offset.
+     * @param image compiled binary image.
+     * @param size size of the image, in bytes.
      * @return completion code.
      */
-    esp_err_t loadExecCode( const uint32_t addr, const uint8_t code[] , const size_t size );
+    esp_err_t loadExecCode( uint32_t* address, const uint8_t* image , const size_t size );
     /**
      * @param addr offset (in 32b words) from the beginning of RTC slow memory (RTC_SLOW_MEM).
      */
-    void setEntryPoint( const uint32_t addr ) { this->addr->set( addr ); }
 };
+
+#define ULP_BINARY_MAGIC_ESP32 (0x00706c75)
 
 #endif

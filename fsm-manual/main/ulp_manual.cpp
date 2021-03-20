@@ -35,13 +35,15 @@ void app_main( void )
     tmr->active->set( false ); 
     
     // load code
-    if( ulp->loadExecCode( 0, ulp_main_bin_start,
-        (ulp_main_bin_end - ulp_main_bin_start) / sizeof(uint32_t) ) != ESP_OK )
+    esp_err_t e = ulp->loadExecCode( RTC_SLOW_MEM, ulp_main_bin_start,
+        ulp_main_bin_end - ulp_main_bin_start );
+    if( e != ESP_OK )
     {
-        printf("Failed to load ULP program, aborting...\n");
-        mcu->stop();
+        printf("Failed to load ULP program (%x), aborting...\n", e);
+        delete mcu;
+        return;
     }
-    ulp->setEntryPoint( &ulp_entry - RTC_SLOW_MEM );
+    ulp->entry->set( &ulp_entry - RTC_SLOW_MEM );
     
     // select FSM to run
     ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );

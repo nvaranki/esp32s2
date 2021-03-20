@@ -1,10 +1,9 @@
-/* ULP FSM Example: timed (hardware) start of processor.
+/* ULP FSM Example: manual (software) start of processor.
 
    This file contains C code to run assembly program on the ULP. To emplloy C++ 
    API "mcu", the file itself is named as C++ file.
 
-   The program prepares ULP timer that periodically wakes up an ULP FSM to run code.
-   Main program stays on hold to let FSM to do some work few times. 
+   The program wakes up an ULP FSM to run code on a request, while it is on hold. 
    To make sure the FSM really runs, an ASM program increments public variable.
 
    Author © 2021 Nikolai Varankine
@@ -36,7 +35,8 @@ void app_main( void )
     tmr->active->set( false ); 
     
     // load code
-    esp_err_t e = ulp->loadExecCode( RTC_SLOW_MEM, ulp_main_bin_start,
+    uint32_t offset32 = 128; // 128*4=512=0x00000200
+    esp_err_t e = ulp->loadExecCode( RTC_SLOW_MEM + offset32, ulp_main_bin_start,
         ulp_main_bin_end - ulp_main_bin_start );
     if( e != ESP_OK )
     {
@@ -44,33 +44,24 @@ void app_main( void )
         delete mcu;
         return;
     }
-    ulp->entry->set( &ulp_entry - RTC_SLOW_MEM );
+    ulp->entry->set( &ulp_entry - RTC_SLOW_MEM + offset32 );
     
     // select FSM to run
     ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );
-    ulp->setConfig( CoprocessorULP::ConfigCore::DONE, 0/*static_cast<bool>( CoprocessorULP::Core::FSM )*/ ); // in: ULP trigger source
-    fsm->startOn->set( false ); // block software start
+    fsm->startOn->set( true );
     fsm->clockOn->set( true );
     fsm->clockOff->set( false );
 
     // init shared vars
     ulp_edge_count = 500; // not earlier than the program has been loaded 
 
-    // start timer
-    tmr->sleep->set( 2000 );
-    tmr->active->set( true );
-
     // go!
-    const TickType_t delay = 1000 / portTICK_PERIOD_MS;
-    printf("Delay %d task ticks\n", delay);
-    for( int i = 0; i < 6; i++ ) 
-    {
-        vTaskDelay( delay );
-        printf("Edge count %3d from ULP: %10d\n", i, ulp_edge_count);
-        ulp_edge_count += 1000000;
-    }
+    fsm->start->set( false );
+    fsm->start->set( true ); // 0->1 transition matters
+    vTaskDelay( 100 / portTICK_PERIOD_MS ); // single pass run should finish within delay
+    printf("Edge count from ULP: %10d\n", ulp_edge_count);
 
-    tmr->active->set( false );
+    fsm->start->set( false ); // it possibly can be applied right after "true"
     fsm->clockOn->set( false );
     delete mcu;
     printf("Exit main program\n");
