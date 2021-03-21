@@ -22,6 +22,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "BinaryImageULP.hpp"
 
 extern const uint8_t ulp_main_bin_start[] asm("_binary_ulp_main_bin_start");
 extern const uint8_t ulp_main_bin_end[]   asm("_binary_ulp_main_bin_end");
@@ -35,16 +36,18 @@ void app_main( void )
     MicroControllerUnit* mcu = new MicroControllerUnit();
     CoprocessorULP* ulp = mcu->getCoprocessorULP();
     CoreFSM* fsm = ulp->getCoreFSM();
-    if( ulp->loadExecCode( 0, ulp_main_bin_start,
-        (ulp_main_bin_end - ulp_main_bin_start) / sizeof(uint32_t) ) != ESP_OK )
+    BinaryImageULP image( ulp_main_bin_start, ulp_main_bin_end - ulp_main_bin_start );
+    esp_err_t e = image.loadAt( RTC_SLOW_MEM );
+    if( e != ESP_OK )
     {
-        printf("Failed to load ULP program, aborting...\n");
-        mcu->stop();
+        printf("Failed to load ULP program (%x), aborting...\n", e);
+        delete mcu;
+        return;
     }
+    ulp->entry->set( &ulp_entry - RTC_SLOW_MEM );
 
     ulp_edge_count = 500; // not earlier than program is loaded 
 
-    ulp->setEntryPoint( &ulp_entry - RTC_SLOW_MEM );
     ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );
 
     printf("MemoryAddressSize: %d\n", fsm->getMemoryAddressSize() );

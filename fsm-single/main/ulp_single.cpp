@@ -15,6 +15,7 @@
 #include "freertos/task.h"
 #include "ulp_main.h"
 #include "mcu.h"
+#include "BinaryImageULP.hpp"
 
 // ASM program placeholders
 extern const uint8_t ulp_main_bin_start[] asm("_binary_ulp_main_bin_start");
@@ -36,8 +37,8 @@ void app_main( void )
     
     // load code
     uint32_t offset32 = 128; // 128*4=512=0x00000200
-    esp_err_t e = ulp->loadExecCode( RTC_SLOW_MEM + offset32, ulp_main_bin_start,
-        ulp_main_bin_end - ulp_main_bin_start );
+    BinaryImageULP image( ulp_main_bin_start, ulp_main_bin_end - ulp_main_bin_start );
+    esp_err_t e = image.loadAt( RTC_SLOW_MEM + offset32 );
     if( e != ESP_OK )
     {
         printf("Failed to load ULP program (%x), aborting...\n", e);

@@ -58,18 +58,6 @@ public:
     void setConfig( const ConfigCore mask, bool value ) { cfgCore->set( static_cast<uint32_t>( mask ), value ); };
     bool getConfig( const ConfigGPIO test ) const { return cfgGPIO->get( static_cast<uint32_t>( test ) ); };
     void setConfig( const ConfigGPIO mask, bool value ) { cfgGPIO->set( static_cast<uint32_t>( mask ), value ); };
-    /**
-     * @param address memory location to load binary at, usually beginning of RTC slow memory (RTC_SLOW_MEM) with optional offset.
-     * @param image compiled binary image.
-     * @param size size of the image, in bytes.
-     * @return completion code.
-     */
-    esp_err_t loadExecCode( uint32_t* address, const uint8_t* image , const size_t size );
-    /**
-     * @param addr offset (in 32b words) from the beginning of RTC slow memory (RTC_SLOW_MEM).
-     */
 };
-
-#define ULP_BINARY_MAGIC_ESP32 (0x00706c75)
 
 #endif
