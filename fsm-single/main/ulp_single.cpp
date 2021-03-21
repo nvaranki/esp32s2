@@ -5,6 +5,7 @@
 
    The program wakes up an ULP FSM to run code on a request, while it is on hold. 
    To make sure the FSM really runs, an ASM program increments public variable.
+   The program is loaded into slow memory with intentional offset.
 
    Author © 2021 Nikolai Varankine
 */
