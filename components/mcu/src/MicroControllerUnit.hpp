@@ -22,4 +22,7 @@ public:
     void stop();
 };
 
+//taken from #include "esp32s2/ulp.h"
+#define RTC_SLOW_MEM ((uint32_t*) 0x50000000)       /*!< RTC slow memory, 8k size */
+
 #endif

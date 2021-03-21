@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp32/ulp.h"
 #include "ulp_main.h"
 #include "mcu.h"
 
