@@ -40,7 +40,7 @@ CoprocessorULP* MicroControllerUnit::getCoprocessorULP()
 
 WordRW* MicroControllerUnit::getRetentionRegister( size_t i ) 
 { 
-    return rr + i; //TODO index check
+    return i < 8 ? rr + i : nullptr;
 }
 
 void MicroControllerUnit::stop()
