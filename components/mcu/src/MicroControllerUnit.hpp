@@ -7,18 +7,21 @@
 
 #include "PowerManagementUnit.hpp"
 #include "CoprocessorULP.hpp"
+#include "bits/WordRW.hpp"
 
 class MicroControllerUnit
 {
 private:
     PowerManagementUnit* pmu;
     CoprocessorULP* ulp;
+    WordRW rr[8]; //TODO WordRW* const rr;
 public:
     MicroControllerUnit();
     virtual ~MicroControllerUnit();
 public:
     PowerManagementUnit* getPowerManagementUnit();
     CoprocessorULP* getCoprocessorULP();
+    WordRW* getRetentionRegister( size_t i );
     void stop();
 };
 
