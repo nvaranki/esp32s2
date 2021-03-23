@@ -21,7 +21,7 @@ PowerManagementUnit::PowerManagementUnit() :
     cocpuDone( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_COCPU_STATE_DONE_S ) ),
     cocpuSleep( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_COCPU_STATE_SLP_S ) ),
     cocpuWork( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_COCPU_STATE_SWITCH_S ) ),
-    cocpuStart( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_COCPU_STATE_START_S ) ),
+    cocpuRuns( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_COCPU_STATE_START_S ) ),
     touchDone( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_TOUCH_STATE_DONE_S ) ),
     touchSleep( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_TOUCH_STATE_SLP_S ) ),
     touchWork( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_TOUCH_STATE_SWITCH_S ) ),
@@ -55,7 +55,7 @@ PowerManagementUnit::~PowerManagementUnit()
     delete cocpuDone;
     delete cocpuSleep;
     delete cocpuWork;
-    delete cocpuStart;
+    delete cocpuRuns;
     delete touchDone;
     delete touchSleep;
     delete touchWork;

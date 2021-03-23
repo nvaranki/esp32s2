@@ -28,10 +28,30 @@ public:
     FlagRO* const ready; //!< rtc main state machine is ready to receive wake up trigger from wake up source
     FlagRO* const pll; //!< rtc main state machine is in states that pll should be running TODO undocumented
     FlagRO* const xtalISO; //!< rtc main state machine: no use any more TODO undocumented
+    /**
+     * When found true, indicates a state of ULP FSM/RISCV when it finished a program. Usually this is an
+     * inverse value of "cocpuRuns" property.
+     * TODO undocumented
+     */
     FlagRO* const cocpuDone; //!< ulp/cocpu is done TODO undocumented
-    FlagRO* const cocpuSleep; //!< ulp/cocpu is in sleep state TODO undocumented
-    FlagRO* const cocpuWork; //!< ulp/cocpu is about to working. Switch rtc main state TODO undocumented
-    FlagRO* const cocpuStart; //!< ulp/cocpu should start to work TODO undocumented
+    /**
+     * When found true, indicates a sleep state of ULP FSM/RISCV. Usually this is an
+     * inverse value of "cocpuWork" property.
+     * TODO undocumented
+     */
+    FlagRO* const cocpuSleep;
+    /**
+     * When found true, indicates a working state of ULP FSM/RISCV. Usually this is an
+     * inverse value of "cocpuSleep" property.
+     * TODO undocumented
+     */
+    FlagRO* const cocpuWork;
+    /**
+     * When found true, indicates a state of ULP FSM/RISCV when it runs a program. Usually this is an
+     * inverse value of "cocpuDone" property.
+     * TODO undocumented
+     */
+    FlagRO* const cocpuRuns;
     FlagRO* const touchDone; //!< touch is done TODO undocumented
     FlagRO* const touchSleep; //!< touch is in sleep state TODO undocumented
     FlagRO* const touchWork; //!< touch is about to working. Switch rtc main state TODO undocumented
