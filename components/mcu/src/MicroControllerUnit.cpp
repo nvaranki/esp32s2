@@ -5,7 +5,7 @@
 #include "MicroControllerUnit.hpp"
 
 MicroControllerUnit::MicroControllerUnit() :
-    pmu( nullptr ), ulp( nullptr ), 
+    cpu( nullptr ), pmu( nullptr ), ulp( nullptr ), 
     rr{ 
         WordRW( RTC_CNTL_STORE0_REG ), 
         WordRW( RTC_CNTL_STORE1_REG ), 
@@ -14,7 +14,9 @@ MicroControllerUnit::MicroControllerUnit() :
         WordRW( RTC_CNTL_STORE4_REG ), 
         WordRW( RTC_CNTL_STORE5_REG ), 
         WordRW( RTC_CNTL_STORE6_REG ), 
-        WordRW( RTC_CNTL_STORE7_REG ) }
+        WordRW( RTC_CNTL_STORE7_REG ) },
+    resetSystem( new FlagWO( RTC_CNTL_OPTIONS0_REG, RTC_CNTL_SW_SYS_RST_S ) ),
+    control( new SubValueRW( RTC_CNTL_OPTIONS0_REG, RTC_CNTL_SW_STALL_PROCPU_C0_M, RTC_CNTL_SW_STALL_PROCPU_C0_S ) )
 {
 }
 
@@ -22,6 +24,17 @@ MicroControllerUnit::~MicroControllerUnit()
 {
     if( pmu != nullptr ) delete pmu;
     if( ulp != nullptr ) delete ulp;
+    delete resetSystem;
+    delete control;
+}
+
+CoreLX7* MicroControllerUnit::getProcessor( size_t i )
+{
+    if( i != 0 )
+        return nullptr;
+    if( cpu == nullptr )
+        cpu = new CoreLX7( 0 );
+    return cpu;
 }
 
 PowerManagementUnit* MicroControllerUnit::getPowerManagementUnit()
@@ -46,4 +59,9 @@ WordRW* MicroControllerUnit::getRetentionRegister( size_t i )
 void MicroControllerUnit::stop()
 {
     //TODO not impl.
+}
+
+void MicroControllerUnit::command( Command c )
+{
+    control->set( static_cast<uint32_t>( c ) );
 }
