@@ -1,5 +1,3 @@
-// RTC_CNTL
-
 // Power management unit of the MCU.
 //
 // © 2021 Nikolai Varankine
@@ -8,8 +6,13 @@
 #define H_PowerManagementUnit
 
 #include "SleepAndWakeupController.hpp"
+#include "Trigger2.hpp"
+#include "Trigger3.hpp"
 #include "bits/FlagRO.hpp"
+#include "bits/FlagRW.hpp"
+#include "bits/FlagWO.hpp"
 #include "bits/SubValueRO.hpp"
+#include "bits/SubValueRW.hpp"
 
 class PowerManagementUnit
 {
@@ -56,14 +59,134 @@ public:
     FlagRO* const touchSleep; //!< touch is in sleep state TODO undocumented
     FlagRO* const touchWork; //!< touch is about to working. Switch rtc main state TODO undocumented
     FlagRO* const touchStart; //!< touch should start to work TODO undocumented
-    FlagRO* const digiOff; //!< digital wrap power down TODO undocumented
-    FlagRO* const digiISO; //!< digital wrap iso TODO undocumented
-    FlagRO* const wifiOff; //!< wifi wrap power down TODO undocumented
-    FlagRO* const wifiISO; //!< wifi iso TODO undocumented
-    FlagRO* const periOff; //!< rtc peripheral power down TODO undocumented
-    FlagRO* const periISO; //!< rtc peripheral iso TODO undocumented
     FlagRO* const dcdcOff; //!< External DCDC power down TODO undocumented
     FlagRO* const rom0Off; //!< rom0 power down TODO undocumented
+public:
+    /** DC-DC voltage regulators */
+    struct Regulator
+    {
+        /** RTC power domain */
+        class Rtc
+        {
+        public:
+            FlagRW* const powerUp; //!< REG force power up, to normal value
+            FlagRW* const powerDn; //!< REG force power down, to reduced value
+            SubValueRW* const biasSleep;  //!< BIAS during sleep
+            SubValueRW* const biasWakeup; //!< BIAS during wakeup
+        public:
+            Rtc();
+            virtual ~Rtc();
+        }
+        const rtc;
+        /** Digital core power domain */
+        class Digital
+        {
+        public:
+        //  FlagRW* const powerUp; //!< REG force power up
+        //  FlagRW* const powerDn; //!< REG force power down
+            SubValueRW* const biasSleep;  //!< BIAS during sleep
+            SubValueRW* const biasWakeup; //!< BIAS during wakeup
+        public:
+            Digital();
+            virtual ~Digital();
+        }
+        const dig;
+        /** SD flash power domain */
+        class Flash
+        {
+            const int xxx=1;//TODO same for SDIO flash
+        }
+        const flash;
+    }
+    const reg;
+    /** On-Off power switches */
+    struct Switch
+    {
+        class Peripherals
+        {
+        public:
+            Trigger3* const isolation;
+            Trigger3* const power;
+            FlagRW* const sleepDn;  //!< Set this bit to enable power down in sleep
+            FlagRW* const holdGPIO;  //!< Set this bit the force hold the RTC GPIOs
+        public:
+            Peripherals();
+            virtual ~Peripherals();
+        }
+        const peripherals;
+
+        class FastMemory
+        {
+        public:
+            Trigger2* const isolation;
+            Trigger2* const power;
+            FlagRW*   const sleepDn;  //!< Set this bit to enable power down in sleep
+            Trigger2* const retain;
+            FlagRW*   const followCPU;  //!< Set this bit to force power down when the CPU is powered down
+        public:
+            FastMemory();
+            virtual ~FastMemory();
+        }
+        const fastMemory;
+
+        class SlowMemory
+        {
+        public:
+            Trigger2* const isolation;
+            Trigger2* const power;
+            FlagRW*   const sleepDn;  //!< Set this bit to enable power down in sleep
+            Trigger2* const retain;
+            FlagRW*   const followCPU;  //!< Set this bit to force power down when the CPU is powered down
+        public:
+            SlowMemory();
+            virtual ~SlowMemory();
+        }
+        const slowMemory;
+
+        class Digital
+        {
+        public:
+            Trigger3* const isolation;
+            Trigger3* const power;
+            FlagRW*   const sleepDn;  //!< Set this bit to enable power down in sleep
+            Trigger2* const memory; //!< FPU/FPD the memories in sleep
+        public:
+            Digital();
+            virtual ~Digital();
+        }
+        const digital;
+        
+        class DigitalGPIO
+        {
+        public:
+            Trigger2* const isolation;
+            Trigger2* const hold;
+            // FlagRW* const isolationOff; //!< Set this bit to disable the force isolation
+            // FlagRW* const isolationOn;  //!< Set this bit to force isolation
+            // FlagRW* const holdOff;  //!< Set this bit the force unhold the digital GPIOs
+            // FlagRW* const holdOn;  //!< Set this bit the force hold the digital GPIOs
+            FlagWO* const holdAutoOff;  //!< Set this bit to clear the auto-hold enabler
+            FlagRW* const holdAutoOn;  //!< Set this bit to allow enter the auto-hold state
+            FlagRO* const holdAuto;  //!< Indicates the auto-hold status of the digital GPIOs
+        public:
+            DigitalGPIO();
+            virtual ~DigitalGPIO();
+        }
+        const digitalGPIO;
+        
+        class WiFi
+        {
+        public:
+            Trigger3* const isolation;
+            Trigger3* const power; //!< controls digital Wi-Fi subsystem
+            FlagRW* const sleepDn; //!< Set this bit to enable power down in sleep
+        public:
+            WiFi();
+            virtual ~WiFi();
+        }
+        const wifi;
+    }
+    const ctrl;
 public:
     PowerManagementUnit();
     virtual ~PowerManagementUnit();
