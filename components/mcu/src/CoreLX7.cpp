@@ -53,3 +53,13 @@ void CoreLX7::command( CoreLX7::Command c )
 {
     control->set( static_cast<uint32_t>( c ) );
 }
+
+void CoreLX7::setBootVectorRTC( CoreLX7::BootVectorRTC v ) 
+{ 
+    staticVector->set( static_cast<bool>( v ) ); 
+}
+    
+CoreLX7::BootVectorRTC CoreLX7::getBootVectorRTC() const 
+{ 
+    return staticVector->get() ? BootVectorRTC::FAST : BootVectorRTC::SLOW; 
+}

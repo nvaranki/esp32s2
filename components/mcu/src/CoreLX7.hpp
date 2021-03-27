@@ -13,9 +13,10 @@
 
 class CoreLX7
 {
+private:
+    FlagRW* const staticVector; //!< Selects the CPU Core 0 (PRO) static boot vector
+//  FlagRW* const staticVector; //!< Selects the CPU Core 1 (APP) static boot vector TODO unsupported
 public:
-    FlagRW* const staticVector; //!< Selects the CPU Core 0 (PRO) static vector
-//  FlagRW* const staticVector; //!< Selects the CPU Core 1 (APP) static vector TODO unsupported
     /**
      * When set to true, immediately resets this particular CPU core only. 
      * Other domains stay unaffected. Once such reset is released, CPU core will 
@@ -62,9 +63,16 @@ public:
         CLEAR = 0x00, //!< clears command register
         STALL = 0x21, //!< stalls the CPU Core
     };
+    enum class BootVectorRTC : bool
+    {
+        SLOW = 0, //!< Using RTC slow memory from 0x50000000
+        FAST = 1, //!< Using ROM from 0x40000400, then jump to RTC fast memory at RTC_CNTL_STORE6_REG
+    };
 public:
     ResetCause getResetCause();
     void command( Command c );
+    void setBootVectorRTC( BootVectorRTC v );
+    BootVectorRTC getBootVectorRTC() const;
 };
 
 #endif
