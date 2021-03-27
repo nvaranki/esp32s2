@@ -5,14 +5,16 @@
 #ifndef H_MicroControllerUnit
 #define H_MicroControllerUnit
 
+#include "soc/extmem_reg.h"
 #include "PowerManagementUnit.hpp"
 #include "CoprocessorULP.hpp"
 #include "CoreLX7.hpp"
 #include "bits/BitSetRW.hpp"
-#include "bits/WordRW.hpp"
+#include "bits/FlagRW.hpp"
 #include "bits/FlagWO.hpp"
 #include "bits/SubValueRO.hpp"
 #include "bits/SubValueRW.hpp"
+#include "bits/WordRW.hpp"
 
 class MicroControllerUnit
 {
@@ -44,6 +46,16 @@ public:
         CLEAR = 0x0,
         STALL = 0x2, //!< setting this bit stalls the CPU Core, see CoreLX7::Command::STALL
     };
+public:
+    class ConfigureCache
+    {
+    public:
+        FlagRW* const debug; //!< activate the cache track function,  1: enable  0: disable
+    public:
+        ConfigureCache();
+        virtual ~ConfigureCache();
+    }
+    const configure;
 public:
     CoreLX7* getProcessor( size_t i );
     PowerManagementUnit* getPowerManagementUnit();
