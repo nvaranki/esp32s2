@@ -121,7 +121,7 @@ public:
             Trigger2* const isolation;
             Trigger2* const power;
             FlagRW*   const sleepDn;  //!< Set this bit to enable power down in sleep
-            Trigger2* const retain;
+            Trigger2* const retain; //!< force retain (on=1) or not retain(off=1) the RTC memory
             FlagRW*   const followCPU;  //!< Set this bit to force power down when the CPU is powered down
         public:
             FastMemory();
@@ -135,7 +135,7 @@ public:
             Trigger2* const isolation;
             Trigger2* const power;
             FlagRW*   const sleepDn;  //!< Set this bit to enable power down in sleep
-            Trigger2* const retain;
+            Trigger2* const retain; //!< force retain (on=1) or not retain(off=1) the RTC memory
             FlagRW*   const followCPU;  //!< Set this bit to force power down when the CPU is powered down
         public:
             SlowMemory();
@@ -148,7 +148,7 @@ public:
         public:
             Trigger3* const isolation;
             Trigger3* const power;
-            FlagRW*   const sleepDn;  //!< Set this bit to enable power down in sleep
+            FlagRW*   const sleepDn; //!< 1: allow PD to deep/hibernate sleep, 0: stay PU to light/modem sleep and active state
             Trigger2* const memory; //!< FPU/FPD the memories in sleep
         public:
             Digital();
@@ -156,15 +156,11 @@ public:
         }
         const digital;
         
-        class DigitalGPIO
+        class DigitalGPIO // not a power domain
         {
         public:
             Trigger2* const isolation;
             Trigger2* const hold;
-            // FlagRW* const isolationOff; //!< Set this bit to disable the force isolation
-            // FlagRW* const isolationOn;  //!< Set this bit to force isolation
-            // FlagRW* const holdOff;  //!< Set this bit the force unhold the digital GPIOs
-            // FlagRW* const holdOn;  //!< Set this bit the force hold the digital GPIOs
             FlagWO* const holdAutoOff;  //!< Set this bit to clear the auto-hold enabler
             FlagRW* const holdAutoOn;  //!< Set this bit to allow enter the auto-hold state
             FlagRO* const holdAuto;  //!< Indicates the auto-hold status of the digital GPIOs
@@ -185,6 +181,67 @@ public:
             virtual ~WiFi();
         }
         const wifi;
+        
+        class WiFiRX // not a power domain
+        {
+        public:
+            Trigger2* const powerEST;
+            Trigger2* const powerROT;
+            Trigger2* const powerVIT;
+            Trigger2* const powerDEMAP;
+        public:
+            WiFiRX();
+            virtual ~WiFiRX();
+        }
+        const wifiRF;
+
+        class WiFiRF // not a power domain
+        {
+        public:
+            Trigger2* const powerIQ;
+            Trigger2* const powerTX;
+        public:
+            WiFiRF();
+            virtual ~WiFiRF();
+        }
+        const wifiRX;
+
+        class SerialI2S // not a power domain
+        {
+        public:
+            FlagRW*   const clockDMA; //!< DMA RAM clock
+            Trigger2* const powerDMA; //!< DMA FIFO RAM power
+            Trigger2* const powerPLC; //!< I2S memory power
+            Trigger2* const powerFIFO; //!< FIFO power
+        public:
+            SerialI2S();
+            virtual ~SerialI2S();
+        }
+        const i2s;
+        
+        class BusAPB // not a power domain
+        {
+        public:
+            Trigger2* const powerDC;
+            Trigger2* const powerPBUS;
+            Trigger2* const powerAGC;
+        public:
+            BusAPB();
+            virtual ~BusAPB();
+        }
+        const apb;
+        
+        class BaseBand // not a power domain
+        {
+        public:
+            Trigger2* const powerFFT;
+            Trigger2* const powerDC;
+        public:
+            BaseBand();
+            virtual ~BaseBand();
+        }
+        const bband;
+        
     }
     const ctrl;
 public:

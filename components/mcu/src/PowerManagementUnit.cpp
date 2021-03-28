@@ -2,6 +2,11 @@
 //
 // © 2021 Nikolai Varankine
 
+#include "soc/apb_ctrl_reg.h"
+#include "soc/bb_reg.h"
+#include "soc/fe_reg.h"
+#include "soc/i2s_reg.h"
+#include "soc/nrx_reg.h"
 #include "PowerManagementUnit.hpp"
 
 PowerManagementUnit::PowerManagementUnit() :
@@ -267,4 +272,130 @@ PowerManagementUnit::Switch::WiFi::~WiFi()
     delete power->off;
     delete power;
     delete sleepDn;
+}
+
+PowerManagementUnit::Switch::WiFiRX::WiFiRX() :
+    powerEST( new Trigger2(
+        new FlagRW( NRXPD_CTRL, NRX_CHAN_EST_FORCE_PU_S ),
+        new FlagRW( NRXPD_CTRL, NRX_CHAN_EST_FORCE_PD_S ) ) ),
+    powerROT( new Trigger2(
+        new FlagRW( NRXPD_CTRL, NRX_RX_ROT_FORCE_PU_S ),
+        new FlagRW( NRXPD_CTRL, NRX_RX_ROT_FORCE_PD_S ) ) ),
+    powerVIT( new Trigger2(
+        new FlagRW( NRXPD_CTRL, NRX_VIT_FORCE_PU_S ),
+        new FlagRW( NRXPD_CTRL, NRX_VIT_FORCE_PD_S ) ) ),
+    powerDEMAP( new Trigger2(
+        new FlagRW( NRXPD_CTRL, NRX_DEMAP_FORCE_PU_S ),
+        new FlagRW( NRXPD_CTRL, NRX_DEMAP_FORCE_PD_S ) ) )
+{
+}
+
+PowerManagementUnit::Switch::WiFiRX::~WiFiRX()
+{
+    delete powerEST->on;
+    delete powerEST->off;
+    delete powerEST;
+    delete powerROT->on;
+    delete powerROT->off;
+    delete powerROT;
+    delete powerVIT->on;
+    delete powerVIT->off;
+    delete powerVIT;
+    delete powerDEMAP->on;
+    delete powerDEMAP->off;
+    delete powerDEMAP;
+}
+
+PowerManagementUnit::Switch::WiFiRF::WiFiRF() :
+    powerIQ( new Trigger2(
+        new FlagRW( FE_GEN_CTRL, FE_IQ_EST_FORCE_PU_S ),
+        new FlagRW( FE_GEN_CTRL, FE_IQ_EST_FORCE_PD_S ) ) ),
+    powerTX( new Trigger2(
+        new FlagRW( FE2_TX_INTERP_CTRL, FE2_TX_INF_FORCE_PU_S ),
+        new FlagRW( FE2_TX_INTERP_CTRL, FE2_TX_INF_FORCE_PD_S ) ) )
+{
+}
+
+PowerManagementUnit::Switch::WiFiRF::~WiFiRF()
+{
+    delete powerIQ->on;
+    delete powerIQ->off;
+    delete powerIQ;
+    delete powerTX->on;
+    delete powerTX->off;
+    delete powerTX;
+}
+
+PowerManagementUnit::Switch::SerialI2S::SerialI2S() :
+    clockDMA  ( new FlagRW( I2S_PD_CONF_REG(0), I2S_DMA_RAM_CLK_FO_S ) ),
+    powerDMA( new Trigger2(
+        new FlagRW( I2S_PD_CONF_REG(0), I2S_DMA_RAM_FORCE_PU_S ),
+        new FlagRW( I2S_PD_CONF_REG(0), I2S_DMA_RAM_FORCE_PD_S ) ) ),
+    powerPLC( new Trigger2(
+        new FlagRW( I2S_PD_CONF_REG(0), I2S_PLC_MEM_FORCE_PU_S ),
+        new FlagRW( I2S_PD_CONF_REG(0), I2S_DMA_RAM_FORCE_PD_S ) ) ),
+    powerFIFO( new Trigger2(
+        new FlagRW( I2S_PD_CONF_REG(0), I2S_FIFO_FORCE_PU_S ),
+        new FlagRW( I2S_PD_CONF_REG(0), I2S_FIFO_FORCE_PD_S ) ) )
+{
+}
+
+PowerManagementUnit::Switch::SerialI2S::~SerialI2S()
+{
+    delete clockDMA;
+    delete powerDMA->on;
+    delete powerDMA->off;
+    delete powerDMA;
+    delete powerPLC->on;
+    delete powerPLC->off;
+    delete powerPLC;
+    delete powerFIFO->on;
+    delete powerFIFO->off;
+    delete powerFIFO;
+}
+
+PowerManagementUnit::Switch::BusAPB::BusAPB() :
+    powerDC( new Trigger2(
+        new FlagRW( APB_CTRL_FRONT_END_MEM_PD_REG, APB_CTRL_DC_MEM_FORCE_PU_S ),
+        new FlagRW( APB_CTRL_FRONT_END_MEM_PD_REG, APB_CTRL_DC_MEM_FORCE_PD_S ) ) ),
+    powerPBUS( new Trigger2(
+        new FlagRW( APB_CTRL_FRONT_END_MEM_PD_REG, APB_CTRL_PBUS_MEM_FORCE_PU_S ),
+        new FlagRW( APB_CTRL_FRONT_END_MEM_PD_REG, APB_CTRL_PBUS_MEM_FORCE_PD_S ) ) ),
+    powerAGC( new Trigger2(
+        new FlagRW( APB_CTRL_FRONT_END_MEM_PD_REG, APB_CTRL_AGC_MEM_FORCE_PU_S ),
+        new FlagRW( APB_CTRL_FRONT_END_MEM_PD_REG, APB_CTRL_AGC_MEM_FORCE_PD_S ) ) )
+{
+}
+
+PowerManagementUnit::Switch::BusAPB::~BusAPB()
+{
+    delete powerDC->on;
+    delete powerDC->off;
+    delete powerDC;
+    delete powerPBUS->on;
+    delete powerPBUS->off;
+    delete powerPBUS;
+    delete powerAGC->on;
+    delete powerAGC->off;
+    delete powerAGC;
+}
+
+PowerManagementUnit::Switch::BaseBand::BaseBand() :
+    powerFFT( new Trigger2(
+        new FlagRW( BBPD_CTRL, BB_FFT_FORCE_PU_S ),
+        new FlagRW( BBPD_CTRL, BB_FFT_FORCE_PD_S ) ) ),
+    powerDC( new Trigger2(
+        new FlagRW( BBPD_CTRL, BB_DC_EST_FORCE_PU_S ),
+        new FlagRW( BBPD_CTRL, BB_DC_EST_FORCE_PD_S ) ) )
+{
+}
+
+PowerManagementUnit::Switch::BaseBand::~BaseBand()
+{
+    delete powerFFT->on;
+    delete powerFFT->off;
+    delete powerFFT;
+    delete powerDC->on;
+    delete powerDC->off;
+    delete powerDC;
 }
