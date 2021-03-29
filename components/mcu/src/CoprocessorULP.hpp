@@ -19,7 +19,7 @@ private:
     CoreFSM* const fsm;
     CoreRISCV* const riscv;
     TimerULP* const timer;
-    BitSetRW* const cfgCore; //!< configuration register
+//  BitSetRW* const cfgCore; //!< configuration register
     BitSetRW* const cfgGPIO; //!< configuration register
 public:
     /**
@@ -36,13 +36,6 @@ public:
         RISCV = false,
         FSM   = true,
     };
-    enum class ConfigCore : uint32_t
-    {
-        // RTC_CNTL_COCPU_CTRL_REG (0x0100)
-        // see missing bits and values in separate registers
-        CORE  = RTC_CNTL_COCPU_SEL, //!< 0: select ULP-RISC-V; 1(default): select ULP-FSM
-        DONE  = RTC_CNTL_COCPU_DONE_FORCE, //!< 0: select ULP-FSM DONE signal; 1: select ULP-RISC-V DONE signal
-    };
     enum class ConfigGPIO : uint32_t
     {
         // RTC_CNTL_ULP_CP_TIMER_REG (0x00F8)
@@ -54,8 +47,6 @@ public:
     CoreFSM* getCoreFSM() { return fsm; }
     CoreRISCV* getCoreRISCV() { return riscv; }
     TimerULP* getTimerULP() { return timer; }
-    bool getConfig( const ConfigCore test ) const { return cfgCore->get( static_cast<uint32_t>( test ) ); };
-    void setConfig( const ConfigCore mask, bool value ) { cfgCore->set( static_cast<uint32_t>( mask ), value ); };
     bool getConfig( const ConfigGPIO test ) const { return cfgGPIO->get( static_cast<uint32_t>( test ) ); };
     void setConfig( const ConfigGPIO mask, bool value ) { cfgGPIO->set( static_cast<uint32_t>( mask ), value ); };
 };

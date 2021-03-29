@@ -82,8 +82,8 @@ void app_main( void )
         printf( "Edge count: %10d\n", ulp_edge_count );
         
         // select FSM to run
-        ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );
-        ulp->setConfig( CoprocessorULP::ConfigCore::DONE, 0/*static_cast<bool>( CoprocessorULP::Core::FSM )*/ ); // in: ULP trigger source
+        fsm->selectForExec();
+        fsm->selectForDone();
         fsm->startOn->set( false ); // block software start of ULP
         fsm->clockOn->set( true );
         fsm->clockOff->set( false );

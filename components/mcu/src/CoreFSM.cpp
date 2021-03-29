@@ -6,6 +6,8 @@
 #include "CoreFSM.hpp"
 
 CoreFSM::CoreFSM() :
+    exec( new FlagRW( RTC_CNTL_COCPU_CTRL_REG, RTC_CNTL_COCPU_SEL_S ) ),
+    done( new FlagRW( RTC_CNTL_COCPU_CTRL_REG, RTC_CNTL_COCPU_DONE_FORCE_S ) ),
     clockOn( new FlagRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_CLK_FO_S ) ),
     clockOff( new FlagRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_RESET_S ) ),
     startOn( new FlagRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_START_TOP_S ) ),
@@ -18,6 +20,8 @@ CoreFSM::CoreFSM() :
 
 CoreFSM::~CoreFSM()
 {
+    delete exec;
+    delete done;
     delete clockOn;
     delete clockOff;
     delete startOn;

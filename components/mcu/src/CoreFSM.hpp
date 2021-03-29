@@ -13,6 +13,9 @@
 
 class CoreFSM
 {
+private:
+    FlagRW* const exec; //!< 1(default): select ULP-FSM
+    FlagRW* const done; //!< 0: select ULP-FSM DONE signal
 public:
     /**
      * When turned to true, it provides clock ticks for the core. Property
@@ -43,6 +46,11 @@ public:
 public:
     CoreFSM();
     virtual ~CoreFSM();
+public:
+    /** Selects this core to execute program. */
+    void selectForExec() { exec->set( true ); }
+    /** Selects this core to send DONE signal to ULP timer after the program has been finished. */
+    void selectForDone() { done->set( false ); }
 };
 
 #endif

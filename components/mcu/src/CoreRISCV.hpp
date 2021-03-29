@@ -7,10 +7,14 @@
 
 #include "esp_bit_defs.h"
 #include "bits/BitSetRW.hpp"
+#include "bits/FlagRW.hpp"
 #include "bits/SubValueRW.hpp"
 
 class CoreRISCV
 {
+private:
+    FlagRW* const exec; //!< 0: select ULP-RISC-
+    FlagRW* const done; //!< 1: select ULP-RISC-V DONE signal
 private:
     BitSetRW* const cfg; //!< configuration register
     SubValueRW* const s2r; //!< Time from startup to pull down reset.
@@ -33,6 +37,11 @@ public:
 public:
     bool getConfig( const Configuration test ) const { return cfg->get( static_cast<uint32_t>( test ) ); };
     void setConfig( const Configuration mask, bool value ) { cfg->set( static_cast<uint32_t>( mask ), value ); };
+public:
+    /** Selects this core to execute program. */
+    void selectForExec() { exec->set( false ); }
+    /** Selects this core to send DONE signal to ULP timer after the program has been finished. */
+    void selectForDone() { done->set( true ); }
 };
 
 #endif
