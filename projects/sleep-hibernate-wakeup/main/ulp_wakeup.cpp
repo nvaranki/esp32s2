@@ -66,19 +66,20 @@ void app_main( void )
         swc->wakeup.setEnabled( SleepAndWakeupController::Peripherals::TIMER, true );
 
         // allow auto PD for everything
+        pmu->ctrl.wifi.sleepDn->on();
         pmu->ctrl.digital.sleepDn->on();
+        //TODO clocks?
         pmu->ctrl.slowMemory.sleepDn->on();
         pmu->ctrl.fastMemory.sleepDn->off(); //TODO rather is works but "E (46) boot: Fast booting is not successful" //on();
-        pmu->ctrl.peripherals.sleepDn->on(); // that differs hibernate from deep sleep
-        pmu->ctrl.wifi.sleepDn->on();
-        //TODO clocks?
+        pmu->ctrl.peripherals.sleepDn->on();
 
         // reset forced power ON
+        pmu->ctrl.wifi.power->on->off();
         pmu->ctrl.digital.power->on->off();
+        //TODO clocks?
         pmu->ctrl.slowMemory.power->on->off();
         pmu->ctrl.fastMemory.power->on->off();
         pmu->ctrl.peripherals.power->on->off();
-        pmu->ctrl.wifi.power->on->off();
         
         // manage isolation of outputs
         pmu->ctrl.slowMemory.isolation->off->off();
