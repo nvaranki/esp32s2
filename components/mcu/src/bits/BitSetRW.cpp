@@ -16,3 +16,11 @@ void BitSetRW::set( const uint32_t mask, const bool value )
             REG_CLR_BIT( this->addr, m );
     }
 }
+
+void BitSetRW::setAll( const bool value )
+{
+    if( value )
+        *this->addr |= this->view;
+    else
+        *this->addr &= ~this->view;
+}

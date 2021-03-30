@@ -11,6 +11,7 @@
 
 PowerManagementUnit::PowerManagementUnit() :
     swc( nullptr ),
+    timer( nullptr ),
     status( new SubValueRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_MAIN_STATE_M, RTC_CNTL_MAIN_STATE_S) ),
     idle( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_MAIN_STATE_IN_IDLE_S ) ),
     sleep( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_MAIN_STATE_IN_SLP_S ) ),
@@ -38,6 +39,7 @@ PowerManagementUnit::PowerManagementUnit() :
 
 PowerManagementUnit::~PowerManagementUnit()
 {
+    if( timer != nullptr ) delete timer;
     if( swc  != nullptr ) delete swc;
     delete status;
     delete idle;
@@ -398,4 +400,10 @@ PowerManagementUnit::Switch::BaseBand::~BaseBand()
     delete powerDC->on;
     delete powerDC->off;
     delete powerDC;
+}
+
+TimerRTC* PowerManagementUnit::getTimer()
+{
+    if( timer == nullptr ) timer = new TimerRTC();
+    return timer;
 }

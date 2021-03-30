@@ -6,6 +6,7 @@
 #define H_PowerManagementUnit
 
 #include "SleepAndWakeupController.hpp"
+#include "TimerRTC.hpp"
 #include "Trigger2.hpp"
 #include "Trigger3.hpp"
 #include "bits/FlagRO.hpp"
@@ -17,6 +18,7 @@
 class PowerManagementUnit
 {
 private:
+    TimerRTC* timer;
     SleepAndWakeupController* swc;
 public:
     SubValueRO* const status; //!< rtc main state machine status TODO undocumented
@@ -248,6 +250,7 @@ public:
     PowerManagementUnit();
     virtual ~PowerManagementUnit();
 public:
+    TimerRTC* getTimer();
     SleepAndWakeupController* getSleepAndWakeupController();
     FastClockRTC* getFastClockRTC();
     SlowClockRTC* getSlowClockRTC();

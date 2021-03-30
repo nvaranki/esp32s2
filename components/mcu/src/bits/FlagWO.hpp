@@ -24,6 +24,14 @@ public:
      * @param value to be set
      */
     void set( const bool value );
+    /**
+     * Sets current value to true.
+     */
+    inline void on() { set( true ); };
+    /**
+     * Sets current value to false.
+     */
+    inline void off() { set( false ); };
 };
 
 #endif

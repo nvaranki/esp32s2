@@ -23,6 +23,11 @@ public:
      * @param value true if all specified bits should be set to 1, false to clear them.
      */
     void set( const uint32_t mask, const bool value );
+    /**
+     * Sets or clears all participating bits same way.
+     * @param value true if all bits should be set to 1, false to clear them.
+     */
+    void setAll( const bool value );
 };
 
 #endif
