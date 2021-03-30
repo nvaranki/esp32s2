@@ -7,15 +7,15 @@
 MicroControllerUnit::MicroControllerUnit() :
     cpu( nullptr ), pmu( nullptr ), ulp( nullptr ), 
     /** Registers that always are powered up */
-    rr{ 
-        WordRW( RTC_CNTL_STORE0_REG ), 
-        WordRW( RTC_CNTL_STORE1_REG ), 
-        WordRW( RTC_CNTL_STORE2_REG ), 
-        WordRW( RTC_CNTL_STORE3_REG ), 
-        WordRW( RTC_CNTL_STORE4_REG ), 
-        WordRW( RTC_CNTL_STORE5_REG ), 
-        WordRW( RTC_CNTL_STORE6_REG ), // RTC fast memory boot: CRC
-        WordRW( RTC_CNTL_STORE7_REG ), // RTC fast memory boot: entry address within fast memory 
+    rr{ // usage info from "esp32s2/rom/rtc.h"
+        WordRW( RTC_CNTL_STORE0_REG ), // Reserved
+        WordRW( RTC_CNTL_STORE1_REG ), // RTC_SLOW_CLK calibration value
+        WordRW( RTC_CNTL_STORE2_REG ), // Boot time, low word
+        WordRW( RTC_CNTL_STORE3_REG ), // Boot time, high word
+        WordRW( RTC_CNTL_STORE4_REG ), // External XTAL frequency
+        WordRW( RTC_CNTL_STORE5_REG ), // APB bus frequency
+        WordRW( RTC_CNTL_STORE6_REG ), // FAST_RTC_MEMORY_ENTRY TODO ?! RTC fast memory boot: CRC
+        WordRW( RTC_CNTL_STORE7_REG ), // FAST_RTC_MEMORY_CRC   TODO ?! RTC fast memory boot: entry address within fast memory 
         },
     resetSystem( new FlagWO( RTC_CNTL_OPTIONS0_REG, RTC_CNTL_SW_SYS_RST_S ) ),
     control( new SubValueRW( RTC_CNTL_OPTIONS0_REG, RTC_CNTL_SW_STALL_PROCPU_C0_M, RTC_CNTL_SW_STALL_PROCPU_C0_S ) )

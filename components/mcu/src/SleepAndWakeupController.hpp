@@ -32,7 +32,7 @@ public:
         EXT0    = BIT0,  //!< EXT0 GPIO wakeup
         EXT1    = BIT1,  //!< EXT1 GPIO wakeup
         GPIO    = BIT2,  //!< GPIO wakeup (light sleep only)
-        TIMER   = BIT3,  //!< Timer wakeup
+        TIMER   = BIT3,  //!< RTC alarm timer wakeup
         SDIO    = BIT4,  //!< SDIO wakeup (light sleep only)
         WIFI    = BIT5,  //!< WIFI wakeup (light sleep only)
         UART0   = BIT6,  //!< UART0 wakeup (light sleep only)
