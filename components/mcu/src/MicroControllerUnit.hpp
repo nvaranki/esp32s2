@@ -9,6 +9,7 @@
 #include "PowerManagementUnit.hpp"
 #include "CoprocessorULP.hpp"
 #include "CoreLX7.hpp"
+#include "TimerGroup.hpp"
 #include "bits/BitSetRW.hpp"
 #include "bits/FlagRW.hpp"
 #include "bits/FlagWO.hpp"
@@ -35,6 +36,8 @@ public:
     //  * RTC and analog domain stays unaffected.
     //  */
     //TODO FlagWO* const resetCore;
+    TimerGroup* const tg0;
+    TimerGroup* const tg1;
 private:
     SubValueRW* const control;
 public:

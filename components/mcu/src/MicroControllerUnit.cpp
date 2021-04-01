@@ -18,6 +18,8 @@ MicroControllerUnit::MicroControllerUnit() :
         WordRW( RTC_CNTL_STORE7_REG ), // FAST_RTC_MEMORY_CRC   TODO ?! RTC fast memory boot: entry address within fast memory 
         },
     resetSystem( new FlagWO( RTC_CNTL_OPTIONS0_REG, RTC_CNTL_SW_SYS_RST_S ) ),
+    tg0( new TimerGroup( 0 ) ),
+    tg1( new TimerGroup( 1 ) ),
     control( new SubValueRW( RTC_CNTL_OPTIONS0_REG, RTC_CNTL_SW_STALL_PROCPU_C0_M, RTC_CNTL_SW_STALL_PROCPU_C0_S ) )
 //  control( new SubValueRW( RTC_CNTL_OPTIONS0_REG, RTC_CNTL_SW_STALL_APPCPU_C0_M, RTC_CNTL_SW_STALL_APPCPU_C0_S ) )
 {
@@ -28,6 +30,8 @@ MicroControllerUnit::~MicroControllerUnit()
     if( pmu != nullptr ) delete pmu;
     if( ulp != nullptr ) delete ulp;
     delete resetSystem;
+    delete tg0;
+    delete tg1;
     delete control;
 }
 
