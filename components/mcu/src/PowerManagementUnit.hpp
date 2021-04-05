@@ -6,6 +6,9 @@
 #define H_PowerManagementUnit
 
 #include "SleepAndWakeupController.hpp"
+#include "FastClockRTC.hpp"
+#include "MemoryClockRTC.hpp"
+#include "SlowClockRTC.hpp"
 #include "TimerRTC.hpp"
 #include "Trigger2.hpp"
 #include "Trigger3.hpp"
@@ -20,6 +23,9 @@ class PowerManagementUnit
 private:
     TimerRTC* timer;
     SleepAndWakeupController* swc;
+    FastClockRTC*   lpfc;
+    SlowClockRTC*   lpsc;
+    MemoryClockRTC* lpmc;
 public:
     SubValueRO* const status; //!< rtc main state machine status TODO undocumented
     FlagRO* const idle; //!< rtc main state machine is in idle state TODO undocumented
@@ -254,6 +260,7 @@ public:
     SleepAndWakeupController* getSleepAndWakeupController();
     FastClockRTC* getFastClockRTC();
     SlowClockRTC* getSlowClockRTC();
+    MemoryClockRTC* getMemoryClockRTC();
     Oscillator32K* getOscillator32K();
     Oscillator8M*  getOscillator8M();
     OscillatorRTC* getOscillatorRTC();

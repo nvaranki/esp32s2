@@ -12,6 +12,7 @@
 PowerManagementUnit::PowerManagementUnit() :
     swc( nullptr ),
     timer( nullptr ),
+    lpfc( nullptr ), lpsc( nullptr ), lpmc( nullptr ), 
     status( new SubValueRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_MAIN_STATE_M, RTC_CNTL_MAIN_STATE_S) ),
     idle( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_MAIN_STATE_IN_IDLE_S ) ),
     sleep( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_MAIN_STATE_IN_SLP_S ) ),
@@ -41,6 +42,9 @@ PowerManagementUnit::~PowerManagementUnit()
 {
     if( timer != nullptr ) delete timer;
     if( swc  != nullptr ) delete swc;
+    if( lpfc != nullptr ) delete lpfc;
+    if( lpsc != nullptr ) delete lpsc;
+    if( lpmc != nullptr ) delete lpmc;
     delete status;
     delete idle;
     delete sleep;
@@ -70,6 +74,27 @@ SleepAndWakeupController* PowerManagementUnit::getSleepAndWakeupController()
     if( swc == nullptr )
         swc = new SleepAndWakeupController();
     return swc;
+}
+
+FastClockRTC* PowerManagementUnit::getFastClockRTC()
+{
+    if( lpfc == nullptr )
+        lpfc = new FastClockRTC();
+    return lpfc;
+}
+
+SlowClockRTC* PowerManagementUnit::getSlowClockRTC()
+{
+    if( lpsc == nullptr )
+        lpsc = new SlowClockRTC();
+    return lpsc;
+}
+
+MemoryClockRTC* PowerManagementUnit::getMemoryClockRTC()
+{
+    if( lpmc == nullptr )
+        lpmc = new MemoryClockRTC();
+    return lpmc;
 }
 
 PowerManagementUnit::Regulator::Rtc::Rtc() :
