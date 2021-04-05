@@ -27,6 +27,10 @@ public:
      * @return current value.
      */
     uint32_t get() const;
+    /**
+     * @return maximum allowed value.
+     */
+    uint32_t max() const { return view >> shift; };
 };
 
 #endif
