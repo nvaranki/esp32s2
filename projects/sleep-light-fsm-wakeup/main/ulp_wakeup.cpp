@@ -103,6 +103,7 @@ void app_main( void )
         // allow Xtensa wakeup by FSM
         swc->wakeup.enable->setAll( false );
         swc->wakeup.setEnabled( SleepAndWakeupController::Peripherals::FSM, true );
+        printf( "Wake-up for 0x%08x\n", swc->wakeup.enable->getAll() );
 
         // start ULP timer
         tmr->sleep->set( 50 ); //TODO 75+: rst:0x8 (TG1WDT_SYS_RST),boot:0x8 (SPI_FAST_FLASH_BOOT)
@@ -110,13 +111,13 @@ void app_main( void )
     }
     else
     {
-        printf( "\nUnexpected wakeup cause %08x\n", cause );
+        printf( "\nUnexpected reset; wakeup cause %08x\n", cause );
     }
     
     while( ulp_wake_count < 6 )
     {
         // Get ready to sleep
-        printf( "Ready to sleep\n\n" );
+        printf( "Ready to sleep 0x%08x\n\n", swc->wakeup.enable->getAll() );
         fflush(stdout);
         // suspend_uart(CONFIG_ESP_CONSOLE_UART_NUM);
         vTaskDelay( 20 );
@@ -126,6 +127,7 @@ void app_main( void )
         swc->sleep.start->on(); // returns after wakeup from there
 
         // wait here until wakeup
+        printf( "Wake-up 0x%08x\n\n", cause = swc->wakeup.cause->getAll() );
         // resume_uart(CONFIG_ESP_CONSOLE_UART_NUM);
         while (GET_PERI_REG_MASK(RTC_CNTL_INT_RAW_REG,
                              RTC_CNTL_SLP_REJECT_INT_RAW | RTC_CNTL_SLP_WAKEUP_INT_RAW) == 0) {

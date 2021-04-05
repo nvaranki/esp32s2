@@ -22,7 +22,6 @@
 #include "BinaryImageULP.hpp"
 #include "SleepAndWakeupController.hpp"
 
-static void printf( const PowerManagementUnit::Switch::SlowMemory* sm );
 static void uart_tx_wait_idle(uint8_t uart_no);
 
 // ASM program placeholders
@@ -63,7 +62,7 @@ void app_main( void )
         printf( "\nMCU reset 0x%02x\n", (uint32_t) cpu->getResetCause() );
 
         // cancel next timer run if any
-        tmr->active->set( false ); 
+        tmr->active->off(); 
 
         // load code
         BinaryImageULP image( ulp_main_bin_start, ulp_main_bin_end - ulp_main_bin_start );
@@ -88,16 +87,26 @@ void app_main( void )
         fsm->clockOn->set( true );
         fsm->clockOff->set( false );
 
-        // ensure power ON for RTC slow memory
-        printf( &pmu->ctrl.slowMemory );
-        pmu->ctrl.slowMemory.sleepDn->set( false ); // found false, but anyway...
+        // allow auto PD for everything but RTC, see Table 195: Predefined Power Modes
+        pmu->ctrl.wifi.sleepDn->on(); // that differs it from light sleep 
+        pmu->ctrl.digital.sleepDn->on(); //  differs it from light sleep 
+        //TODO clocks OFF?
+        pmu->ctrl.slowMemory.sleepDn->off();
+        pmu->ctrl.fastMemory.sleepDn->off(); // on: E (46) boot: Fast booting is not successful
+        pmu->ctrl.peripherals.sleepDn->off();
+
+        // ensure power ON for RTC slow memory where FSM program resides
+        pmu->ctrl.slowMemory.power->on->on();
+        pmu->ctrl.slowMemory.power->off->off();
+        pmu->ctrl.slowMemory.isolation->off->on();
+        pmu->ctrl.slowMemory.followCPU->off();
 
         // allow Xtensa wakeup by FSM
         swc->wakeup.setEnabled( SleepAndWakeupController::Peripherals::FSM, true );
 
-        // start timer
+        // start ULP timer
         tmr->sleep->set( 500 );
-        tmr->active->set( true );
+        tmr->active->on();
     }
     else
     {
@@ -109,29 +118,14 @@ void app_main( void )
     fflush(stdout);
     uart_tx_wait_idle(0);
     vTaskDelay( 20 );
-    pmu->ctrl.digital.sleepDn->set( true ); // go deep in sleep
-    // pmu->digiNoDeepSleep->set( true );
-    swc->sleep.start->set( false );
-    swc->sleep.start->set( true ); // never returns from there
+    
+    // enter deep sleep
+    swc->sleep.start->on(); // normally never returns from there
 
     // Something went wrong
     printf( "Enter to sleep aborted\n\n" );
     delete mcu;
     printf("Exit Xtensa program\n");
-}
-
-static void printf( const PowerManagementUnit::Switch::SlowMemory* sm )
-{
-    printf( "Slow memory:  PU=%1d PD=%1d  RU=%1d RD=%1d  IU=%1d ID=%1d  SLP=%1d  CPU=%1d  \n",
-        sm->power->on->get(),
-        sm->power->off->get(),
-        sm->retain->on->get(),
-        sm->retain->off->get(),
-        sm->isolation->on->get(),
-        sm->isolation->off->get(),
-        sm->sleepDn->get(),
-        sm->followCPU->get()
-        );
 }
 
 /* sleep_modes.c */
