@@ -52,7 +52,7 @@ void app_main( void )
             // Done. Stop both programs
             printf("Cancelling FSM program...\n");
             tmr->active->set( false );
-            fsm->clockOn->set( false );
+            fsm->clock->on->off();
             printf("Final exit Xtensa program\n");
             return;
         }
@@ -84,8 +84,8 @@ void app_main( void )
         fsm->selectForExec();
         fsm->selectForDone();
         fsm->startOn->set( false ); // block software start of ULP
-        fsm->clockOn->set( true );
-        fsm->clockOff->set( false );
+        fsm->clock->on->on();
+        fsm->clock->off->off();
 
         // allow auto PD for everything but RTC, see Table 195: Predefined Power Modes
         pmu->ctrl.wifi.sleepDn->on(); // that differs it from light sleep 
