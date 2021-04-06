@@ -83,7 +83,7 @@ void app_main( void )
     }
 
     // done
-    printf("Stop ULP tomer and FSM\n");
+    printf("Stop ULP timer and FSM\n");
     tmr->active->off();
     fsm->clock->on->off();
     delete mcu;
