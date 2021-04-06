@@ -21,6 +21,7 @@ edge_count:
 	
 	.global entry
 entry:
+	wait 1000 // just to prolong "while" loop in LX7 program 
 	/* edge_count += 33 Increment edge_count */
 	move r3, edge_count // r3 = edge_count
 	ld r2, r3, 0        // r2 = r3[0]
