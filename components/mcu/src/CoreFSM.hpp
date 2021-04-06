@@ -10,6 +10,7 @@
 #include "bits/FlagRW.hpp"
 #include "bits/FlagWO.hpp"
 #include "bits/SubValueRW.hpp"
+#include "Trigger2.hpp"
 
 class CoreFSM
 {
@@ -18,15 +19,11 @@ private:
     FlagRW* const done; //!< 0: select ULP-FSM DONE signal
 public:
     /**
-     * When turned to true, it provides clock ticks for the core. Property
-     * "clockOff" should be false to allow ticks to reach the core.
+     * When "on" turned to true and "off" turned to false, it provides 
+     * clock ticks for the core. Other combinations effectively gate 
+     * clock ticks from the core.
      */
-    FlagRW* const clockOn;
-    /**
-     * When turned to true, it blocks clock ticks for the core. Property
-     * "clockOn" should be true to allow ticks to reach the core.
-     */
-    FlagRW* const clockOff;
+    Trigger2* const clock;
     /**
      * When turned to true, it allows the core to start execution of a program. This 
      * property controls ability of the core to start only by manupulation with 

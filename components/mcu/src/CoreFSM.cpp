@@ -8,8 +8,9 @@
 CoreFSM::CoreFSM() :
     exec( new FlagRW( RTC_CNTL_COCPU_CTRL_REG, RTC_CNTL_COCPU_SEL_S ) ),
     done( new FlagRW( RTC_CNTL_COCPU_CTRL_REG, RTC_CNTL_COCPU_DONE_FORCE_S ) ),
-    clockOn( new FlagRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_CLK_FO_S ) ),
-    clockOff( new FlagRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_RESET_S ) ),
+    clock( new Trigger2( 
+        new FlagRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_CLK_FO_S ),
+        new FlagRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_RESET_S ) ) ),
     startOn( new FlagRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_START_TOP_S ) ),
     start( new FlagRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_FORCE_START_TOP_S ) ),
     memoryAddressSize( new SubValueRW( RTC_CNTL_ULP_CP_CTRL_REG, RTC_CNTL_ULP_CP_MEM_ADDR_SIZE_M, RTC_CNTL_ULP_CP_MEM_ADDR_SIZE_S ) ),
@@ -22,8 +23,9 @@ CoreFSM::~CoreFSM()
 {
     delete exec;
     delete done;
-    delete clockOn;
-    delete clockOff;
+    delete clock->on;
+    delete clock->off;
+    delete clock;
     delete startOn;
     delete start;
     delete memoryAddressSize;

@@ -49,8 +49,8 @@ void app_main( void )
     ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );
     fsm->startOn->set( true );
     fsm->start->set( false );
-    fsm->clockOn->set( true );
-    fsm->clockOff->set( false );
+    fsm->clock->on->on();
+    fsm->clock->off->off();
 
     // init shared vars
     ulp_edge_count = 500; // not earlier than the program has been loaded 
@@ -67,7 +67,7 @@ void app_main( void )
         fsm->start->set( false ); // it possibly can be applied right after "true"
     }
 
-    fsm->clockOn->set( false );
+    fsm->clock->on->off();
     delete mcu;
     printf("Exit main program\n");
 }
