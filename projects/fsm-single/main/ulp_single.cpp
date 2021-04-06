@@ -29,9 +29,8 @@ Exit main program
 #include "MicroControllerUnit.hpp"
 #include "CoprocessorULP.hpp"
 #include "CoreFSM.hpp"
-#include "PowerManagementUnit.hpp"
 
-void printf( const PowerManagementUnit* pmu );
+void printf( const CoprocessorULP* ulp );
 
 // ASM program placeholders
 extern const uint8_t ulp_main_bin_start[] asm("_binary_ulp_main_bin_start");
@@ -44,7 +43,6 @@ extern "C"
 void app_main( void )
 {
     MicroControllerUnit* const mcu = new MicroControllerUnit();
-    PowerManagementUnit* const pmu = mcu->getPowerManagementUnit();
     CoprocessorULP* const ulp = mcu->getCoprocessorULP();
     CoreFSM* const fsm = ulp->getCoreFSM();
     
@@ -70,12 +68,12 @@ void app_main( void )
     fsm->clock->off->off();
 
     // go!
-    printf( pmu );
+    printf( ulp );
     fsm->start->off();
     fsm->start->on(); // 0->1 transition matters for software start
-    while( !pmu->cocpuDone->get() )
-        printf( pmu ); // it may stand on long wait, so WORK=0 RUNS=0 is expected
-    printf( pmu );
+    while( !ulp->status.done->get() )
+        printf( ulp ); // it may stand on long wait, so WORK=0 RUNS=0 is expected
+    printf( ulp );
     printf( "Edge count from ULP: %10d\n", ulp_edge_count );
 
     // done
@@ -86,12 +84,12 @@ void app_main( void )
     printf("Exit main program\n");
 }
 
-void printf( const PowerManagementUnit* pmu )
+void printf( const CoprocessorULP* ulp )
 {
     printf( "FSM: SLEEP=%1d WORK=%1d RUNS=%1d DONE=%1d\n",
-        pmu->cocpuSleep->get(),
-        pmu->cocpuWork->get(),
-        pmu->cocpuRuns->get(),
-        pmu->cocpuDone->get()
+        ulp->status.sleep->get(),
+        ulp->status.work->get(),
+        ulp->status.runs->get(),
+        ulp->status.done->get()
         );
 }

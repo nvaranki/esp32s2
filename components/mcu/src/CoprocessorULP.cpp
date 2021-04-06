@@ -24,3 +24,19 @@ CoprocessorULP::~CoprocessorULP()
     delete cfgGPIO;
     delete entry;
 }
+
+CoprocessorULP::Status::Status() :
+    sleep( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_COCPU_STATE_SLP_S    ) ),
+    work ( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_COCPU_STATE_SWITCH_S ) ),
+    runs ( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_COCPU_STATE_START_S  ) ),
+    done ( new FlagRO( RTC_CNTL_LOW_POWER_ST_REG, RTC_CNTL_COCPU_STATE_DONE_S   ) )
+{
+}
+    
+CoprocessorULP::Status::~Status()
+{
+    delete sleep;
+    delete work;
+    delete runs;
+    delete done;
+}

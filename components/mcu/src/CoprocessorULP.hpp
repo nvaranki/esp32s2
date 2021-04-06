@@ -22,6 +22,38 @@ private:
 //  BitSetRW* const cfgCore; //!< configuration register
     BitSetRW* const cfgGPIO; //!< configuration register
 public:
+    class Status
+    {
+    public:
+        /**
+         * When found true, indicates a sleep state of ULP FSM/RISCV. Usually this is an
+         * inverse value of "cocpuWork" property.
+         * TODO undocumented
+         */
+        FlagRO* const sleep;
+        /**
+         * When found true, indicates a working state of ULP FSM/RISCV. Usually this is an
+         * inverse value of "cocpuSleep" property.
+         * TODO undocumented
+         */
+        FlagRO* const work;
+        /**
+         * When found true, indicates a state of ULP FSM/RISCV when it runs a program. Usually this is an
+         * inverse value of "cocpuDone" property.
+         * TODO undocumented
+         */
+        FlagRO* const runs;
+        /**
+         * When found true, indicates a state of ULP FSM/RISCV when it finished a program. Usually this is an
+         * inverse value of "cocpuRuns" property.
+         * TODO undocumented
+         */
+        FlagRO* const done; //!< ulp/cocpu is done TODO undocumented
+    public:
+        Status();
+        virtual ~Status();
+    }
+    const status;
     /**
      * Relative, to RTC_SLOW_MEM, an address of first program instruction,
      * expressed in 32 bit words.

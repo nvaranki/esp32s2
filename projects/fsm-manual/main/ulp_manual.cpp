@@ -28,7 +28,6 @@ Exit main program
 #include "mcu.h"
 #include "BinaryImageULP.hpp"
 #include "MicroControllerUnit.hpp"
-#include "PowerManagementUnit.hpp"
 #include "CoprocessorULP.hpp"
 #include "CoreFSM.hpp"
 
@@ -43,7 +42,6 @@ extern "C"
 void app_main( void )
 {
     MicroControllerUnit* const mcu = new MicroControllerUnit();
-    PowerManagementUnit* const pmu = mcu->getPowerManagementUnit();
     CoprocessorULP* const ulp = mcu->getCoprocessorULP();
     CoreFSM* const fsm = ulp->getCoreFSM();
     
@@ -75,7 +73,7 @@ void app_main( void )
     {
         fsm->start->on();
         do vTaskDelay( delay ); // let FSM go; single pass run should finish within delay
-        while( !pmu->cocpuDone->get() );
+        while( !ulp->status.done->get() );
         fsm->start->off(); // get ready for next run; it possibly can be applied right after "true"
         printf("Edge count %3d from ULP: %10d\n", i, ulp_edge_count);
         ulp_edge_count += 1000000;
