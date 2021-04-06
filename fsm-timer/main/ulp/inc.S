@@ -21,10 +21,10 @@ edge_count:
 	
 	.global entry
 entry:
-	/* edge_count += 33 Increment edge_count */
+	/* edge_count += 1 Increment edge_count */
 	move r3, edge_count // r3 = edge_count
 	ld r2, r3, 0        // r2 = r3[0]
-	add r2, r2, 33      // r2 += 33
+	add r2, r2, 1       // r2 += 1
 	st r2, r3, 0        // r3[0] = r2
 	
 	/* that's all */
