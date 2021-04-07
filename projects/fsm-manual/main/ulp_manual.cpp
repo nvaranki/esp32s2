@@ -59,8 +59,8 @@ void app_main( void )
     // select FSM to run
     fsm->selectForExec();
     fsm->startOn->on(); // manual (software) start
-    fsm->clock->on->on();
-    fsm->clock->off->off();
+    fsm->clock.on->on();
+    fsm->clock.off->off();
 
     // init shared vars
     ulp_edge_count = 500; // not earlier than the program has been loaded 
@@ -80,7 +80,7 @@ void app_main( void )
     }
 
     // done
-    fsm->clock->on->off();
+    fsm->clock.on->off();
     delete mcu;
     printf("Exit main program\n");
 }

@@ -64,8 +64,8 @@ void app_main( void )
     // select FSM to run
     fsm->selectForExec();
     fsm->startOn->on();
-    fsm->clock->on->on();
-    fsm->clock->off->off();
+    fsm->clock.on->on();
+    fsm->clock.off->off();
 
     // go!
     printf( ulp );
@@ -79,7 +79,7 @@ void app_main( void )
     // done
     printf("Stop FSM clock\n");
     fsm->start->off(); // it possibly can be applied right after "true"
-    fsm->clock->on->off();
+    fsm->clock.on->off();
     delete mcu;
     printf("Exit main program\n");
 }

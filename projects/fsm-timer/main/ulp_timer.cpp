@@ -65,8 +65,8 @@ void app_main( void )
     fsm->selectForExec();
     fsm->selectForDone(); // triggers ULP timer on HALT
     fsm->startOn->off(); // block software start
-    fsm->clock->on->on();
-    fsm->clock->off->off();
+    fsm->clock.on->on();
+    fsm->clock.off->off();
 
     // start timer
     tmr->sleep->set( 20000 );
@@ -85,7 +85,7 @@ void app_main( void )
     // done
     printf("Stop ULP timer and FSM\n");
     tmr->active->off();
-    fsm->clock->on->off();
+    fsm->clock.on->off();
     delete mcu;
     printf("Exit main program\n");
 }

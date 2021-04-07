@@ -10,6 +10,7 @@
 #include "CoprocessorULP.hpp"
 #include "CoreLX7.hpp"
 #include "TimerGroup.hpp"
+#include "Trigger2.hpp"
 #include "bits/BitSetRW.hpp"
 #include "bits/FlagRW.hpp"
 #include "bits/FlagWO.hpp"
@@ -25,17 +26,29 @@ private:
     CoprocessorULP* ulp;
     WordRW rr[8]; //TODO WordRW* const rr;
 public:
-    /**
-     * When set to true, resets the whole digital system, including RTC. 
-     * Analog domain stays unaffected.
-     */
-    FlagWO* const resetSystem;
-    // /**
-    //  * When set to true, resets the whole digital system, 
-    //  * including all CPU's, peripherals, Wi-Fi and digital GPIO's. 
-    //  * RTC and analog domain stays unaffected.
-    //  */
-    //TODO FlagWO* const resetCore;
+    class Reset
+    {
+    public:
+        /**
+         * When set to true, resets the whole digital system, including RTC. 
+         * Analog domain stays unaffected.
+         */
+        FlagWO* const system;
+        // /**
+        //  * When set to true, resets the whole digital system, 
+        //  * including all CPU's, peripherals, Wi-Fi and digital GPIO's. 
+        //  * RTC and analog domain stays unaffected.
+        //  */
+        //TODO FlagWO* const core;
+        /**
+         * Enable/disable force reset of the digital system (in deep-sleep?!). TODO unclear function
+         */
+        Trigger2 const digital;
+    public:
+        Reset();
+        virtual ~Reset();
+    }
+    const reset;
     TimerGroup* const tg0;
     TimerGroup* const tg1;
 private:

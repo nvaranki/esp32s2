@@ -23,7 +23,7 @@ public:
      * clock ticks for the core. Other combinations effectively gate 
      * clock ticks from the core.
      */
-    Trigger2* const clock;
+    Trigger2 const clock;
     /**
      * When turned to true, it allows the core to start execution of a program. This 
      * property controls ability of the core to start only by manupulation with 

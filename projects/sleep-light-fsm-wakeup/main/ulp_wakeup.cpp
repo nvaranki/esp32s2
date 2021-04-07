@@ -84,8 +84,8 @@ void app_main( void )
         fsm->selectForExec();
         fsm->selectForDone();
         fsm->startOn->off(); // block software start of ULP
-        fsm->clockOn->on();
-        fsm->clockOff->off();
+        fsm->clock.on->on();
+        fsm->clock.off->off();
 
         // allow auto PD for clocks only, see Table 195: Predefined Power Modes
         pmu->ctrl.wifi.sleepDn->off();
@@ -96,9 +96,9 @@ void app_main( void )
         pmu->ctrl.peripherals.sleepDn->off();
 
         // ensure power ON for RTC slow memory where FSM program resides
-        pmu->ctrl.slowMemory.power->on->on();
-        pmu->ctrl.slowMemory.power->off->off();
-        pmu->ctrl.slowMemory.isolation->off->on();
+        pmu->ctrl.slowMemory.power.on->on();
+        pmu->ctrl.slowMemory.power.off->off();
+        pmu->ctrl.slowMemory.isolation.off->on();
 
         // allow Xtensa wakeup by FSM
         swc->wakeup.enable->setAll( false );
@@ -149,7 +149,7 @@ void app_main( void )
     // Done. Stop both programs
     printf("Cancelling FSM program...\n");
     tmr->active->off();
-    fsm->clockOn->off();
+    fsm->clock.on->off();
     printf("Final exit Xtensa program\n");
 }
 

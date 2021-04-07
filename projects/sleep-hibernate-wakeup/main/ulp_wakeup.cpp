@@ -74,16 +74,16 @@ void app_main( void )
         pmu->ctrl.peripherals.sleepDn->on();
 
         // reset forced power ON
-        pmu->ctrl.wifi.power->on->off();
-        pmu->ctrl.digital.power->on->off();
+        pmu->ctrl.wifi.power.on->off();
+        pmu->ctrl.digital.power.on->off();
         //TODO clocks?
-        pmu->ctrl.slowMemory.power->on->off();
-        pmu->ctrl.fastMemory.power->on->off();
-        pmu->ctrl.peripherals.power->on->off();
+        pmu->ctrl.slowMemory.power.on->off();
+        pmu->ctrl.fastMemory.power.on->off();
+        pmu->ctrl.peripherals.power.on->off();
         
         // manage isolation of outputs
-        pmu->ctrl.slowMemory.isolation->off->off();
-        //TODO see above pmu->ctrl.fastMemory.isolation->off->off();
+        pmu->ctrl.slowMemory.isolation.off->off();
+        //TODO see above pmu->ctrl.fastMemory.isolation.off->off();
     }
     else
     {
