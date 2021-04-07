@@ -73,22 +73,22 @@ void app_main( void )
     ulp->entry->set( 0 );
     
     // select FSM to run
-    ulp->setConfig( CoprocessorULP::ConfigCore::CORE, static_cast<bool>( CoprocessorULP::Core::FSM ) );
-    fsm->startOn->set( true );
-    fsm->clock->on->on();
-    fsm->clock->off->off();
+    fsm->selectForExec();
+    fsm->startOn->on();
+    fsm->clock.on->on();
+    fsm->clock.off->off();
 
     // init shared vars
     ulp_edge_count = 500; // not earlier than the program has been loaded 
 
     // go!
-    fsm->start->set( false );
-    fsm->start->set( true ); // 0->1 transition matters
+    fsm->start->off();
+    fsm->start->on(); // 0->1 transition matters
     vTaskDelay( 100 / portTICK_PERIOD_MS ); // single pass run should finish within delay
     printf("Edge count from ULP: %10d\n", ulp_edge_count);
 
     fsm->start->set( false ); // it possibly can be applied right after "true"
-    fsm->clock->on->off();
+    fsm->clock.on->off();
     delete mcu;
     printf("Exit main program\n");
 }
