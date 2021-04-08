@@ -21,7 +21,7 @@ private:
 public:
     /** Internal buffer for simple (direct) I/O */
     MatrixBuffer* const buffer;
-    /** Internal buffer for simple (direct) I/O */
+    /** Interrupt controller for GPIO Matrix */
     MatrixInterrupt* const interrupt;
     /** Clock control. 0: gating, 1: running */
     FlagRW* const clock;
