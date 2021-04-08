@@ -5,7 +5,7 @@
 #include "MicroControllerUnit.hpp"
 
 MicroControllerUnit::MicroControllerUnit() :
-    cpu( nullptr ), pmu( nullptr ), ulp( nullptr ), 
+    cpu( nullptr ), pmu( nullptr ), io( nullptr ),  ulp( nullptr ), 
     /** Registers that always are powered up */
     rr{ // usage info from "esp32s2/rom/rtc.h"
         WordRW( RTC_CNTL_STORE0_REG ), // Reserved
@@ -28,6 +28,7 @@ MicroControllerUnit::MicroControllerUnit() :
 MicroControllerUnit::~MicroControllerUnit()
 {
     if( pmu != nullptr ) delete pmu;
+    if( io  != nullptr ) delete io;
     if( ulp != nullptr ) delete ulp;
     delete resetSystem;
     delete tg0;
@@ -49,6 +50,13 @@ PowerManagementUnit* MicroControllerUnit::getPowerManagementUnit()
     if( pmu == nullptr )
         pmu = new PowerManagementUnit();
     return pmu;
+}
+
+ControllerIO* MicroControllerUnit::getControllerIO()
+{
+    if( io == nullptr )
+        io = new ControllerIO();
+    return io;
 }
 
 CoprocessorULP* MicroControllerUnit::getCoprocessorULP()

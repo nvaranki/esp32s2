@@ -7,6 +7,7 @@
 
 #include "soc/extmem_reg.h"
 #include "PowerManagementUnit.hpp"
+#include "io/ControllerIO.hpp"
 #include "CoprocessorULP.hpp"
 #include "CoreLX7.hpp"
 #include "TimerGroup.hpp"
@@ -23,6 +24,7 @@ class MicroControllerUnit
 private:
     CoreLX7* cpu;
     PowerManagementUnit* pmu;
+    ControllerIO* io;
     CoprocessorULP* ulp;
     WordRW rr[8]; //TODO WordRW* const rr;
 public:
@@ -75,6 +77,7 @@ public:
 public:
     CoreLX7* getProcessor( size_t i );
     PowerManagementUnit* getPowerManagementUnit();
+    ControllerIO* getControllerIO();
     CoprocessorULP* getCoprocessorULP();
     WordRW* getRetentionRegister( size_t i );
     void command( Command c );
