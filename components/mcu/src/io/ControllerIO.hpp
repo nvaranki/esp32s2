@@ -6,8 +6,10 @@
 #define H_ControllerIO
 
 #include "MatrixBuffer.hpp"
+#include "MatrixInterrupt.hpp"
 #include "MatrixInput.hpp"
 #include "MatrixOutput.hpp"
+#include "bits/FlagRW.hpp"
 
 class ControllerIO
 {
@@ -17,12 +19,15 @@ private:
     MatrixInput* input[MAX_INPUT];
     MatrixOutput* output[MAX_OUTPUT];
 public:
+    /** Internal buffer for simple (direct) I/O */
     MatrixBuffer* const buffer;
+    /** Internal buffer for simple (direct) I/O */
+    MatrixInterrupt* const interrupt;
+    /** Clock control. 0: gating, 1: running */
+    FlagRW* const clock;
     //TODO GPIO_BT_SELECT_REG GPIO bit selection register - Reserved (R/W)
-    //TODO GPIO_SDIO_SELECT_REG GPIO SDIO selection register
-    //TODO GPIO_STRAP_REG Bootstrap pin value register
-    //TODO GPIO_CLOCK_GATE_REG GPIO clock gating register
-    //TODO interrupt ctrl
+    //TODO GPIO_SDIO_SELECT_REG GPIO SDIO selection register - Reserved (R/W)
+    //TODO GPIO_STRAP_REG Bootstrap pin value register (RO)
 public:
     ControllerIO();
     virtual ~ControllerIO();

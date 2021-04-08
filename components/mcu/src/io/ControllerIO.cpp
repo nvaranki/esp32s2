@@ -5,7 +5,9 @@
 #include "ControllerIO.hpp"
 
 ControllerIO::ControllerIO() :
-    buffer( new MatrixBuffer() )
+    buffer( new MatrixBuffer() ),
+    interrupt( new MatrixInterrupt() ),
+    clock( new FlagRW( GPIO_CLOCK_GATE_REG, GPIO_CLK_EN_S ) )
 {
     for( int i = 0; i < MAX_INPUT;  i++ ) input [i] = nullptr;
     for( int i = 0; i < MAX_OUTPUT; i++ ) output[i] = nullptr;
@@ -14,6 +16,8 @@ ControllerIO::ControllerIO() :
 ControllerIO::~ControllerIO()
 {
     delete buffer;
+    delete interrupt;
+    delete clock;
     for( int i = 0; i < MAX_INPUT;  i++ ) if( input [i] != nullptr ) delete input [i];
     for( int i = 0; i < MAX_OUTPUT; i++ ) if( output[i] != nullptr ) delete output[i];
 }
