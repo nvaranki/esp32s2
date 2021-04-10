@@ -5,7 +5,7 @@
 #include "MicroControllerUnit.hpp"
 
 MicroControllerUnit::MicroControllerUnit() :
-    cpu( nullptr ), pmu( nullptr ), io( nullptr ),  ulp( nullptr ), 
+    cpu( nullptr ), pmu( nullptr ), io( nullptr ), ulp( nullptr ), systemTimer( nullptr ), 
     /** Registers that always are powered up */
     rr{ // usage info from "esp32s2/rom/rtc.h"
         WordRW( RTC_CNTL_STORE0_REG ), // Reserved
@@ -31,6 +31,7 @@ MicroControllerUnit::~MicroControllerUnit()
     if( io  != nullptr ) delete io;
     if( ulp != nullptr ) delete ulp;
     delete resetSystem;
+    if( systemTimer != nullptr ) delete systemTimer;
     delete tg0;
     delete tg1;
     delete control;
@@ -64,6 +65,13 @@ CoprocessorULP* MicroControllerUnit::getCoprocessorULP()
     if( ulp == nullptr )
         ulp = new CoprocessorULP();
     return ulp;
+}
+
+SystemTimer* MicroControllerUnit::getSystemTimer()
+{
+    if( systemTimer == nullptr )
+        systemTimer = new SystemTimer();
+    return systemTimer;
 }
 
 WordRW* MicroControllerUnit::getRetentionRegister( size_t i ) 

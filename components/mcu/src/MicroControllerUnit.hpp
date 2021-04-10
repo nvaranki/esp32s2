@@ -10,6 +10,7 @@
 #include "io/ControllerIO.hpp"
 #include "CoprocessorULP.hpp"
 #include "CoreLX7.hpp"
+#include "SystemTimer.hpp"
 #include "TimerGroup.hpp"
 #include "Trigger2.hpp"
 #include "bits/BitSetRW.hpp"
@@ -26,6 +27,7 @@ private:
     PowerManagementUnit* pmu;
     ControllerIO* io;
     CoprocessorULP* ulp;
+    SystemTimer* systemTimer;
     WordRW rr[8]; //TODO WordRW* const rr;
 public:
     class Reset
@@ -79,6 +81,7 @@ public:
     PowerManagementUnit* getPowerManagementUnit();
     ControllerIO* getControllerIO();
     CoprocessorULP* getCoprocessorULP();
+    SystemTimer* getSystemTimer();
     WordRW* getRetentionRegister( size_t i );
     void command( Command c );
 };
