@@ -47,10 +47,16 @@ void runRegMacro( const uint32_t max, SystemTimer* stm, const uint32_t m4 )
     vTaskDelay( 1 ); //esp_task_wdt_reset();
     uint64_t t0 = stm->getValidValue( TIME_ATTEMPTS );
     uint32_t v4 = m4;
+    // constexpr uint32_t RS = GPIO_OUT_W1TS_REG;
+    // constexpr uint32_t RC = GPIO_OUT_W1TC_REG;
+    // constexpr uint32_t R[2] { RC, RS };
     for( uint32_t i = 0; i < max; i++ )
     {
         REG_WRITE( GPIO_OUT_REG, v4 );
         v4 = ~v4 & m4;
+        // next variants look better but result in same frequency
+        // REG_WRITE( i & 1 ? RS : RC, m4 );
+        // REG_WRITE( R[ i & 1 ], m4 );
     }
     uint64_t t1 = stm->getValidValue( TIME_ATTEMPTS );
     uint64_t t2 = stm->getValidValue( TIME_ATTEMPTS );
