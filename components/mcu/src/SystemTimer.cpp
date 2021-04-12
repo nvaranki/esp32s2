@@ -30,6 +30,6 @@ uint64_t SystemTimer::getValidValue( uint32_t attempts )
 {
     update->on();
     while( !valid->get() ) 
-        if( attempts-- == 0 ) return INVALID; 
+        if( attempts-- <= 0 ) return INVALID; 
     return ( (uint64_t) valueHI->get() << 32 ) | valueLO->get();
 }
