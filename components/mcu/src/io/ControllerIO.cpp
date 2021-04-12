@@ -46,6 +46,7 @@ MatrixOutput* ControllerIO::getMatrixOutput( const size_t i )
 ExternalPin* ControllerIO::getExternalPin( const size_t i )
 {
     if( i >= MAX_PAD ) return nullptr;
+    for( int t : RESERVED_PAD ) if( t == i ) return nullptr;
     if( pins[i] == nullptr ) pins[i] = new ExternalPin( i );
     return pins[i];
 }
