@@ -98,3 +98,19 @@ MicroControllerUnit::ConfigureCache::~ConfigureCache()
 {
     delete debug;
 }
+
+MicroControllerUnit::Periphery::Periphery() :
+    pcnt( nullptr )
+{
+}
+    
+MicroControllerUnit::Periphery::~Periphery()
+{
+    if( pcnt != nullptr ) delete pcnt;
+}
+
+PulseCountController* MicroControllerUnit::Periphery::getPulseCountController()
+{
+    if( pcnt == nullptr ) pcnt = new PulseCountController();
+    return pcnt;
+}

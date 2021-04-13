@@ -8,6 +8,7 @@
 #include "soc/extmem_reg.h"
 #include "PowerManagementUnit.hpp"
 #include "io/ControllerIO.hpp"
+#include "periphery/pcnt/PulseCountController.hpp"
 #include "CoprocessorULP.hpp"
 #include "CoreLX7.hpp"
 #include "SystemTimer.hpp"
@@ -30,6 +31,17 @@ private:
     SystemTimer* systemTimer;
     WordRW rr[8]; //TODO WordRW* const rr;
 public:
+    class Periphery
+    {
+    private:
+        PulseCountController* pcnt;
+    public:
+        Periphery();
+        virtual ~Periphery();
+    public:
+        PulseCountController* getPulseCountController();
+    }
+    /*const*/ periphery;
     class Reset
     {
     public:
