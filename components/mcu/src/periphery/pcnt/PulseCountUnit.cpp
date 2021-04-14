@@ -28,6 +28,11 @@ PulseCountUnit::~PulseCountUnit()
     if( comparator != nullptr ) delete comparator;
 }
 
+int16_t PulseCountUnit::getValue() const
+{
+    return (int16_t) value->get(); //TODO negative
+}
+
 PulseCountUnit::Status PulseCountUnit::getStatus() const
 {
     return (Status) status->get();

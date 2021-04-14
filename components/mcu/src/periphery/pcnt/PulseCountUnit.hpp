@@ -29,9 +29,10 @@ public:
         /** counter is positive */
         POSITIVE = 0b11,
     };
-public:
+private:
     /** Current pulse count value */
     SubValueRO* const value;
+public:
     /** Set this bit to clear counter */
     FlagRW* const reset;
     /** Set this bit to freeze counter */
@@ -52,6 +53,7 @@ public:
     virtual ~PulseCountUnit();
 public:
     Status getStatus() const;
+    int16_t getValue() const;
     PulseCountChannel* getChannel( const size_t i );
     PulseCountFilter* getFilter();
     PulseCountComparator* getComparator();

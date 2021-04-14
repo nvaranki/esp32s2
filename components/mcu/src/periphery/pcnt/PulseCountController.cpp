@@ -3,10 +3,13 @@
 // © 2021 Nikolai Varankine
 
 #include "soc/pcnt_reg.h"
+#include "soc/system_reg.h"
 #include "PulseCountController.hpp"
 
 PulseCountController::PulseCountController() :
-    clock( new FlagRW( PCNT_CTRL_REG, PCNT_CLK_EN_S ) ),
+    clock( new FlagRW( DPORT_PERIP_CLK_EN0_REG, DPORT_PCNT_CLK_EN_S ) ),
+    reset( new FlagRW( DPORT_PERIP_RST_EN0_REG, DPORT_PCNT_RST_S ) ),
+    enable( new FlagRW( PCNT_CTRL_REG, PCNT_CLK_EN_S ) ),
     version( new WordRO( PCNT_DATE_REG ) )
 {
     for( int i = 0; i < MAX_UNIT; i++ ) ctrl[i] = nullptr;
@@ -15,6 +18,8 @@ PulseCountController::PulseCountController() :
 PulseCountController::~PulseCountController()
 {
     delete clock;
+    delete reset;
+    delete enable;
     delete version;
     for( int i = 0; i < MAX_UNIT; i++ ) if( ctrl[i] != nullptr ) delete ctrl[i];
 }

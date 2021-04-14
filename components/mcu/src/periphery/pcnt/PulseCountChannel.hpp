@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <stdint.h>
+#include "soc/gpio_sig_map.h"
 #include "bits/SubValueRW.hpp"
 
 class PulseCountChannel
@@ -21,6 +22,7 @@ private:
     /** Modifier to positive/negative action when the control signal is low */
     SubValueRW* const low;
 public:
+    const size_t unit;
     const size_t id;
 public:
     PulseCountChannel( const size_t unit, const size_t i );
@@ -54,6 +56,16 @@ public:
     Edge getOnPositive() { return (Edge) positive->get(); }
     Extremum getOnHigh() { return (Extremum) high->get(); }
     Extremum getOnLow () { return (Extremum) low ->get(); }
+    enum class Input : size_t
+    {
+        SIGNAL  = 0,
+        CONTROL = 1,
+    };
+    /** 
+     * @param i type of channel input
+     * @return index of the GPIO Matrix input channel
+    */
+    size_t getMatrixIndex( const Input i ) const;
 };
 
 #endif

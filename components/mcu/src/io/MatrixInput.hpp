@@ -29,7 +29,8 @@ public:
     /** Invert output of the channel */
     FlagRW* const invert;
 public:
-    MatrixInput( const size_t n );
+    /** @param i index of perpheral input, see "Table 22: GPIO Matrix" */
+    MatrixInput( const size_t i );
     virtual ~MatrixInput();
 };
 

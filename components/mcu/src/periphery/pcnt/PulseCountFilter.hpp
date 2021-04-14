@@ -12,6 +12,7 @@
 
 class PulseCountFilter
 {
+public:
     /** Apply or bypass filter */
     FlagRW* const enable;
     /** The maximum threshold, in APB clock cycles, for the filter.

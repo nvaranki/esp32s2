@@ -17,6 +17,7 @@
 class PulseCountComparator
 {
 public:
+    /** A comparator to clear value of the counter when it reaches threshold */
     typedef class LimitComparator
     {
     public:
@@ -59,7 +60,9 @@ public:
     }
     ZeroComparator_t;
 public:
+    /** A comparator to reset decreasing counter */
     LimitComparator_t const low;
+    /** A comparator to reset increasing counter */
     LimitComparator_t const high;
     ThresholdComparator_t const thr0;
     ThresholdComparator_t const thr1;

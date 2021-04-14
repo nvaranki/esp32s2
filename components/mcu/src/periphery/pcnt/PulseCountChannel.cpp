@@ -4,6 +4,7 @@
 
 #include "soc/pcnt_reg.h"
 #include "PulseCountChannel.hpp"
+#include "PulseCountUnit.hpp"
 
 PulseCountChannel::PulseCountChannel( const size_t unit, const size_t i ) :
     negative( new SubValueRW( PCNT_U0_CONF0_REG + 0xC * unit, 
@@ -18,6 +19,7 @@ PulseCountChannel::PulseCountChannel( const size_t unit, const size_t i ) :
     low     ( new SubValueRW( PCNT_U0_CONF0_REG + 0xC * unit, 
         i ? PCNT_CH1_LCTRL_MODE_U0_M : PCNT_CH0_LCTRL_MODE_U0_M, 
         i ? PCNT_CH1_LCTRL_MODE_U0_S : PCNT_CH0_LCTRL_MODE_U0_S ) ),
+    unit( unit ),
     id( i )
 {
 }
@@ -28,4 +30,17 @@ PulseCountChannel::~PulseCountChannel()
     delete positive;
     delete high;
     delete low;
+}
+
+size_t PulseCountChannel::getMatrixIndex( const Input i ) const 
+{ 
+    // See Table 22: GPIO Matrix
+    // 39 pcnt_sig_ch0_in0 
+    // 40 pcnt_sig_ch1_in0
+    // 41 pcnt_ctrl_ch0_in0
+    // 42 pcnt_ctrl_ch1_in0
+    // ... and so on
+    return ( i == Input::SIGNAL ? PCNT_SIG_CH0_IN0_IDX : PCNT_CTRL_CH0_IN0_IDX ) 
+        + unit * ( PulseCountUnit::MAX_CHANNEL * 2 /* item count in Input */ ) 
+        + id; 
 }
