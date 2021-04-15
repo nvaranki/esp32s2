@@ -13,13 +13,10 @@
 class MatrixInput
 {
 public:
-    enum class Constant : uint32_t
-    {
-        /** Number of internal pad that holds constantly high value */
-        HIGH = GPIO_FUNC_IN_HIGH,
-        /** Number of internal pad that holds constantly low value */
-        LOW  = GPIO_FUNC_IN_LOW,
-    };
+    /** Number of internal pad that holds constantly high value */
+    static constexpr uint32_t SOURCE_HIGH = GPIO_FUNC_IN_HIGH;
+    /** Number of internal pad that holds constantly low value */
+    static constexpr uint32_t SOURCE_LOW  = GPIO_FUNC_IN_LOW;
 public:
     /** GPIO pad number to get signal from, [0;53] or Constant::HIGH or Constant::LOW */
     SubValueRW* const source;
