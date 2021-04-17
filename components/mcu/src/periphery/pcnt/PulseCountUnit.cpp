@@ -6,11 +6,7 @@
 #include "PulseCountUnit.hpp"
 
 PulseCountUnit::PulseCountUnit( const size_t id ) :
-    value( new SubValueRO(  PCNT_U0_CNT_REG + id * 0x4, PCNT_PULSE_CNT_U0_M, PCNT_PULSE_CNT_U0_S ) ),
-    reset( new FlagRW( PCNT_CTRL_REG, PCNT_PULSE_CNT_RST_U0_S + id * 2 ) ),
-    pause( new FlagRW( PCNT_CTRL_REG, PCNT_CNT_PAUSE_U0_S + id * 2 ) ),
-    status( new SubValueRO( PCNT_U0_STATUS_REG + 0x4 * id, 
-        PCNT_CNT_THR_ZERO_MODE_U0_M, PCNT_CNT_THR_ZERO_MODE_U0_S ) ),
+    counter( id ),
     filter( nullptr ),
     comparator( nullptr ),
     id( id )
@@ -20,22 +16,8 @@ PulseCountUnit::PulseCountUnit( const size_t id ) :
     
 PulseCountUnit::~PulseCountUnit()
 {
-    delete value;
-    delete reset;
-    delete pause;
-    delete status;
     for( int i = 0; i < MAX_CHANNEL; i++ ) if( channel[i] != nullptr ) delete channel[i];
     if( comparator != nullptr ) delete comparator;
-}
-
-int16_t PulseCountUnit::getValue() const
-{
-    return (int16_t) value->get(); // +- 16 bit counter
-}
-
-PulseCountUnit::Status PulseCountUnit::getStatus() const
-{
-    return (Status) status->get();
 }
 
 PulseCountChannel* PulseCountUnit::getChannel( const size_t i )
@@ -55,4 +37,31 @@ PulseCountComparator* PulseCountUnit::getComparator()
 {
     if( comparator == nullptr ) comparator = new PulseCountComparator( id );
     return comparator;
+}
+
+PulseCountUnit::Counter::Counter( const size_t id ) :
+    value( new SubValueRO(  PCNT_U0_CNT_REG + id * 0x4, PCNT_PULSE_CNT_U0_M, PCNT_PULSE_CNT_U0_S ) ),
+    reset( new FlagRW( PCNT_CTRL_REG, PCNT_PULSE_CNT_RST_U0_S + id * 2 ) ),
+    pause( new FlagRW( PCNT_CTRL_REG, PCNT_CNT_PAUSE_U0_S + id * 2 ) ),
+    status( new SubValueRO( PCNT_U0_STATUS_REG + 0x4 * id, 
+        PCNT_CNT_THR_ZERO_MODE_U0_M, PCNT_CNT_THR_ZERO_MODE_U0_S ) )
+{
+}
+    
+PulseCountUnit::Counter::~Counter()
+{
+    delete value;
+    delete reset;
+    delete pause;
+    delete status;
+}
+
+int16_t PulseCountUnit::Counter::getValue() const
+{
+    return (int16_t) value->get(); // +- 16 bit counter
+}
+
+PulseCountUnit::Counter::Status PulseCountUnit::Counter::getStatus() const
+{
+    return (Status) status->get();
 }
