@@ -194,33 +194,35 @@ void app_main( void )
 
     // Unit tests
 
+    PulseCountUnit::Counter* cnt = &pcu->counter;
+
     printf( "\n" );
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     pcc0->signal.setOnPositive( PulseCountChannel::Signal::Action::INCREASE );
     printf( pcc0 );
     runChannel ( 200u, ch4, stm );
     printf( pcu, "INCREASE" );
 
     printf( "\n" );
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     pcc0->signal.setOnPositive( PulseCountChannel::Signal::Action::DECREASE );
     printf( pcc0 );
     runChannel ( 200u, ch4, stm );
     printf( pcu, "DECREASE" );
     
     printf( "\n" );
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     pcc0->signal.setOnPositive( PulseCountChannel::Signal::Action::IGNORE );
     printf( pcc0 );
     runChannel ( 200u, ch4, stm );
     printf( pcu, "IGNORE" );
     
     printf( "\n" );
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     pcc0->signal.setOnPositive( PulseCountChannel::Signal::Action::INCREASE );
     pcc0->signal.setOnNegative( PulseCountChannel::Signal::Action::INCREASE );
     printf( pcc0 );
@@ -228,8 +230,8 @@ void app_main( void )
     printf( pcu, "INCREASE+ INCREASE-" );
 
     printf( "\n" );
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     runChannel ( 200u, ch4, stm );
     printf( pcu, "" );
     pcc0->control.setOnLow( PulseCountChannel::Control::Action::BOUNCE );
@@ -239,8 +241,8 @@ void app_main( void )
     pcc0->control.setOnLow( PulseCountChannel::Control::Action::IGNORE );
 
     printf( "\n" );
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     runChannel ( 200u, ch4, stm );
     printf( pcu, "" );
     pcc0->control.setOnLow( PulseCountChannel::Control::Action::INHIBIT );
@@ -251,8 +253,8 @@ void app_main( void )
 
     printf( "\n" );
     p8->filter->on();
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     pcc0->signal.setOnPositive( PulseCountChannel::Signal::Action::INCREASE );
     printf( pcc0 );
     runChannel ( 200u, ch4, stm );
@@ -262,8 +264,8 @@ void app_main( void )
     printf( "\n" );
     mi0s->matrix->on(); // via matrix
     printf( mi0s, p8 );
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     pcc0->signal.setOnPositive( PulseCountChannel::Signal::Action::INCREASE );
     printf( pcc0 );
     runChannel ( 200u, ch4, stm );
@@ -272,8 +274,8 @@ void app_main( void )
     printf( "\n" );
     p8->setSync( ExternalPin::SyncStage::FIRST,  ExternalPin::SyncMode::RAISE );
     p8->setSync( ExternalPin::SyncStage::SECOND, ExternalPin::SyncMode::FALL );
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     printf( pcc0 );
     runChannel ( 200u, ch4, stm );
     printf( pcu, "INCREASE synch'd by APB clock raise and fall" );
@@ -281,8 +283,8 @@ void app_main( void )
     printf( "\n" );
     pcu->getFilter()->enable->on();
     pcu->getFilter()->threshold->set( 100 ); // 10: counter=+200, 100: counter=+2 ?, 1000: counter=+0
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     printf( pcc0 );
     runChannel ( 400u, ch4, stm );
     printf( pcu, "INCREASE filtered by unit" );
@@ -292,8 +294,8 @@ void app_main( void )
     
     printf( "\n" );
     p8->filter->on();
-    pcu->counter.reset->on();
-    pcu->counter.reset->off();
+    cnt->reset->on();
+    cnt->reset->off();
     printf( pcc0 );
     runChannel ( 200u, ch4, stm );
     printf( pcu, "INCREASE filtered on pin" );
