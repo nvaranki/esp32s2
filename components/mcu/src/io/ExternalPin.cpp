@@ -10,9 +10,12 @@ ExternalPin::ExternalPin( const size_t i ) :
     sleep( i ),
     strength( new SubValueRW( GPIO_REG(i), FUN_DRV_M, FUN_DRV_S ) ),
     pull( new BitSetRW( GPIO_REG(i), FUN_PD_M | FUN_PU_M ) ),
+    sync1( new SubValueRW( GPIO_PIN0_REG + i * 0x4u, GPIO_PIN0_SYNC1_BYPASS_M, GPIO_PIN0_SYNC1_BYPASS_S ) ),
+    sync2( new SubValueRW( GPIO_PIN0_REG + i * 0x4u, GPIO_PIN0_SYNC2_BYPASS_M, GPIO_PIN0_SYNC2_BYPASS_S ) ),
     input( new FlagRW( GPIO_REG(i), FUN_IE_S ) ),
     function( new SubValueRW( GPIO_REG(i), MCU_SEL_M, MCU_SEL_S ) ),
-    filter( new FlagRW( GPIO_REG(i), 15 ) ) //TODO mnemonics, undefined in ESP-IDF
+    filter( new FlagRW( GPIO_REG(i), 15 ) ), //TODO mnemonics, undefined in ESP-IDF
+    number( i )
 {
 }
     
@@ -20,6 +23,8 @@ ExternalPin::~ExternalPin()
 {
     delete strength;
     delete pull;
+    delete sync1;
+    delete sync2;
     delete input;
     delete function;
     delete filter;
@@ -29,6 +34,16 @@ ExternalPin::Pull ExternalPin::getPull() const
 { 
     return pull->get( FUN_PD_M ) ? Pull::DOWN : pull->get( FUN_PU_M ) ? Pull::UP : Pull::OPEN;
 }
+
+ExternalPin::DriveStrength ExternalPin::getDriveStrength() const 
+{ 
+    return (DriveStrength) strength->get(); 
+}
+
+void ExternalPin::setDriveStrength( DriveStrength v ) 
+{ 
+    strength->set( static_cast<uint32_t>( v ) ); 
+}
     
 void ExternalPin::setPull( ExternalPin::Pull v )
 {
@@ -36,6 +51,16 @@ void ExternalPin::setPull( ExternalPin::Pull v )
     uint32_t m = static_cast<uint32_t>( v );
     if( m )
         pull->set( m, true );
+}
+
+ExternalPin::SyncMode ExternalPin::getSync( const SyncStage stage ) const 
+{ 
+    return (SyncMode) ( stage == SyncStage::FIRST ? sync1 : sync2 )->get(); 
+}
+
+void ExternalPin::setSync( const SyncStage stage, const SyncMode mode ) 
+{ 
+    ( stage == SyncStage::FIRST ? sync1 : sync2 )->set( static_cast<uint32_t>( mode ) ); 
 }
 
 ExternalPin::Sleep::Sleep( const size_t i ) :

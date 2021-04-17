@@ -62,24 +62,24 @@ void MatrixBuffer::clear( uint64_t m )
     clr1->set( (uint32_t) ( ( m >> 32 ) & MASK_H ) );
 }
 
-uint64_t MatrixBuffer::enabled() const
+uint64_t MatrixBuffer::getOutput() const
 {
     return ( (uint64_t) enw1->get() << 32 ) | enw0->get();
 }
 
-void MatrixBuffer::enable( uint64_t v )
+void MatrixBuffer::setOutput( uint64_t v )
 {
     enw0->set( (uint32_t) ( v & MASK_L ) );
     enw1->set( (uint32_t) ( ( v >> 32 ) & MASK_H ) );
 }
 
-void MatrixBuffer::setEnabled( uint64_t m )
+void MatrixBuffer::enableOutput( uint64_t m )
 {
     ens0->set( (uint32_t) ( m & MASK_L ) );
     ens1->set( (uint32_t) ( ( m >> 32 ) & MASK_H ) );
 }
 
-void MatrixBuffer::clearEnabled( uint64_t m )
+void MatrixBuffer::disableOutput( uint64_t m )
 {
     enc0->set( (uint32_t) ( m & MASK_L ) );
     enc1->set( (uint32_t) ( ( m >> 32 ) & MASK_H ) );
@@ -92,40 +92,25 @@ MatrixBuffer::Channel* MatrixBuffer::getChannel( const size_t i )
     return channel[i];
 }
 
-void MatrixBuffer::Channel::enable( const bool v )
+bool MatrixBuffer::Channel::output() const
 {
-    if( v )
-    {
-        if( id < 32 )
-            mb->ens0->set( mask );
-        else
-            mb->ens1->set( mask );
-    }
+    return ( id < 32 ? mb->enw0->get() : mb->enw1->get() ) & mask;
+}
+
+void MatrixBuffer::Channel::output( const bool v )
+{
+    if( id < 32 )
+        ( v ? mb->ens0 : mb->enc0 )->set( mask );
     else
-    {
-        if( id < 32 )
-            mb->enc0->set( mask );
-        else
-            mb->enc1->set( mask );
-    }
+        ( v ? mb->ens1 : mb->enc1 )->set( mask );
 }
 
 void MatrixBuffer::Channel::write( const bool v )
 {
-    if( v )
-    {
-        if( id < 32 )
-            mb->set0->set( mask );
-        else
-            mb->set1->set( mask );
-    }
+    if( id < 32 )
+        ( v ? mb->set0 : mb->clr0 )->set( mask );
     else
-    {
-        if( id < 32 )
-            mb->clr0->set( mask );
-        else
-            mb->clr1->set( mask );
-    }
+        ( v ? mb->set1 : mb->clr1 )->set( mask );
 }
 
 bool MatrixBuffer::Channel::read() const

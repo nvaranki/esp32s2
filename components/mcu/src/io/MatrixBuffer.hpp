@@ -52,15 +52,16 @@ public:
     void set( uint64_t m );
     /** @param m mask to selectively set GPIO pins to 0 */
     void clear( uint64_t m );
-    /** @return currently enabled all GPIO pins */
-    uint64_t enabled() const;
+    /** @return currently enabled for write all GPIO pins */
+    uint64_t getOutput() const;
     /** @param v value to enable write for all GPIO pins */
-    void enable( uint64_t v );
+    void setOutput( uint64_t v );
     /** @param m mask to selectively enable write for GPIO pins */
-    void setEnabled( uint64_t m );
+    void enableOutput( uint64_t m );
     /** @param m mask to selectively disable write for GPIO pins */
-    void clearEnabled( uint64_t m );
+    void disableOutput( uint64_t m );
 public:
+    /** 1 bit I/O channel through the buffer */
     class Channel
     {
     private:
@@ -72,8 +73,13 @@ public:
         Channel( MatrixBuffer* mb, const size_t id ) : mb( mb ), mask( BIT( id % 32 ) ), id( id ) {}
         virtual ~Channel() {}
     public:
-        void enable( const bool v );
+        /** @return "true" when write is enabled to GPIO pin, "false" for read only */
+        bool output() const;
+        /** @param v "true" to enable write to GPIO pin, "false" to allow read only */
+        void output( const bool v );
+        /** @param v value to set on GPIO pin */
         void write( const bool v );
+        /** @return current value of GPIO pin */
         bool read() const;
     }
     * channel[MAX_CHANNEL];

@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include "soc/io_mux_reg.h"
+#include "soc/gpio_reg.h"
 #include "bits/BitSetRW.hpp"
 #include "bits/FlagRW.hpp"
 #include "bits/SubValueRW.hpp"
@@ -65,26 +66,51 @@ public:
         /** pull-up the pin to VCC with internal resistor */
         UP = FUN_PU_M,
     };
+    /** Stage of GPIO Matrix input synchronization cascade */
+    enum class SyncStage : uint8_t
+    {
+        FIRST  = 1,
+        SECOND = 2,
+    };
+    /** GPIO Matrix input synchronization with APB clock */
+    enum class SyncMode : uint32_t
+    {
+        /** no synchronization */
+        BYPASS = 0,
+        /** synchronized on falling edge */
+        FALL = 1,
+        /** synchronized on rising edge */
+        RAISE = 2,
+    };
 private:
     /** Output drive strength */
     SubValueRW* const strength;
     /** Select pull-up/down or open mode */
     BitSetRW* const pull;
+    /** First stage synchronization */
+    SubValueRW* const sync1;
+    /** Second stage synchronization */
+    SubValueRW* const sync2;
 public:
     /** Enable input signals */
     FlagRW* const input;
-    /** IO MUX function, see FUNC_<pinname_function> */
+    /** IO MUX function defined as FUNC_<pinname_function>, see the "Table 23: IO MUX Pad List" */
     SubValueRW* const function;
-    /** Enable filter for pin input signals */
+    /** Enable filter for matrix input signals */
     FlagRW* const filter;
+    /** GPIO pin number */
+    size_t const number;
 public:
+    /** @param i GPIO pin number */
     ExternalPin( const size_t i );
     virtual ~ExternalPin();
 public:
-    DriveStrength getDriveStrength() const { return (DriveStrength) strength->get(); }
-    void setDriveStrength( DriveStrength v ) { strength->set( static_cast<uint32_t>( v ) ); }
+    DriveStrength getDriveStrength() const;
+    void setDriveStrength( DriveStrength v );
     Pull getPull() const;
     void setPull( Pull v );
+    SyncMode getSync( const SyncStage stage ) const;
+    void setSync( const SyncStage stage, const SyncMode mode );
 };
 
 #endif

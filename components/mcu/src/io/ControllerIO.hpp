@@ -19,7 +19,7 @@ class ControllerIO
 private:
     static constexpr size_t MAX_INPUT = 256;
     static constexpr size_t MAX_OUTPUT = MAX_GPIO_NUM + 1;
-    static constexpr size_t MAX_PAD = MAX_PAD_GPIO_NUM;
+    static constexpr size_t MAX_PAD = MAX_PAD_GPIO_NUM + 1;
     const size_t RESERVED_PAD[4] { 22, 23, 24, 25 }; //TODO ld undef ref static constexpr
     MatrixInput* input[MAX_INPUT];
     MatrixOutput* output[MAX_OUTPUT];

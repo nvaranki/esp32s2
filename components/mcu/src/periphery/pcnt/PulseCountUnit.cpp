@@ -30,7 +30,7 @@ PulseCountUnit::~PulseCountUnit()
 
 int16_t PulseCountUnit::getValue() const
 {
-    return (int16_t) value->get(); //TODO negative
+    return (int16_t) value->get(); // +- 16 bit counter
 }
 
 PulseCountUnit::Status PulseCountUnit::getStatus() const

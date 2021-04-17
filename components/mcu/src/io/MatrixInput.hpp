@@ -22,9 +22,11 @@ public:
     SubValueRW* const source;
     /** 1: route signals via selected GPIO matrix pad; 
         0: connect signals directly to peripheral configured in IO_MUX */
-    FlagRW* const enable;
+    FlagRW* const matrix;
     /** Invert output of the channel */
     FlagRW* const invert;
+    /** Index of the perpheral input channel */
+    const size_t input;
 public:
     /** @param i index of perpheral input, see "Table 22: GPIO Matrix" */
     MatrixInput( const size_t i );

@@ -18,7 +18,7 @@ class PulseCountUnit
 {
 public:
     static constexpr size_t MAX_CHANNEL = 2;
-    enum class Status : uint32_t
+    enum class Status : uint32_t //TODO --> ZeroComparator ?
     {
         /** counter decreases from positive to 0 */
         POS_DOWN = 0b00,
