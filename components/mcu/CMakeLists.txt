@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
 idf_component_register(
-	SRC_DIRS "src" "src/bits" "src/io" 
+	SRC_DIRS "src" 
+		"src/bits" 
+		"src/io" 
 		"src/periphery/pcnt"
+		"src/periphery/rmt"
 	INCLUDE_DIRS "include" "src"
 	REQUIRES ulp
 	REQUIRED_IDF_TARGETS esp32s2)
