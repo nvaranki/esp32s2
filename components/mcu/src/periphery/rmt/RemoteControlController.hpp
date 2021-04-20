@@ -5,12 +5,12 @@
 #ifndef H_RemoteControlController
 #define H_RemoteControlController
 
-#include <cstddef>
+#include <stdint.h>
 #include "soc/rmt_caps.h"
 #include "bits/FlagRW.hpp"
 #include "bits/WordRO.hpp"
-#include "Trigger2.hpp"
 #include "RemoteControlChannel.hpp"
+#include "RemoteControlMemory.hpp"
 
 class RemoteControlController
 {
@@ -29,20 +29,7 @@ public:
     /** enable multiple channels to start sending data simultaneously. */
     FlagRW* const sendAltogether;
     /** FIFO RAM for signal I/O */
-    class Memory
-    {
-        public:
-            FlagRW* const clock;
-            /** repetitive usage of data */
-            FlagRW* const wrap;
-            /** 1: Access memory directly; 0: Access memory via APB FIFO */
-            FlagRW* const direct;
-            Trigger2 power;
-        public:
-            Memory();
-            virtual ~Memory();
-    }
-    /*TODO const*/ memory;
+    RemoteControlMemory* const memory;
     /** Hardware version */
     WordRO* const version;
 private:
@@ -51,7 +38,7 @@ public:
     RemoteControlController();
     virtual ~RemoteControlController();
 public:
-    RemoteControlChannel* getChannel( const size_t i );
+    RemoteControlChannel* getChannel( const uint32_t i );
 };
 
 #endif
