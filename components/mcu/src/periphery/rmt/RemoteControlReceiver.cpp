@@ -3,6 +3,7 @@
 //
 // © 2021 Nikolai Varankine
 
+#include "soc/gpio_sig_map.h"
 #include "soc/rmt_reg.h"
 #include "RemoteControlReceiver.hpp"
 
@@ -16,7 +17,8 @@ RemoteControlReceiver::RemoteControlReceiver( const uint32_t channel ) :
         new FlagRO( RMT_INT_RAW_REG, RMT_CH0_RX_END_INT_RAW_S + 0x3 * channel ),
         new FlagRO( RMT_INT_ST_REG,  RMT_CH0_RX_END_INT_ST_S  + 0x3 * channel ),
         new FlagRW( RMT_INT_ENA_REG, RMT_CH0_RX_END_INT_ENA_S + 0x3 * channel ),
-        new FlagWO( RMT_INT_CLR_REG, RMT_CH0_RX_END_INT_CLR_S + 0x3 * channel ) ) )
+        new FlagWO( RMT_INT_CLR_REG, RMT_CH0_RX_END_INT_CLR_S + 0x3 * channel ) ) ),
+    index( RMT_SIG_IN0_IDX + channel )
 {
 }
 

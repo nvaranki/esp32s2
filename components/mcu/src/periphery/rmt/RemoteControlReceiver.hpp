@@ -31,6 +31,8 @@ public:
      * Triggered when the receiver has finished receiving signals.
      */
     InterruptController* const interrupt;
+    /** Index of the GPIO Matrix input channel */
+    uint8_t const index;
 public:
     RemoteControlReceiver( const uint32_t channel );
     virtual ~RemoteControlReceiver();
