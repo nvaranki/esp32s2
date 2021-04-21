@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include "bits/FlagRW.hpp"
 #include "bits/SubValueRW.hpp"
+#include "InterruptController.hpp"
 #include "RemoteControlReceiverAddress.hpp"
 #include "RemoteControlReceiverCarrier.hpp"
 #include "RemoteControlFilter.hpp"
@@ -26,6 +27,10 @@ public:
     FlagRW* const enable;
     /** number 0f continuous clock cycles to detect idle state (no change on input) */
     SubValueRW* const idle;
+    /** end of receive interrupt status and control;
+     * Triggered when the receiver has finished receiving signals.
+     */
+    InterruptController* const interrupt;
 public:
     RemoteControlReceiver( const uint32_t channel );
     virtual ~RemoteControlReceiver();

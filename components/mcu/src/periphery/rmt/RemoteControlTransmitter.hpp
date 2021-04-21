@@ -8,10 +8,12 @@
 
 #include "bits/FlagRW.hpp"
 #include "bits/SubValueRW.hpp"
+#include "InterruptController.hpp"
+#include "RemoteControlIdle.hpp"
+#include "RemoteControlLimit.hpp"
+#include "RemoteControlLoop.hpp"
 #include "RemoteControlTransmitterAddress.hpp"
 #include "RemoteControlTransmitterCarrier.hpp"
-#include "RemoteControlLoop.hpp"
-#include "RemoteControlIdle.hpp"
 #include "Trigger2.hpp"
 
 class RemoteControlTransmitter
@@ -25,14 +27,18 @@ public:
     RemoteControlLoop* const loop;
     /** Configuration of idle state (no signal to send) */
     RemoteControlIdle* const idle;
+    /** Configuration of transmission marker; used in continuous mode */
+    RemoteControlLimit* const limit;
     /** Start/stop sending data out */
     Trigger2 const send;
-    /** Total number of signal entries (level and duration) to send out, max 128=2*64 per allocated RAM block */
-    SubValueRW* const entries;
     /** reset RAM read address */
     FlagRW* const repeat;
     /** start sending data simultaneously with other channels */
     FlagRW* const simultaneously;
+    /** end of transmit interrupt status and control;
+     * Triggered when the transmitter has finished transmitting signals.
+     */
+    InterruptController* const interrupt;
 public:
     RemoteControlTransmitter( const size_t channel );
     virtual ~RemoteControlTransmitter();

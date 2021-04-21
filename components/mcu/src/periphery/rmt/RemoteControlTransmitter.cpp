@@ -11,12 +11,17 @@ RemoteControlTransmitter::RemoteControlTransmitter( const size_t channel ) :
     carrier( new RemoteControlTransmitterCarrier( channel ) ),
     loop( new RemoteControlLoop( channel ) ),
     idle( new RemoteControlIdle( channel ) ),
+    limit( new RemoteControlLimit( channel ) ),
     send(
         new FlagRW( RMT_CH0CONF1_REG + 0x8 * channel, RMT_TX_START_CH0_S ),
         new FlagRW( RMT_CH0CONF1_REG + 0x8 * channel, RMT_TX_STOP_CH0_S ) ),
-    entries( new SubValueRW( RMT_CH0_TX_LIM_REG + 0x4 * channel, RMT_TX_LIM_CH0_M, RMT_TX_LIM_CH0_S ) ),
     repeat( new FlagRW( RMT_CH0CONF1_REG + 0x8 * channel, RMT_TX_CONTI_MODE_CH0_S ) ),
-    simultaneously( new FlagRW( RMT_TX_SIM_REG, RMT_TX_SIM_CH0_S + channel ) )
+    simultaneously( new FlagRW( RMT_TX_SIM_REG, RMT_TX_SIM_CH0_S + channel ) ),
+    interrupt( new InterruptController( // bits 0 3 6 9
+        new FlagRO( RMT_INT_RAW_REG, RMT_CH0_TX_END_INT_RAW_S + 0x3 * channel ),
+        new FlagRO( RMT_INT_ST_REG,  RMT_CH0_TX_END_INT_ST_S  + 0x3 * channel ),
+        new FlagRW( RMT_INT_ENA_REG, RMT_CH0_TX_END_INT_ENA_S + 0x3 * channel ),
+        new FlagWO( RMT_INT_CLR_REG, RMT_CH0_TX_END_INT_CLR_S + 0x3 * channel ) ) )
 {
 }
 
@@ -26,9 +31,10 @@ RemoteControlTransmitter::~RemoteControlTransmitter()
     delete carrier;
     delete loop;
     delete idle;
+    delete limit;
     delete send.on;
     delete send.off;
-    delete entries;
     delete repeat;
     delete simultaneously;
+    delete interrupt;
 }

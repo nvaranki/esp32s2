@@ -15,8 +15,10 @@ private:
     /** select a base clock */
     FlagRW* const source;
 public:
-    /** divider of source clock frequency */
+    /** divider of source clock frequency; value 0f 0 means 256 */
     SubValueRW* const divider;
+    /** reset the clock divider */
+    FlagRW* const reset;
 public:
     RemoteControlClock( const size_t channel );
     virtual ~RemoteControlClock();
