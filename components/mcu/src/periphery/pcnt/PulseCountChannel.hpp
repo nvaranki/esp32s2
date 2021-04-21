@@ -7,7 +7,6 @@
 
 #include <cstddef>
 #include <stdint.h>
-#include "soc/gpio_sig_map.h"
 #include "bits/SubValueRW.hpp"
 
 class PulseCountChannel
@@ -23,7 +22,7 @@ public:
         SubValueRW* const positive;
     public:
         /** Index of the GPIO Matrix input channel */
-        size_t const index;
+        uint8_t const index;
     public:
         Signal( const size_t unit, const size_t channel );
         virtual ~Signal();

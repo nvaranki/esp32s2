@@ -9,6 +9,7 @@
 //
 // © 2021 Nikolai Varankine
 
+#include "soc/gpio_sig_map.h"
 #include "soc/pcnt_reg.h"
 #include "PulseCountChannel.hpp"
 #include "PulseCountUnit.hpp"
