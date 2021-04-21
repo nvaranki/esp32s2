@@ -39,7 +39,7 @@ public:
      * Triggered when the transmitter has finished transmitting signals.
      */
     InterruptController* const interrupt;
-    /** Index of the GPIO Matrix input channel */
+    /** Index of the GPIO Matrix output channel */
     uint8_t const index;
 public:
     RemoteControlTransmitter( const size_t channel );
