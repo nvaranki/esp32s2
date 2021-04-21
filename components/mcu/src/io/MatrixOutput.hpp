@@ -13,34 +13,36 @@
 class MatrixOutput
 {
 public:
-    enum class Constant : uint32_t
-    {
-        /** Number of internal pad that holds constantly high value */
-        HIGH = GPIO_FUNC_IN_HIGH,
-        /** Number of internal pad that holds constantly low value */
-        LOW  = GPIO_FUNC_IN_LOW,
-    };
-public:
-    /** Peripheral output to get signal from, [0;255] or 256 ... TODO */
-    SubValueRW* const source;
-    /** 1: route signals via selected GPIO matrix pad; 
-        0: connect signals directly to peripheral configured in IO_MUX */
+    /** index of perpheral output, see "Table 22: GPIO Matrix" */
+    SubValueRW* const periphery;
     class Enable
     {
-    public:
+    private:
         /** Source of enable signal for the channel. 0: peripheral, 1: register tODO  */
         FlagRW* const select;
+    public:
         /** Invert incoming enable signal */
         FlagRW* const invert;
     public:
-        Enable( const size_t n );
+        Enable( const uint8_t i );
         virtual ~Enable();
+    public:
+        enum class Source : uint32_t
+        {
+            PERIPHERY = 0,
+            GPIO      = 1,
+        };
+        Source getSource() const { return (Source) select->get(); };
+        void setSource( Source s ) const { select->set( static_cast<uint32_t>( s ) ); };
     }
     const enable;
     /** Invert output of the channel */
     FlagRW* const invert;
+    /** Index of the perpheral input channel */
+    const uint8_t gpio;
 public:
-    MatrixOutput( const size_t n );
+    /** @param gpio GPIO pad number to put signal to, [0;53] */
+    MatrixOutput( const uint8_t gpio );
     virtual ~MatrixOutput();
 };
 

@@ -16,7 +16,7 @@ RemoteControlTransmitter::RemoteControlTransmitter( const size_t channel ) :
     send(
         new FlagRW( RMT_CH0CONF1_REG + 0x8 * channel, RMT_TX_START_CH0_S ),
         new FlagRW( RMT_CH0CONF1_REG + 0x8 * channel, RMT_TX_STOP_CH0_S ) ),
-    repeat( new FlagRW( RMT_CH0CONF1_REG + 0x8 * channel, RMT_TX_CONTI_MODE_CH0_S ) ),
+    continuous( new FlagRW( RMT_CH0CONF1_REG + 0x8 * channel, RMT_TX_CONTI_MODE_CH0_S ) ),
     simultaneously( new FlagRW( RMT_TX_SIM_REG, RMT_TX_SIM_CH0_S + channel ) ),
     interrupt( new InterruptController( // bits 0 3 6 9
         new FlagRO( RMT_INT_RAW_REG, RMT_CH0_TX_END_INT_RAW_S + 0x3 * channel ),
@@ -36,7 +36,7 @@ RemoteControlTransmitter::~RemoteControlTransmitter()
     delete limit;
     delete send.on;
     delete send.off;
-    delete repeat;
+    delete continuous;
     delete simultaneously;
     delete interrupt;
 }

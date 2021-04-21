@@ -19,17 +19,17 @@ public:
     static constexpr uint32_t SOURCE_LOW  = GPIO_FUNC_IN_LOW;
 public:
     /** GPIO pad number to get signal from, [0;53] or Constant::HIGH or Constant::LOW */
-    SubValueRW* const source;
+    SubValueRW* const gpio;
     /** 1: route signals via selected GPIO matrix pad; 
         0: connect signals directly to peripheral configured in IO_MUX */
     FlagRW* const matrix;
     /** Invert output of the channel */
     FlagRW* const invert;
     /** Index of the perpheral input channel */
-    const size_t input;
+    const uint16_t periphery;
 public:
     /** @param i index of perpheral input, see "Table 22: GPIO Matrix" */
-    MatrixInput( const size_t i );
+    MatrixInput( const uint16_t i );
     virtual ~MatrixInput();
 };
 

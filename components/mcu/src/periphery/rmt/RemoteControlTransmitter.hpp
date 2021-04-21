@@ -31,8 +31,8 @@ public:
     RemoteControlLimit* const limit;
     /** Start/stop sending data out */
     Trigger2 const send;
-    /** reset RAM read address */
-    FlagRW* const repeat;
+    /** continuous mode (resets RAM read address automatically on transmission end-marker) */
+    FlagRW* const continuous;
     /** start sending data simultaneously with other channels */
     FlagRW* const simultaneously;
     /** end of transmit interrupt status and control;

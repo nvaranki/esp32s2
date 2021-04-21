@@ -27,8 +27,8 @@ private: // these modules unlikely are used together
     /** Memory manager */
     RemoteControlChannelMemory* memory;
 public:
-    /** data I/O via APB FIFO */
-    WordRW* const data;
+    /** data I/O gateway for APB FIFO */
+    WordRW* const fifo;
     /** use carrier modulation */
     FlagRW* const carrier;
     /** FSM status */

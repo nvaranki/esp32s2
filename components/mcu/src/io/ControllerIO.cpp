@@ -39,6 +39,7 @@ MatrixInput* ControllerIO::getMatrixInput( const size_t i )
 MatrixOutput* ControllerIO::getMatrixOutput( const size_t i )
 {
     if( i >= MAX_OUTPUT ) return nullptr;
+    for( int t : RESERVED_PAD ) if( t == i ) return nullptr;
     if( output[i] == nullptr ) output[i] = new MatrixOutput( i );
     return output[i];
 }
