@@ -20,9 +20,9 @@ public:
     FlagRW* const limited;
     /** signal level to apply carrier modulation */
     FlagRW* const level;
-    /** Number (low +1) of clock cycles in period of carrier wave at low signal TODO ?*/
+    /** Duration (low +1) of low level in modulation pulse, in undivided clock cycles */
     SubValueRW* const low;
-    /** Number (high +1) of clock cycles in period of carrier wave at high signal TODO ?*/
+    /** Duration (high +1) of high level in modulation pulse, in undivided clock cycles */
     SubValueRW* const high;
 public:
     RemoteControlTransmitterCarrier( const uint32_t channel );

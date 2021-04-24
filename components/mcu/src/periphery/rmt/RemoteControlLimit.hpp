@@ -14,10 +14,12 @@
 class RemoteControlLimit
 {
 public:
-    /** number of transmitted signal entries (level and duration) when to fire interrupt */
-    SubValueRW* const entries;
+    /** virtual address (in 32 bit words) of entry pair to be transmitted when to fire interrupt;
+     * every turn around within a block in wrap mode or cross blocks reading counts towards checked value
+     */
+    SubValueRW* const threshold;
     /** threshold interrupt status and control;
-     * Triggered when the amount of data the transmitter has sent matches the value of "entries" property.
+     * Triggered when the amount of data the transmitter has sent matches the value of "threshold" property.
      */
     InterruptController* const interrupt;
 public:

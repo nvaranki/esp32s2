@@ -9,15 +9,14 @@
 #include "bits/FlagRO.hpp"
 #include "bits/FlagWO.hpp"
 #include "bits/SubValueRO.hpp"
-#include "bits/SubValueRW.hpp"
 
 class RemoteControlTransmitterAddress
 {
 public:
-    /** memory address offset when channel reads RAM via APB bus */
-    SubValueRW* const offset;
     /** current memory address offset when channel reads RAM via APB bus */
-    SubValueRO* const current;
+    SubValueRO* const fifo;
+    /** current memory address offset (in 32 bit words) when channel reads RAM directly */
+    SubValueRO* const ram;
     /** reset RAM read address */
     FlagWO* const reset;
     /** offset address is out of memory size */

@@ -17,7 +17,7 @@
 class RemoteControlReceiver
 {
 public:
-    /** RAM address to write received signal */
+    /** RAM address to write inbound signal */
     RemoteControlReceiverAddress* const address;
     /** Input sinal filter */
     RemoteControlFilter* const filter;

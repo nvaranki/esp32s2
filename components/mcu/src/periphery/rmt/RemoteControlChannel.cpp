@@ -13,7 +13,6 @@ RemoteControlChannel::RemoteControlChannel( const uint32_t channel ) :
     transmitter( nullptr ),
     clock( nullptr ),
     memory( nullptr ),
-    fifo( new WordRW( RMT_CH0DATA_REG + 0x4 * channel ) ),
     carrier( new FlagRW( RMT_CH0CONF0_REG + 0x8 * channel, RMT_CARRIER_EN_CH0_S ) ),
     status( new SubValueRO( RMT_CH0STATUS_REG + 0x4 * channel, RMT_STATE_CH0_M, RMT_STATE_CH0_S ) ),
     interrupt( new InterruptController( // bits 2 5 8 11
@@ -31,7 +30,6 @@ RemoteControlChannel::~RemoteControlChannel()
     if( transmitter != nullptr ) delete transmitter;
     if( clock  != nullptr ) delete clock;
     if( memory != nullptr ) delete memory;
-    delete fifo;
     delete carrier;
     delete status;
     delete interrupt;

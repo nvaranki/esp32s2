@@ -19,7 +19,7 @@
 class RemoteControlTransmitter
 {
 public:
-    /** RAM address to write received signal */
+    /** RAM address to read outbound signal */
     RemoteControlTransmitterAddress* const address;
     /** Carrier modulation of signal level. */
     RemoteControlTransmitterCarrier* const carrier;

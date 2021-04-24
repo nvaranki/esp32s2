@@ -13,7 +13,9 @@ class RemoteControlMemory
 {
 public:
     FlagRW* const clock;
-    /** repetitive usage of data */
+    /** repetitive transmit mode of entire allocated memory until "end marker" entry is met; 
+     * it affects transmitters in all channels; for single channel wrap mode use continuous 
+     * tramsmitting instead */
     FlagRW* const wrap;
     /** 1: Access memory directly; 0: Access memory via APB FIFO */
     FlagRW* const direct;
