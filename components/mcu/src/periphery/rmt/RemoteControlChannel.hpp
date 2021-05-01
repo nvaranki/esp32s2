@@ -27,8 +27,8 @@ private: // these modules unlikely are used together
     /** Memory manager */
     RemoteControlChannelMemory* memory;
 public:
-    /** use carrier modulation TODO no effect on gen*/
-    FlagRW* const carrier;
+    /** signal level associated with carrier modulation */
+    FlagRW* const level;
     /** FSM status */
     SubValueRO* const status;
     /** I/O interrupt status and control;

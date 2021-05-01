@@ -48,8 +48,16 @@ public:
     /** Performer of memory I/O inside remote control controller */
     enum class Owner : uint32_t
     {
-        TRANSMITTER = 0,
-        RECIVER     = 1,
+        /**
+         * Transmitter memory read mode.
+         * It is safe to perform software I/O with memory.
+         */
+        SW_TRANSMITTER = 0,
+        /**
+         * Receiver memory write mode.
+         * It is NOT safe to perform software I/O with memory.
+         */
+        HW_RECEIVER    = 1,
     };
     /** @param n Number of memory blocks to allocate for the channel; no more than reminder of the pool. */
     void setAllocated( const uint32_t n );

@@ -17,7 +17,11 @@ public:
      * it affects transmitters in all channels; for single channel wrap mode use continuous 
      * tramsmitting instead */
     FlagRW* const wrap;
-    /** 1: Access memory directly; 0: Access memory via APB FIFO */
+    /** 
+     * 1: Access memory directly by software; 
+     * 0: Access memory via APB FIFO, 
+     *    it is NOT safe to perform software I/O with memory.
+     * */
     FlagRW* const direct;
     Trigger2 power;
 public:

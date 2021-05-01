@@ -6,6 +6,7 @@
 #include "RemoteControlReceiverCarrier.hpp"
 
 RemoteControlReceiverCarrier::RemoteControlReceiverCarrier( const uint32_t channel ) :
+    enable( new FlagRW( RMT_CH0CONF0_REG + 0x8 * channel, RMT_CARRIER_EN_CH0_S ) ),
     remove( new FlagRW( RMT_CH0CONF1_REG + 0x8 * channel, RMT_CHK_RX_CARRIER_EN_CH0_S ) ),
     low ( new SubValueRW( RMT_CH0_RX_CARRIER_RM_REG + 0x4 * channel, 
         RMT_CARRIER_LOW_THRES_CH0_M, RMT_CARRIER_LOW_THRES_CH0_S ) ),
@@ -16,6 +17,7 @@ RemoteControlReceiverCarrier::RemoteControlReceiverCarrier( const uint32_t chann
     
 RemoteControlReceiverCarrier::~RemoteControlReceiverCarrier()
 {
+    delete enable;
     delete remove;
     delete low;
     delete high;

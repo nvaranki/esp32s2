@@ -13,7 +13,7 @@ RemoteControlChannel::RemoteControlChannel( const uint32_t channel ) :
     transmitter( nullptr ),
     clock( nullptr ),
     memory( nullptr ),
-    carrier( new FlagRW( RMT_CH0CONF0_REG + 0x8 * channel, RMT_CARRIER_EN_CH0_S ) ),
+    level( new FlagRW( RMT_CH0CONF0_REG + 0x8 * channel, RMT_CARRIER_OUT_LV_CH0_S ) ),
     status( new SubValueRO( RMT_CH0STATUS_REG + 0x4 * channel, RMT_STATE_CH0_M, RMT_STATE_CH0_S ) ),
     interrupt( new InterruptController( // bits 2 5 8 11
         new FlagRO( RMT_INT_RAW_REG, RMT_CH0_ERR_INT_RAW_S + 0x3 * channel ),
@@ -30,7 +30,7 @@ RemoteControlChannel::~RemoteControlChannel()
     if( transmitter != nullptr ) delete transmitter;
     if( clock  != nullptr ) delete clock;
     if( memory != nullptr ) delete memory;
-    delete carrier;
+    delete level;
     delete status;
     delete interrupt;
 }

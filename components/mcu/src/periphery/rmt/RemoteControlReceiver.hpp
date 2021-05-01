@@ -25,9 +25,15 @@ public:
     RemoteControlReceiverCarrier* const carrier;
     /** allow to receive data */
     FlagRW* const enable;
-    /** number 0f continuous clock cycles to detect idle state (no change on input) */
+    /** 
+     * Number 0f continuous divided clock cycles to detect idle state (no change on input, no matter 
+     * of level 0 or 1). Once an idle state has been detected, the channel places end-marker entry to 
+     * memory and generates interrupt "end of receive".
+     * TODO if input rather continues, some trash entries were noticed after end-marker.
+     */
     SubValueRW* const idle;
-    /** end of receive interrupt status and control;
+    /** 
+     * end of receive interrupt status and control;
      * Triggered when the receiver has finished receiving signals.
      */
     InterruptController* const interrupt;

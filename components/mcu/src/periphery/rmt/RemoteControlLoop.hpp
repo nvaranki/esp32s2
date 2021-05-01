@@ -15,7 +15,8 @@ class RemoteControlLoop
 public:
     /** enable loop counting */
     FlagRW* const enable;
-    /** maximum loop times */
+    /** fire interrupt after the loop repeats specified number of times, 
+     * i.e. after "repeat"+1 times of memory pass */
     SubValueRW* const repeat;
     /** reset loop counting when continuous transmission mode is valid */
     FlagRW* const reset;

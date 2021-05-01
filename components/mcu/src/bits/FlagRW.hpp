@@ -26,9 +26,25 @@ public:
      */
     inline void on() { set( true ); };
     /**
+     * Sets current value to true.
+     */
+    inline void up() { set( true ); };
+    /**
+     * Sets current value to true.
+     */
+    inline void high() { set( true ); };
+    /**
      * Sets current value to false.
      */
     inline void off() { set( false ); };
+    /**
+     * Sets current value to false.
+     */
+    inline void down() { set( false ); };
+    /**
+     * Sets current value to false.
+     */
+    inline void low() { set( false ); };
 };
 
 #endif
