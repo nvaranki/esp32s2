@@ -38,7 +38,7 @@ public:
             RESET_SYSTEM = 3,
         };
         void setAction( Action a ) { action->set( static_cast<uint32_t>( a ) ); };
-        Action getAction() const { return (Action) action->get(); }; //TODO test it!
+        Action getAction() const { return (Action) action->get(); };
     };
     Stage* const stage0;
     Stage* const stage1;

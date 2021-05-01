@@ -77,17 +77,3 @@ WatchDogMain::Stage::~Stage()
     delete action;
     delete timeout;
 }
-
-// WatchDogMain::Stage::Action WatchDogMain::Stage::getAction()
-// {
-//     Action rc;
-//     switch( action->get() ) //TODO map?
-//     {
-//     case static_cast<uint32_t>( Action::OFF          ) : rc = Action::OFF;          break;
-//     case static_cast<uint32_t>( Action::INTERRUPT    ) : rc = Action::INTERRUPT;    break;
-//     case static_cast<uint32_t>( Action::RESET_CPU    ) : rc = Action::RESET_CPU;    break;
-//     case static_cast<uint32_t>( Action::RESET_SYSTEM ) : rc = Action::RESET_SYSTEM; break;
-//     default: rc = *nullptr; break;
-//     }
-//     return static_cast<Action>( 2  );
-// }
