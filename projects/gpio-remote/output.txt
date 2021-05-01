@@ -1,0 +1,203 @@
+I/O clock=1
+Peripheral output 87 assigned to GPIO pin 04 W
+Peripheral input 84 assigned to GPIO pin 08 R via matrix
+Peripheral input 39 assigned to GPIO pin 08 R via matrix
+Peripheral input 41 assigned to GPIO pin 60 F via matrix
+Peripheral input 40 assigned to GPIO pin 60 F via matrix
+Peripheral input 42 assigned to GPIO pin 60 F via matrix
+
+Direct memory load, single pass, address reset
+Address TX: RAM=0 FIFO=0
+TX: 0=8032 1=0096 2=8032 3=0096 4=8032 5=0096 6=0000
+Address TX: RAM=0 FIFO=0
+Address TX: RAM=5 FIFO=0
+Address TX: RAM=0 FIFO=0
+Unit 0: status=0x00 counter=+3
+
+FIFO memory load, single pass, address reset
+Address TX: RAM=0 FIFO=0
+Address TX: RAM=0 FIFO=0
+Address TX: RAM=3 FIFO=0
+Address TX: RAM=0 FIFO=0
+TX: 0=8032 1=0096 2=8032 3=0096 4=0000 5=0096
+Unit 0: status=0x00 counter=+2
+
+Passes in unlimited continuous mode
+TX: 0=8032 1=0096 2=0000
+Unit 0: status=0x00 counter=+3910
+
+Passes in counted loop, monitored interrupt
+TX: 0=8032 1=0096 2=0000
+TX LOOP R=99
+Interrupt: E=1 R=0 M=0 LOOP type
+Check count: 1520
+Interrupt: E=1 R=1 M=1 fired
+Interrupt: E=1 R=0 M=0 cleared
+Unit 0: status=0x00 counter=+100 
+
+Passes in limited wrap mode, interrupts
+   0=8032   1=0096   2=8032   3=0096   4=8032   5=0096   6=8032   7=0096   8=8032   9=0096  10=8032  11=0096  12=8032  13=0096  14=8032  15=0096
+  16=8032  17=0096  18=8032  19=0096  20=8032  21=0096  22=8032  23=0096  24=8032  25=0096  26=8032  27=0096  28=8032  29=0096  30=8032  31=0096
+  32=8032  33=0096  34=8032  35=0096  36=8032  37=0096  38=8032  39=0096  40=8032  41=0096  42=8032  43=0096  44=8032  45=0096  46=8032  47=0096
+  48=8032  49=0096  50=8032  51=0096  52=8032  53=0096  54=8032  55=0096  56=8032  57=0096  58=8032  59=0096  60=8032  61=0096  62=8032  63=0096
+  64=8032  65=0096  66=8032  67=0096  68=8032  69=0096  70=8032  71=0096  72=8032  73=0096  74=8032  75=0096  76=8032  77=0096  78=8032  79=0096
+  80=8032  81=0096  82=8032  83=0096  84=8032  85=0096  86=8032  87=0096  88=8032  89=0096  90=8032  91=0096  92=8032  93=0096  94=8032  95=0096
+  96=8032  97=0096  98=8032  99=0096 100=8032 101=0096 102=8032 103=0096 104=8032 105=0096 106=8032 107=0096 108=8032 109=0096 110=8032 111=0096
+ 112=8032 113=0096 114=8032 115=0096 116=8032 117=0096 118=8032 119=0096 120=8032 121=0096 122=8032 123=0096 124=8032 125=0096 126=8032 127=0096
+Interrupt: E=1 R=0 M=0 TX type
+TX THR @ 224
+Interrupt: E=1 R=0 M=0 THR type
+TX address: 32
+Check count: 3415
+Interrupt: E=1 R=1 M=1 THR fired
+Interrupt: E=1 R=0 M=0 THR cleared
+Interrupt: E=1 R=1 M=1 TX fired
+Check count: 0
+Interrupt: E=1 R=0 M=0 TX cleared
+Unit 0: status=0x00 counter=+266
+
+Passes at max frequency 40000 kHz
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=1 M=1 TX fired
+Check count: 0
+Interrupt: E=1 R=0 M=0 TX cleared
+Unit 0: status=0x00 counter=+4
+
+Passes at max frequency 20000 kHz
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=1 M=1 TX fired
+Check count: 0
+Interrupt: E=1 R=0 M=0 TX cleared
+Unit 0: status=0x00 counter=+6
+
+Passes at max frequency 13333 kHz
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=1 M=1 TX fired
+Check count: 0
+Interrupt: E=1 R=0 M=0 TX cleared
+Unit 0: status=0x00 counter=+5
+
+Passes at max frequency 10000 kHz
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=1 M=1 TX fired
+Check count: 0
+Interrupt: E=1 R=0 M=0 TX cleared
+Unit 0: status=0x00 counter=+5
+
+Passes at max frequency 8000 kHz
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=1 M=1 TX fired
+Check count: 0
+Interrupt: E=1 R=0 M=0 TX cleared
+Unit 0: status=0x00 counter=+5
+
+Passes at max frequency 4000 kHz
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=1 M=1 TX fired
+Check count: 3
+Interrupt: E=1 R=0 M=0 TX cleared
+Unit 0: status=0x00 counter=+5
+
+Generation of unmodulated signal
+TX: 0=8030 1=0010 2=8040 3=0000
+Carrier TX: M=0 V=1 L=96 H=32
+Interrupt: E=1 R=0 M=0 TX type
+Address TX: RAM=0 FIFO=0
+Check count TX: 168
+Interrupt: E=1 R=1 M=1 TX fired
+Interrupt: E=1 R=0 M=0 TX cleared
+Address TX: RAM=2 FIFO=0
+Unit 0: status=0x00 counter=+2
+Interrupt: E=1 R=0 M=0 RX cleared
+
+Generation of modulated signal
+TX: 0=8030 1=0010 2=8040 3=0000
+Carrier TX: M=1 V=1 L=96 H=32
+Interrupt: E=1 R=0 M=0 TX type
+Address TX: RAM=0 FIFO=0
+Check count TX: 168
+Interrupt: E=1 R=1 M=1 TX fired
+Interrupt: E=1 R=0 M=0 TX cleared
+Address TX: RAM=2 FIFO=0
+Unit 0: status=0x00 counter=+14
+Interrupt: E=1 R=0 M=0 RX cleared
+
+Recognition of unmodulated signal
+TX: 0=8030 1=0010 2=8040 3=0000
+Carrier TX: M=0 V=1 L=96 H=32
+Carrier RX: M=0 V=1 L=9 H=10 I=65
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=0 M=0 RX type
+Address RX: RAM=64 FIFO=64
+Address TX: RAM=0 FIFO=0
+Check count TX: 171
+Interrupt: E=1 R=1 M=1 TX fired
+Interrupt: E=1 R=0 M=0 TX cleared
+Address TX: RAM=2 FIFO=0
+Unit 0: status=0x00 counter=+2
+Check count RX: 0
+Interrupt: E=1 R=1 M=1 RX fired
+Interrupt: E=1 R=0 M=0 RX cleared
+Address RX: RAM=66 FIFO=64
+RX:   0=8030   1=0010   2=8040   3=0000
+
+Recognition of modulated signal
+TX: 0=8030 1=0010 2=8040 3=0000
+Carrier TX: M=1 V=1 L=96 H=32
+Carrier RX: M=1 V=1 L=9 H=10 I=65
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=0 M=0 RX type
+Address RX: RAM=64 FIFO=64
+Address TX: RAM=0 FIFO=0
+Check count TX: 171
+Interrupt: E=1 R=1 M=1 TX fired
+Interrupt: E=1 R=0 M=0 TX cleared
+Address TX: RAM=2 FIFO=0
+Unit 0: status=0x00 counter=+14
+Check count RX: 0
+Interrupt: E=1 R=1 M=1 RX fired
+Interrupt: E=1 R=0 M=0 RX cleared
+Address RX: RAM=66 FIFO=64
+RX:   0=8032   1=0010   2=8040   3=0000
+
+Recognition of unmodulated signal
+TX: 0=8030 1=0010 2=8040 3=0028 4=0000
+Carrier TX: M=0 V=1 L=96 H=32
+Carrier RX: M=0 V=1 L=9 H=10 I=65
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=0 M=0 RX type
+Address RX: RAM=64 FIFO=64
+Address TX: RAM=0 FIFO=0
+Check count TX: 225
+Interrupt: E=1 R=1 M=1 TX fired
+Interrupt: E=1 R=0 M=0 TX cleared
+Address TX: RAM=3 FIFO=0
+Unit 0: status=0x00 counter=+2
+Check count RX: 0
+Interrupt: E=1 R=1 M=1 RX fired
+Interrupt: E=1 R=0 M=0 RX cleared
+Address RX: RAM=66 FIFO=64
+RX:   0=8030   1=0010   2=8040   3=0000   4=c981
+
+Recognition of modulated signal
+TX: 0=8030 1=0010 2=8040 3=0028 4=0000
+Carrier TX: M=1 V=1 L=96 H=32
+Carrier RX: M=1 V=1 L=9 H=10 I=65
+Interrupt: E=1 R=0 M=0 TX type
+Interrupt: E=1 R=0 M=0 RX type
+Address RX: RAM=64 FIFO=64
+Address TX: RAM=0 FIFO=0
+Check count TX: 225
+Interrupt: E=1 R=1 M=1 TX fired
+Interrupt: E=1 R=0 M=0 TX cleared
+Address TX: RAM=3 FIFO=0
+Unit 0: status=0x00 counter=+14
+Check count RX: 0
+Interrupt: E=1 R=1 M=1 RX fired
+Interrupt: E=1 R=0 M=0 RX cleared
+Address RX: RAM=66 FIFO=64
+RX:   0=8032   1=0010   2=8040   3=0000   4=c981
+
+Exit Xtensa program
+
+Done
