@@ -1,5 +1,5 @@
 /* 
- * Single WS2812 LED driver. Employs RMT output channel.
+ * Single/pair WS2812 LED driver. Employs RMT output channel.
  *
  * Author © 2021 Nikolai Varankine
  */
@@ -67,29 +67,11 @@ DriverWS2812::DriverWS2812( MicroControllerUnit* const mcu, const uint8_t ch, co
 DriverWS2812::~DriverWS2812()
 {
 }
-    
-void DriverWS2812::send( const uint8_t r, const uint8_t g, const uint8_t b )
-{
-    RemoteControlTransmitter* rct = rcc->getTransmitter();
-    
-    // using FIFO memory load, address reset required
-    bool direct = rmt->memory->direct->get();
-    rmt->memory->direct->off();
-    rcc->getMemory()->reset->on();
-    rcc->getMemory()->reset->off();
-    rct->address->reset->on();
-    rct->address->reset->off();
-    WordRW* const fifo = rcc->getMemory()->fifo;
-    for( uint8_t v : { g, r, b } )
-    {
-        for( int bit = 0; bit < 8; bit++ )
-        {
-            fifo->set( DATA[ v & 0x80u ? 1 : 0 ].val ); 
-            v <<= 1;
-        }
-    }
-    fifo->set( DriverWS2812::RESET.val ); 
 
+void DriverWS2812::push()
+{
+    RemoteControlTransmitter* const rct = rcc->getTransmitter();
+    
     // send in single pass, address reset required
     rct->interrupt->enable->on();
     rct->interrupt->clear->on();
@@ -101,11 +83,53 @@ void DriverWS2812::send( const uint8_t r, const uint8_t g, const uint8_t b )
     rct->send.on->on();
     // generating - counting ...
     unsigned long pc = 0;
-    while( ! rct->interrupt->masked->get() && pc < 1000u ) { pc++; } // pc~330; ~ 30 + 50 mks
+    while( ! rct->interrupt->masked->get() && pc < 1000u ) { pc++; } // pc~330 per RGB triple; ~ 30 + 50 mks
     rct->interrupt->enable->off();
     rct->interrupt->clear->on();
     rct->interrupt->clear->off();
     rct->send.on->off();
+}
 
+void DriverWS2812::load( uint8_t* const values, uint32_t const size )
+{
+    RemoteControlTransmitter* const rct = rcc->getTransmitter();
+    
+    // using FIFO memory load, address reset required
+    rcc->getMemory()->reset->on();
+    rcc->getMemory()->reset->off();
+    rct->address->reset->on();
+    rct->address->reset->off();
+    WordRW* const fifo = rcc->getMemory()->fifo;
+    for( int i = 0; i < size; i++ )
+    {
+        uint8_t v = values[i];
+        for( int bit = 0; bit < 8; bit++ )
+        {
+            fifo->set( DATA[ v & 0x80u ? 1 : 0 ].val ); 
+            v <<= 1;
+        }
+    }
+    fifo->set( DriverWS2812::RESET.val ); 
+}
+    
+void DriverWS2812::send( const uint8_t r, const uint8_t g, const uint8_t b )
+{
+    bool direct = rmt->memory->direct->get();
+    rmt->memory->direct->off();
+    uint8_t values[] { g, r, b };
+    load( values, sizeof( values ) / sizeof( uint8_t ) );
+    push();
+    rmt->memory->direct->set( direct );
+}
+
+void DriverWS2812::send( 
+        const uint8_t r0, const uint8_t g0, const uint8_t b0, 
+        const uint8_t r1, const uint8_t g1, const uint8_t b1 )
+{
+    bool direct = rmt->memory->direct->get();
+    rmt->memory->direct->off();
+    uint8_t values[] { g0, r0, b0, g1, r1, b1 };
+    load( values, sizeof( values ) / sizeof( uint8_t ) );
+    push();
     rmt->memory->direct->set( direct );
 }

@@ -1,6 +1,6 @@
 /* WS2812 LED Example: Driver in use.
 
-   The program uses WS2812 single LED driver to transit RGB values to the device.
+   The program uses WS2812 single/pair LED driver to transit RGB values to the device.
    That, in turn, employs hardware digital generator RMT to make a signal sequence
    supported by device. LED device emits submitted color.
 
@@ -79,6 +79,8 @@ void app_main( void )
         }   
         // vTaskDelay( 1 );
     }
+    drv->send( 10, 10, 10, 0xFFu, 0xFFu, 0xFFu ); // draft test for chain of two LEDs
+    vTaskDelay( 1000 );
     drv->send( 0, 0, 0 );
 
     drv->getController()->enable->off();

@@ -1,5 +1,5 @@
 /* 
- * Single WS2812 LED driver. Employs RMT output channel.
+ * Single/pair WS2812 LED driver. Employs RMT output channel.
  *
  * Author © 2021 Nikolai Varankine
  */
@@ -38,12 +38,26 @@ public:
     ExternalPin* getPin() const { return pin; };
     MatrixOutput* getOutput() const { return output; };
     /**
-     * Transmits RGB setting to the LED device.
+     * Transmits RGB setting to single LED device.
      * @param r red color intensity, [0,255]
      * @param g green color intensity, [0,255]
      * @param b blue color intensity, [0,255]
      */
     void send( const uint8_t r, const uint8_t g, const uint8_t b );
+    /**
+     * Transmits RGB setting to a chain of two LED devices.
+     * @param r0 first LED red color intensity, [0,255]
+     * @param g0 first LED green color intensity, [0,255]
+     * @param b0 first LED blue color intensity, [0,255]
+     * @param r1 next LED red color intensity, [0,255]
+     * @param g1 next LED green color intensity, [0,255]
+     * @param b1 next LED blue color intensity, [0,255]
+     */
+    void send( const uint8_t r0, const uint8_t g0, const uint8_t b0, 
+               const uint8_t r1, const uint8_t g1, const uint8_t b1 );
+private:
+    void load( uint8_t* const values, uint32_t const size );
+    void push();
 };
 
 #endif
