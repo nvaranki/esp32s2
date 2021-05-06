@@ -12,15 +12,12 @@
 #include "RemoteControlIdle.hpp"
 #include "RemoteControlLimit.hpp"
 #include "RemoteControlLoop.hpp"
-#include "RemoteControlTransmitterAddress.hpp"
 #include "RemoteControlTransmitterCarrier.hpp"
 #include "Trigger2.hpp"
 
 class RemoteControlTransmitter
 {
 public:
-    /** RAM address to read outbound signal */
-    RemoteControlTransmitterAddress* const address;
     /** Carrier modulation of signal level. */
     RemoteControlTransmitterCarrier* const carrier;
     /** Configuration of continuous transmission mode */

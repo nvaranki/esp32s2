@@ -24,9 +24,9 @@ private: // these modules unlikely are used together
     RemoteControlTransmitter* transmitter;
     /** Clock manager */
     RemoteControlClock* clock;
-    /** Memory manager */
-    RemoteControlChannelMemory* memory;
 public:
+    /** Memory manager */
+    RemoteControlChannelMemory* const memory;
     /** signal level associated with carrier modulation */
     FlagRW* const level;
     /** FSM status */
@@ -46,7 +46,6 @@ public:
     RemoteControlReceiver* getReceiver();
     RemoteControlTransmitter* getTransmitter();
     RemoteControlClock* getClock(); 
-    RemoteControlChannelMemory* getMemory(); 
 };
 
 #endif

@@ -10,15 +10,12 @@
 #include "bits/FlagRW.hpp"
 #include "bits/SubValueRW.hpp"
 #include "InterruptController.hpp"
-#include "RemoteControlReceiverAddress.hpp"
 #include "RemoteControlReceiverCarrier.hpp"
 #include "RemoteControlFilter.hpp"
 
 class RemoteControlReceiver
 {
 public:
-    /** RAM address to write inbound signal */
-    RemoteControlReceiverAddress* const address;
     /** Input sinal filter */
     RemoteControlFilter* const filter;
     /** Carrier remover configuration */

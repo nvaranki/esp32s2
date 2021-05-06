@@ -9,10 +9,9 @@
 #include "soc/rmt_struct.h"
 #include "bits/FlagRO.hpp"
 #include "bits/FlagRW.hpp"
-#include "bits/FlagWO.hpp"
 #include "bits/SubValueRO.hpp"
-#include "bits/SubValueRW.hpp"
-#include "bits/WordRW.hpp"
+#include "RemoteControlFIFO.hpp"
+#include "RemoteControlRAM.hpp"
 
 class RemoteControlChannelMemory
 {
@@ -28,19 +27,10 @@ private:
 public:
     /** Ownership of memory block is violated */
     FlagRO* const error;
-    /** 
-     * data I/O gateway for APB FIFO; 
-     * it puts into or reads from the same RAM area 
-     */
-    WordRW* const fifo;
-    /** Set this bit to reset I/O address used by FIFO to access RAM */
-    FlagWO* const reset;
-private:
-    /** 
-     * pointer to the beginning of channel's RAM area; 
-     * it allows direct data I/O
-     */
-    volatile uint32_t* const ram; // uint16_t* is not readable
+    /** Indexed accessor to signal pattern */
+    RemoteControlRAM* const ram;
+    /** Sequential accessor to signal pattern */
+    RemoteControlFIFO* const fifo;
 public:
     RemoteControlChannelMemory( const uint32_t channel );
     virtual ~RemoteControlChannelMemory();
@@ -65,18 +55,6 @@ public:
     inline Owner getOwner() const { return (Owner) owner->get(); };
     /** @param o Ownership of channel’s RAM block. */
     inline void setOwner( const Owner o ) const { owner->set( static_cast<uint32_t>( o ) ); };
-    /** 
-     * Reads entry from RAM in direct access mode.
-     * @param i pulse entry index in RAM 
-     * @return pulse entry extracted from RAM
-     */
-    rmt_item16_t getEntry( const uint32_t i );
-    /** 
-     * Writes entry into RAM in direct access mode.
-     * @param i pulse entry index in RAM 
-     * @param e pulse entry to save into RAM
-     */
-    void setEntry( const uint32_t i, const rmt_item16_t& e );
     /** 
      * @param level signal value
      * @param duration signalduration, in divided APB ticks

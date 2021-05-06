@@ -8,7 +8,6 @@
 #include "RemoteControlTransmitter.hpp"
 
 RemoteControlTransmitter::RemoteControlTransmitter( const size_t channel ) :
-    address( new RemoteControlTransmitterAddress( channel ) ),
     carrier( new RemoteControlTransmitterCarrier( channel ) ),
     loop( new RemoteControlLoop( channel ) ),
     idle( new RemoteControlIdle( channel ) ),
@@ -29,7 +28,6 @@ RemoteControlTransmitter::RemoteControlTransmitter( const size_t channel ) :
 
 RemoteControlTransmitter::~RemoteControlTransmitter()
 {
-    delete address;
     delete carrier;
     delete loop;
     delete idle;

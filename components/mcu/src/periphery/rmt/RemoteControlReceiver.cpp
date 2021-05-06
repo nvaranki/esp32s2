@@ -8,7 +8,6 @@
 #include "RemoteControlReceiver.hpp"
 
 RemoteControlReceiver::RemoteControlReceiver( const uint32_t channel ) :
-    address( new RemoteControlReceiverAddress( channel ) ),
     filter( new RemoteControlFilter( channel ) ),
     carrier( new RemoteControlReceiverCarrier( channel ) ),
     enable( new FlagRW( RMT_CH0CONF1_REG + 0x8 * channel, RMT_RX_EN_CH0_S ) ),
@@ -24,7 +23,6 @@ RemoteControlReceiver::RemoteControlReceiver( const uint32_t channel ) :
 
 RemoteControlReceiver::~RemoteControlReceiver()
 {
-    delete address;
     delete filter;
     delete carrier;
     delete enable;
