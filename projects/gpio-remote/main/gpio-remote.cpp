@@ -55,35 +55,33 @@ void ram( RemoteControlController* const rmt, RemoteControlChannel* const rcc0, 
     const rmt_item16_t& p, const rmt_item16_t& n )
 {
     RemoteControlTransmitter* const rct = rcc0->getTransmitter();
+    RemoteControlRAM*         const ram = rcc0->memory->ram;
     PulseCountUnit::Counter*  const cnt = &pcu->counter;
 
     printf( "\nDirect memory load, single pass, address reset\n" );
     rmt->memory->direct->on();
-    rct->address->reset->on();
-    rct->address->reset->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
     rmt_item16_t e[7]{ p, n, p, n, p, n, RemoteControlChannelMemory::ENTRY_END };
     printf( "TX:" );
     for( int i = 0; i < sizeof(e)/sizeof(rmt_item16_t); i++ )
     {
-        rcc0->getMemory()->setEntry( i, e[i] ); 
-        printf( " %d=%04hx", i, rcc0->getMemory()->getEntry( i ).val );
+        ram->setEntry( i, e[i] ); 
+        printf( " %d=%04hx", i, ram->getEntry( i ).val );
     }
     printf( "\n" );
     cnt->reset->on();
     cnt->reset->off();
-    rct->address->reset->on();
-    rct->address->reset->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
+    ram->resetRead->on();
+    ram->resetRead->off();
+    printf( "Address  RAM: R=%d W=%d\n", ram->addressRead->get(), ram->addressWrite->get() ); 
     rct->send.on->on(); // required for both memory and FIFO
     // generating - counting ...
     while( ! rct->interrupt->raw->get() ) {}
     rct->interrupt->clear->on();
     rct->send.on->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
-    rct->address->reset->on();
-    rct->address->reset->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
+    printf( "Address  RAM: R=%d W=%d\n", ram->addressRead->get(), ram->addressWrite->get() ); //TODO R=5 W=0
+    ram->resetRead->on();
+    ram->resetRead->off();
+    printf( "Address  RAM: R=%d W=%d\n", ram->addressRead->get(), ram->addressWrite->get() ); 
     printf( pcu, "" ); // 3
 }
 
@@ -91,40 +89,56 @@ void fifo( RemoteControlController* const rmt, RemoteControlChannel* const rcc0,
     const rmt_item16_t& p, const rmt_item16_t& n )
 {
     RemoteControlTransmitter* const rct = rcc0->getTransmitter();
+    RemoteControlRAM*         const ram = rcc0->memory->ram;
+    RemoteControlFIFO*       const fifo = rcc0->memory->fifo;
     PulseCountUnit::Counter*  const cnt = &pcu->counter;
 
     printf( "\nFIFO memory load, single pass, address reset\n" );
     rmt->memory->direct->off();
-    // rcc0->getMemory()->reset->on();
-    // rcc0->getMemory()->reset->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
-    rct->address->reset->on();
-    rct->address->reset->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
+    fifo->reset->on();
+    fifo->reset->off();
+    printf( "Address FIFO: R=%d W=%d\n", fifo->addressRead->get(), fifo->addressWrite->get() ); 
     rmt_item16_t e1[6]{ p, n, p, n, RemoteControlChannelMemory::ENTRY_END, n };
     for( int i = 0; i < sizeof(e1)/sizeof(rmt_item16_t); i +=2 )
-        rcc0->getMemory()->fifo->set( RemoteControlChannelMemory::entry2( e1[i], e1[i+1] ).val ); 
+        fifo->data->set( RemoteControlChannelMemory::entry2( e1[i], e1[i+1] ).val );
+    // fires rcc0->interrupt if "i" goes beyond allocated memory
+    printf( "Address FIFO: R=%d W=%d\n", fifo->addressRead->get(), fifo->addressWrite->get() ); 
+    printf( "Address  RAM: R=%d W=%d\n", ram->addressRead->get(), ram->addressWrite->get() ); 
     cnt->reset->on();
     cnt->reset->off();
+    ram->resetRead->on(); // send goes from RAM
+    ram->resetRead->off();
     rct->send.on->on(); // required for both memory and FIFO
     // generating - counting ...
     while( ! rct->interrupt->raw->get() ) {}
     rct->interrupt->clear->on();
     rct->send.on->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
-    // rcc0->getMemory()->reset->on();
-    // rcc0->getMemory()->reset->off();
-    rct->address->reset->on();
-    rct->address->reset->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
+    printf( "Address FIFO: R=%d W=%d\n", fifo->addressRead->get(), fifo->addressWrite->get() ); 
+    printf( "Address  RAM: R=%d W=%d\n", ram->addressRead->get(), ram->addressWrite->get() ); 
+    fifo->reset->on();
+    fifo->reset->off();
+    ram->resetRead->on();
+    ram->resetRead->off();
+    printf( "Address FIFO: R=%d W=%d\n", fifo->addressRead->get(), fifo->addressWrite->get() ); 
+    printf( "Address  RAM: R=%d W=%d\n", ram->addressRead->get(), ram->addressWrite->get() ); 
+    printf( "TX:" );
+    for( int i = 0; i < sizeof(e1)/sizeof(rmt_item16_t); i +=2 )
+    {
+        uint32_t val = fifo->data->get();
+        printf( " %d=%04hx", i,   val & 0x0000FFFF );
+        printf( " %d=%04hx", i+1, (( val & 0xFFFF0000 ) >> 16 ) & 0x0000FFFF );
+    }
+    printf( " - FIFO\n" );
+    printf( "Address FIFO: R=%d W=%d\n", fifo->addressRead->get(), fifo->addressWrite->get() ); 
+    printf( "Address  RAM: R=%d W=%d\n", ram->addressRead->get(), ram->addressWrite->get() ); 
     rmt->memory->direct->on(); // reads trash if not set
     printf( "TX:" );
-    for( int i = 0; i < 6; i +=2 )
+    for( int i = 0; i < sizeof(e1)/sizeof(rmt_item16_t); i +=2 )
     {
-        printf( " %d=%04hx", i,   rcc0->getMemory()->getEntry( i   ).val );
-        printf( " %d=%04hx", i+1, rcc0->getMemory()->getEntry( i+1 ).val );
+        printf( " %d=%04hx", i,   ram->getEntry( i   ).val );
+        printf( " %d=%04hx", i+1, ram->getEntry( i+1 ).val );
     }
-    printf( "\n" );
+    printf( " - RAM\n" );
     printf( pcu, "" ); // 2
 }
 
@@ -139,15 +153,15 @@ void continuous( RemoteControlChannel* const rcc0, PulseCountUnit* const pcu,
     printf( "TX:" );
     for( int i = 0; i < sizeof(e)/sizeof(rmt_item16_t); i++ )
     {
-        rcc0->getMemory()->setEntry( i, e[i] ); 
-        printf( " %d=%04hx", i, rcc0->getMemory()->getEntry( i ).val );
+        rcc0->memory->ram->setEntry( i, e[i] ); 
+        printf( " %d=%04hx", i, rcc0->memory->ram->getEntry( i ).val );
     }
     printf( "\n" );
     cnt->reset->on();
     cnt->reset->off();
     rct->continuous->on(); // repeats memory contents for this channel
-    rct->address->reset->on();
-    rct->address->reset->off();
+    rcc0->memory->ram->resetRead->on();
+    rcc0->memory->ram->resetRead->off();
     rct->send.on->on(); // required for both memory and FIFO
     // generating - counting ...
     vTaskDelay( 1 );
@@ -169,8 +183,8 @@ void loop( RemoteControlChannel* const rcc0, PulseCountUnit* const pcu,
     printf( "TX:" );
     for( int i = 0; i < sizeof(e)/sizeof(rmt_item16_t); i++ )
     {
-        rcc0->getMemory()->setEntry( i, e[i] ); 
-        printf( " %d=%04hx", i, rcc0->getMemory()->getEntry( i ).val );
+        rcc0->memory->ram->setEntry( i, e[i] ); 
+        printf( " %d=%04hx", i, rcc0->memory->ram->getEntry( i ).val );
     }
     printf( "\n" );
     rct->loop->reset->on(); // to start counting from 0
@@ -184,8 +198,8 @@ void loop( RemoteControlChannel* const rcc0, PulseCountUnit* const pcu,
     cnt->reset->on();
     cnt->reset->off();
     rct->continuous->on(); // repeats memory contents
-    rct->address->reset->on();
-    rct->address->reset->off();
+    rcc0->memory->ram->resetRead->on();
+    rcc0->memory->ram->resetRead->off();
     rct->send.on->on(); // required for both memory and FIFO
     // generating - counting ...
     unsigned long pc = 0;
@@ -212,8 +226,8 @@ void wrap( RemoteControlController* const rmt, RemoteControlChannel* const rcc0,
     printf( "\nPasses in limited wrap mode, interrupts\n" );
     for( int i = 0; i < 128; i++ ) // full block
     {
-        rcc0->getMemory()->setEntry( i, ( i & 0x1 ) ? n : p ); 
-        printf( " %3d=%04hx", i, rcc0->getMemory()->getEntry( i ).val );
+        rcc0->memory->ram->setEntry( i, ( i & 0x1 ) ? n : p ); 
+        printf( " %3d=%04hx", i, rcc0->memory->ram->getEntry( i ).val );
         if( (i+1) % 16 == 0 ) printf( "\n" );
     }
     rct->interrupt->enable->on();
@@ -227,14 +241,14 @@ void wrap( RemoteControlController* const rmt, RemoteControlChannel* const rcc0,
     cnt->reset->on();
     cnt->reset->off();
     rmt->memory->wrap->on();
-    rct->address->reset->on();
-    rct->address->reset->off();
+    rcc0->memory->ram->resetRead->on();
+    rcc0->memory->ram->resetRead->off();
     rct->send.on->on(); // required for both memory and FIFO
     // generating - counting ...
     unsigned long pcT = 0;
     while( ! rct->limit->interrupt->masked->get() ) { pcT++; } // ~15 checks per entry couple
-    rcc0->getMemory()->setEntry( 20, RemoteControlChannelMemory::ENTRY_END ); // to finish on the next cycle at entry #(4*128+20)
-    printf( "TX address: %d\n", rct->address->ram->get() ); 
+    rcc0->memory->ram->setEntry( 20, RemoteControlChannelMemory::ENTRY_END ); // to finish on the next cycle at entry #(4*128+20)
+    printf( "Address  RAM: R=%d W=%d\n", rcc0->memory->ram->addressRead->get(), rcc0->memory->ram->addressWrite->get() ); 
     printf( "Check count: %ld\n", pcT ); 
     printf( rct->limit->interrupt, "THR fired" ); 
     rct->limit->interrupt->clear->on();
@@ -259,24 +273,24 @@ void frequency( RemoteControlChannel* const rcc0, PulseCountUnit* const pcu, uin
 
     printf( "\nPasses at max frequency %d kHz\n", 80000/d/2 ); // APB at 80 MHz
     // d: 1=40MHz (no osc confirm) 2=20MHz 5=8MHz 10=4MHz ...
-    rcc0->getMemory()->setEntry( 0, RemoteControlChannelMemory::entry(  true, d ) ); 
-    rcc0->getMemory()->setEntry( 1, RemoteControlChannelMemory::entry( false, d ) ); 
-    rcc0->getMemory()->setEntry( 2, RemoteControlChannelMemory::entry(  true, d ) ); 
-    rcc0->getMemory()->setEntry( 3, RemoteControlChannelMemory::entry( false, d ) ); 
-    rcc0->getMemory()->setEntry( 4, RemoteControlChannelMemory::entry(  true, d ) ); 
-    rcc0->getMemory()->setEntry( 5, RemoteControlChannelMemory::entry( false, d ) ); 
-    rcc0->getMemory()->setEntry( 6, RemoteControlChannelMemory::entry(  true, d ) ); 
-    rcc0->getMemory()->setEntry( 7, RemoteControlChannelMemory::entry( false, d ) ); 
-    rcc0->getMemory()->setEntry( 8, RemoteControlChannelMemory::entry(  true, d ) ); 
-    rcc0->getMemory()->setEntry( 9, RemoteControlChannelMemory::entry( false, d ) ); 
-    rcc0->getMemory()->setEntry(10, RemoteControlChannelMemory::ENTRY_END         ); 
+    rcc0->memory->ram->setEntry( 0, RemoteControlChannelMemory::entry(  true, d ) ); 
+    rcc0->memory->ram->setEntry( 1, RemoteControlChannelMemory::entry( false, d ) ); 
+    rcc0->memory->ram->setEntry( 2, RemoteControlChannelMemory::entry(  true, d ) ); 
+    rcc0->memory->ram->setEntry( 3, RemoteControlChannelMemory::entry( false, d ) ); 
+    rcc0->memory->ram->setEntry( 4, RemoteControlChannelMemory::entry(  true, d ) ); 
+    rcc0->memory->ram->setEntry( 5, RemoteControlChannelMemory::entry( false, d ) ); 
+    rcc0->memory->ram->setEntry( 6, RemoteControlChannelMemory::entry(  true, d ) ); 
+    rcc0->memory->ram->setEntry( 7, RemoteControlChannelMemory::entry( false, d ) ); 
+    rcc0->memory->ram->setEntry( 8, RemoteControlChannelMemory::entry(  true, d ) ); 
+    rcc0->memory->ram->setEntry( 9, RemoteControlChannelMemory::entry( false, d ) ); 
+    rcc0->memory->ram->setEntry(10, RemoteControlChannelMemory::ENTRY_END         ); 
     rct->interrupt->enable->on();
     rct->interrupt->clear->on();
     printf( rct->interrupt, "TX type" ); 
     cnt->reset->on();
     cnt->reset->off();
-    rct->address->reset->on();
-    rct->address->reset->off();
+    rcc0->memory->ram->resetRead->on();
+    rcc0->memory->ram->resetRead->off();
     rct->send.on->on(); // required for both memory and FIFO
     // generating - counting ...
     unsigned long pcT = 0;
@@ -299,8 +313,8 @@ void modulator( RemoteControlChannel* const rcc0, PulseCountUnit* const pcu,
     printf( "TX:" );
     for( int i = 0; i < es; i++ )
     {
-        rcc0->getMemory()->setEntry( i, e[i] ); 
-        printf( " %d=%04hx", i, rcc0->getMemory()->getEntry( i ).val );
+        rcc0->memory->ram->setEntry( i, e[i] ); 
+        printf( " %d=%04hx", i, rcc0->memory->ram->getEntry( i ).val );
         if( (i+1) % 16 == 0 || i == es - 1 ) printf( "\n" );
     }
     rcc0->level->on(); // modulate 1's
@@ -318,9 +332,9 @@ void modulator( RemoteControlChannel* const rcc0, PulseCountUnit* const pcu,
     printf( rct->interrupt, "TX type" ); 
     cnt->reset->on();
     cnt->reset->off();
-    rct->address->reset->on();
-    rct->address->reset->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
+    rcc0->memory->ram->resetRead->on();
+    rcc0->memory->ram->resetRead->off();
+    printf( "Address  RAM: R=%d W=%d\n", rcc0->memory->ram->addressRead->get(), rcc0->memory->ram->addressWrite->get() ); 
     rct->send.on->on();
     // generating - counting ...
     unsigned long pc = 0;
@@ -330,14 +344,15 @@ void modulator( RemoteControlChannel* const rcc0, PulseCountUnit* const pcu,
     printf( rct->interrupt, "TX fired" ); 
     rct->interrupt->clear->on();
     printf( rct->interrupt, "TX cleared" ); 
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
+    printf( "Address  RAM: R=%d W=%d\n", rcc0->memory->ram->addressRead->get(), rcc0->memory->ram->addressWrite->get() ); 
     printf( pcu, "" ); // 6
     printf( rct->interrupt, "RX cleared" );
     //TODO corrupts repeat() rcc0->getClock()->divider->set( 1 );
 }
 
-void recognition( RemoteControlChannel* const rcc0, RemoteControlChannel* const rcc1, 
-    PulseCountUnit* const pcu, const bool m, const rmt_item16_t* const e, const uint32_t es )
+void recognition( RemoteControlController* const rmt, RemoteControlChannel* const rcc0, 
+    RemoteControlChannel* const rcc1, PulseCountUnit* const pcu, 
+    const bool m, const rmt_item16_t* const e, const uint32_t es )
 {
     RemoteControlTransmitter* const rct = rcc0->getTransmitter();
     RemoteControlReceiver*    const rcr = rcc1->getReceiver();
@@ -347,8 +362,8 @@ void recognition( RemoteControlChannel* const rcc0, RemoteControlChannel* const 
     printf( "TX:" );
     for( int i = 0; i < es; i++ )
     {
-        rcc0->getMemory()->setEntry( i, e[i] ); 
-        printf( " %d=%04hx", i, rcc0->getMemory()->getEntry( i ).val );
+        rcc0->memory->ram->setEntry( i, e[i] ); 
+        printf( " %d=%04hx", i, rcc0->memory->ram->getEntry( i ).val );
         if( (i+1) % 16 == 0 || i == es - 1 ) printf( "\n" );
     }
     rcc0->level->on(); // modulate 1's
@@ -362,8 +377,6 @@ void recognition( RemoteControlChannel* const rcc0, RemoteControlChannel* const 
     printf( "Carrier TX: M=%1d V=%1d L=%d H=%d\n", 
         rct->carrier->enable->get(), rcc0->level->get(),
         rct->carrier->low->get(), rct->carrier->high->get() );
-    // rcc1->getTransmitter()->carrier->enable->on();//TODO DEBUG
-    // rcc0->getReceiver()->carrier->enable->on();//TODO DEBUG
     rcr->carrier->enable->set( m ); // when off for modulated, it sees every modulation pulse
     rcr->filter->enable->off();
     rcr->idle->set( 64 +1 ); // more than longest pulse on/off, in divided ticks
@@ -390,51 +403,74 @@ void recognition( RemoteControlChannel* const rcc0, RemoteControlChannel* const 
     printf( rcr->interrupt, "RX type" ); 
     cnt->reset->on();
     cnt->reset->off();
-    rcr->address->reset->on();
-    rcr->address->reset->off();
-    printf( "Address RX: RAM=%d FIFO=%d\n", rcr->address->ram->get(), rcr->address->fifo->get() ); 
     rcr->enable->on();
-    rct->address->reset->on();
-    rct->address->reset->off();
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
+    rcc0->memory->ram->resetRead->on();
+    rcc0->memory->ram->resetRead->off();
+    rcc0->memory->fifo->reset->on();
+    rcc0->memory->fifo->reset->off();
+    rcc1->memory->ram->resetWrite->on();
+    rcc1->memory->ram->resetWrite->off();
+    rcc1->memory->fifo->reset->on();
+    rcc1->memory->fifo->reset->off();
     rct->send.on->on();
     // generating - counting ...
+
     unsigned long pc = 0;
-    while( ! rct->interrupt->masked->get() ) { pc++; } // no cycles cause slow printf's above
+    while( ! rct->interrupt->masked->get() ) { pc++; } // 
     rct->send.on->off(); // already stopped, no rush
     printf( "Check count TX: %ld\n", pc ); 
     printf( rct->interrupt, "TX fired" ); 
     rct->interrupt->clear->on();
     printf( rct->interrupt, "TX cleared" ); 
-    printf( "Address TX: RAM=%d FIFO=%d\n", rct->address->ram->get(), rct->address->fifo->get() ); 
-    printf( pcu, "" ); // 6
+    printf( "TX: Address  RAM: R=%d W=%d\n", rcc0->memory->ram->addressRead->get(), rcc0->memory->ram->addressWrite->get() ); 
+    printf( "TX: Address FIFO: R=%d W=%d\n", rcc0->memory->fifo->addressRead->get(), rcc0->memory->fifo->addressWrite->get() ); 
+    printf( pcu, "" );
+    
     pc = 0;
     while( ! rcr->interrupt->masked->get() ) { pc++; } // no cycles cause slow printf's above
     printf( "Check count RX: %ld\n", pc ); 
     printf( rcr->interrupt, "RX fired" ); 
     rcr->interrupt->clear->on();
     printf( rcr->interrupt, "RX cleared" );
-    printf( "Address RX: RAM=%d FIFO=%d\n", rcr->address->ram->get(), rcr->address->fifo->get() ); 
-    rcc1->getMemory()->setOwner( RemoteControlChannelMemory::Owner::SW_TRANSMITTER ); // otherwise trash on second+ run
-    printf( "RX:" );
+    printf( "RX: Address  RAM: R=%d W=%d\n", rcc1->memory->ram->addressRead->get(), rcc1->memory->ram->addressWrite->get() ); 
+    printf( "RX: Address FIFO: R=%d W=%d\n", rcc1->memory->fifo->addressRead->get(), rcc1->memory->fifo->addressWrite->get() ); 
+    
+    rcc1->memory->setOwner( RemoteControlChannelMemory::Owner::SW_TRANSMITTER ); // otherwise trash on second+ run
+    printf( "RX:  RAM:" );
     for( int i = 0; i < es; i++ )
     {
-        printf( " %3d=%04hx", i, rcc1->getMemory()->getEntry( i ).val );
+        printf( " %3d=%04hx", i, rcc1->memory->ram->getEntry( i ).val );
         if( (i+1) % 16 == 0 || i == es - 1 ) printf( "\n" );
     }
-    rcc1->getMemory()->setOwner( RemoteControlChannelMemory::Owner::HW_RECEIVER ); // back to working mode
+
+    rmt->memory->direct->off();
+    rcc1->memory->fifo->reset->on();
+    rcc1->memory->fifo->reset->off();
+    printf( "RX: FIFO:" );
+    for( int i = 0; i < es; i += 2 )
+    {
+        uint32_t v = rcc1->memory->fifo->data->get();
+        printf( " %3d=%04hx", i, v & 0xFFFFu );
+        printf( " %3d=%04hx", i+1, ( v >> 16 ) & 0xFFFFu );
+        if( (i+1) % 16 == 0 || i == es - 1 ) printf( "\n" );
+    }
+    printf( "RX: Address FIFO: R=%d W=%d\n", rcc1->memory->fifo->addressRead->get(), rcc1->memory->fifo->addressWrite->get() ); 
+    rmt->memory->direct->on();
+    
+    rcc1->memory->setOwner( RemoteControlChannelMemory::Owner::HW_RECEIVER ); // back to working mode
     rcr->interrupt->enable->off();
     rcr->enable->off();
     //TODO corrupts repeat() rcc0->getClock()->divider->set( 1 );
 }
 
-void repeat( RemoteControlTransmitter* const rct, PulseCountUnit::Counter* const cnt, uint32_t const delay )
+void repeat( RemoteControlChannel* const rcc0, PulseCountUnit::Counter* const cnt, uint32_t const delay )
 {
+    RemoteControlTransmitter* const rct = rcc0->getTransmitter();
     // next code for osc visualization
     cnt->pause->on(); // too much will be generated
     rct->continuous->on(); // repeats memory contents for this channel
-    rct->address->reset->on();
-    rct->address->reset->off();
+    rcc0->memory->ram->resetRead->on();
+    rcc0->memory->ram->resetRead->off();
     rct->send.on->on(); // required for both memory and FIFO
     // generating - counting ...
     vTaskDelay( delay );
@@ -464,7 +500,7 @@ void app_main( void )
     rmt->memory->direct->on();
 
     RemoteControlChannel* rcc0 = rmt->getChannel( 0 );
-    rcc0->getMemory()->setOwner( RemoteControlChannelMemory::Owner::SW_TRANSMITTER );
+    rcc0->memory->setOwner( RemoteControlChannelMemory::Owner::SW_TRANSMITTER );
     rcc0->getClock()->setSource( RemoteControlClock::Source::APB );
     rcc0->getClock()->divider->set( 1 );
 
@@ -478,7 +514,7 @@ void app_main( void )
     rct->carrier->enable->off();
 
     RemoteControlChannel* rcc1 = rmt->getChannel( 1 );
-    rcc1->getMemory()->setOwner( RemoteControlChannelMemory::Owner::HW_RECEIVER );
+    rcc1->memory->setOwner( RemoteControlChannelMemory::Owner::HW_RECEIVER );
     rcc1->getClock()->setSource( RemoteControlClock::Source::APB );
     rcc1->getClock()->divider->set( 1 );
 
@@ -590,26 +626,26 @@ void app_main( void )
     };
     const uint32_t s1 = sizeof(e1)/sizeof(rmt_item16_t);
 
-    uint32_t delay = 1000;
+    uint32_t delay = 0;//1000;
 
-    ram( rmt, rcc0, pcu, p, n ); if( delay ) repeat( rct, cnt, delay );
-    fifo( rmt, rcc0, pcu, p, n ); if( delay ) repeat( rct, cnt, delay );
+    ram( rmt, rcc0, pcu, p, n ); if( delay ) repeat( rcc0, cnt, delay );
+    fifo( rmt, rcc0, pcu, p, n ); if( delay ) repeat( rcc0, cnt, delay );
     continuous( rcc0, pcu, p, n );
     loop( rcc0, pcu, p, n, 100-1 );
     wrap( rmt, rcc0, pcu, p, n );
-    frequency( rcc0, pcu, 1 ); if( delay ) repeat( rct, cnt, delay );
-    frequency( rcc0, pcu, 2 ); if( delay ) repeat( rct, cnt, delay );
-    frequency( rcc0, pcu, 3 ); if( delay ) repeat( rct, cnt, delay );
-    frequency( rcc0, pcu, 4 ); if( delay ) repeat( rct, cnt, delay );
-    frequency( rcc0, pcu, 5 ); if( delay ) repeat( rct, cnt, delay );
-    frequency( rcc0, pcu, 10 ); if( delay ) repeat( rct, cnt, delay );
-    modulator( rcc0, pcu, false, e0, s0 ); if( delay ) repeat( rct, cnt, delay );
-    modulator( rcc0, pcu,  true, e0, s0 ); if( delay ) repeat( rct, cnt, delay );
+    frequency( rcc0, pcu, 1 ); if( delay ) repeat( rcc0, cnt, delay );
+    frequency( rcc0, pcu, 2 ); if( delay ) repeat( rcc0, cnt, delay );
+    frequency( rcc0, pcu, 3 ); if( delay ) repeat( rcc0, cnt, delay );
+    frequency( rcc0, pcu, 4 ); if( delay ) repeat( rcc0, cnt, delay );
+    frequency( rcc0, pcu, 5 ); if( delay ) repeat( rcc0, cnt, delay );
+    frequency( rcc0, pcu, 10 ); if( delay ) repeat( rcc0, cnt, delay );
+    modulator( rcc0, pcu, false, e0, s0 ); if( delay ) repeat( rcc0, cnt, delay );
+    modulator( rcc0, pcu,  true, e0, s0 ); if( delay ) repeat( rcc0, cnt, delay );
     rcc0->getClock()->divider->set( 1 );
-    recognition( rcc0, rcc1, pcu, false, e0, s0 ); //if( delay ) repeat( rct, cnt, delay );
-    recognition( rcc0, rcc1, pcu,  true, e0, s0 ); //if( delay ) repeat( rct, cnt, delay );
-    recognition( rcc0, rcc1, pcu, false, e1, s1 ); if( delay ) repeat( rct, cnt, delay ); // 200-500 ns/sq
-    recognition( rcc0, rcc1, pcu,  true, e1, s1 ); if( delay ) repeat( rct, cnt, delay ); // 200 ns - mod, 
+    recognition( rmt, rcc0, rcc1, pcu, false, e0, s0 ); //if( delay ) repeat( rcc0, cnt, delay );
+    recognition( rmt, rcc0, rcc1, pcu,  true, e0, s0 ); //if( delay ) repeat( rcc0, cnt, delay );
+    recognition( rmt, rcc0, rcc1, pcu, false, e1, s1 ); if( delay ) repeat( rcc0, cnt, delay ); // 200-500 ns/sq
+    recognition( rmt, rcc0, rcc1, pcu,  true, e1, s1 ); if( delay ) repeat( rcc0, cnt, delay ); // 200 ns - mod, 
     rcc0->getClock()->divider->set( 1 );
     rcc1->getClock()->divider->set( 1 );
 

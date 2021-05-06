@@ -43,7 +43,7 @@ DriverWS2812::DriverWS2812( MicroControllerUnit* const mcu, const uint8_t ch, co
     rmt->memory->wrap->off();
     rmt->memory->direct->on();
 
-    rcc->getMemory()->setOwner( RemoteControlChannelMemory::Owner::SW_TRANSMITTER );
+    rcc->memory->setOwner( RemoteControlChannelMemory::Owner::SW_TRANSMITTER );
     rcc->getClock()->setSource( RemoteControlClock::Source::APB );
     rcc->getClock()->divider->set( 1 );
 
@@ -76,10 +76,10 @@ void DriverWS2812::push()
     rct->interrupt->enable->on();
     rct->interrupt->clear->on();
     rct->interrupt->clear->off();
-    rcc->getMemory()->reset->on();
-    rcc->getMemory()->reset->off();
-    rct->address->reset->on();
-    rct->address->reset->off();
+    rcc->memory->fifo->reset->on();
+    rcc->memory->fifo->reset->off();
+    rcc->memory->ram->resetRead->on();
+    rcc->memory->ram->resetRead->off();
     rct->send.on->on();
     // generating - counting ...
     unsigned long pc = 0;
@@ -95,11 +95,11 @@ void DriverWS2812::load( uint8_t* const values, uint32_t const size )
     RemoteControlTransmitter* const rct = rcc->getTransmitter();
     
     // using FIFO memory load, address reset required
-    rcc->getMemory()->reset->on();
-    rcc->getMemory()->reset->off();
-    rct->address->reset->on();
-    rct->address->reset->off();
-    WordRW* const fifo = rcc->getMemory()->fifo;
+    rcc->memory->fifo->reset->on();
+    rcc->memory->fifo->reset->off();
+    rcc->memory->ram->resetRead->on();
+    rcc->memory->ram->resetRead->off();
+    WordRW* const fifo = rcc->memory->fifo->data;
     for( int i = 0; i < size; i++ )
     {
         uint8_t v = values[i];
