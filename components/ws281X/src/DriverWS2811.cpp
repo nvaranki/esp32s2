@@ -7,8 +7,8 @@
 
 #include "DriverWS2811.hpp"
 
-DriverWS2811::DriverWS2811( MicroControllerUnit* const mcu, const uint8_t ch, const uint8_t gpio ) :
-    DriverWS281X( mcu, ch, gpio, T0H, T0L, T1H, T1L, RES )
+DriverWS2811::DriverWS2811( MicroControllerUnit* const mcu, const uint8_t ch, const uint8_t gpio, const bool hs ) :
+    DriverWS281X( mcu, ch, gpio, T0H / ( hs + 1u ), T0L / ( hs + 1u ), T1H / ( hs + 1u ), T1L / ( hs + 1u ), RES )
 {
 }
 
