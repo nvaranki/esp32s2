@@ -17,7 +17,6 @@
 #include "io/MatrixOutput.hpp"
 #include "periphery/rmt/RemoteControlController.hpp"
 #include "periphery/rmt/RemoteControlChannel.hpp"
-#include "MicroControllerUnit.hpp"
 
 class SingleNZR 
 {
@@ -33,7 +32,7 @@ public:
 private:
     /** 0 and 1 signal patterns, i.e. elements of "data refresh cycle" */
     const rmt_item32_t DATA[2];
-    /** signal pattern terminating, i.e. a "reset code" */
+    /** signal pattern of terminatot, i.e. a "reset code" */
     const rmt_item32_t RESET;
     /** safety threshold for interrupt wait cycles */
     const uint32_t thrLoop;
@@ -56,15 +55,30 @@ public:
         const uint16_t nRST );
     virtual ~SingleNZR();
 public:
+    enum class BitOrder : uint8_t
+    {
+        /** 
+         * most significant bit goes out first;
+         * i.e. 0x80, 0x40,... 0x01
+         */
+        MSBF = 0x80u,
+        /** 
+         * least significant bit goes out first;
+         * i.e. 0x01, 0x02,... 0x80
+         */
+        LSBF = 0x01u,
+    };
     /**
      * Transmits bit sequence to destination. Every bit is converted 
      * into two RMT entries comprizing on-off pair in output signal. 
-     * @param values bit sequence as byte array
+     * @param data bit sequence as byte array
      * @param size of array
+     * @param order bit priority
+     * @return number of actually processed bytes
      */
-    int sendz( const uint8_t* const values, uint32_t const size );
+    int transmit( const uint8_t* const data, uint32_t const size, const BitOrder order );
 private:
-    uint32_t loadBytes( const uint8_t* const values, uint32_t const size, 
+    uint32_t loadBytes( const uint8_t* const values, uint32_t const size, const BitOrder order,
         uint32_t const start, uint32_t const bound, const bool direct );
     void loadEntries( const rmt_item32_t& data, 
         uint32_t const start, uint32_t const bound, const bool direct );

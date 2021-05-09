@@ -64,7 +64,8 @@ SingleNZR::~SingleNZR()
 {
 }
 
-uint32_t SingleNZR::loadBytes( const uint8_t* const values, uint32_t const size, 
+uint32_t SingleNZR::loadBytes( 
+        const uint8_t* const values, uint32_t const size, const BitOrder order, 
         uint32_t const start, uint32_t const bound, const bool direct )
 {
     uint32_t i = 0;
@@ -75,9 +76,12 @@ uint32_t SingleNZR::loadBytes( const uint8_t* const values, uint32_t const size,
         uint8_t value = values[i];
         for( int bit = 0; bit < 8; bit++ )
         {
-            const uint8_t vi = value & 0x80u ? 1 : 0;
+            const uint8_t vi = value & static_cast<uint8_t>( order ) ? 1 : 0;
             loadEntries( DATA[ vi ], address + bit, bound, direct );
-            value <<= 1;
+            if( order == BitOrder::MSBF )
+                value <<= 1;
+            else
+                value >>= 1;
         }
     }
     return i;
@@ -108,7 +112,7 @@ bool SingleNZR::waitFor( InterruptController *const interrupt )
     return pc < thrLoop;
 }
 
-int SingleNZR::sendz( const uint8_t* const values, uint32_t const size )
+int SingleNZR::transmit( const uint8_t* const values, uint32_t const size, const BitOrder order )
 {
     RemoteControlFIFO* const fifo = channel->memory->fifo;
     RemoteControlRAM*  const ram  = channel->memory->ram;
@@ -139,7 +143,7 @@ int SingleNZR::sendz( const uint8_t* const values, uint32_t const size )
     uint32_t remainder = size;
 
     // initial attempt to load full memory
-    uint32_t loaded = loadBytes( cursor, remainder, start, bound, direct );
+    uint32_t loaded = loadBytes( cursor, remainder, order, start, bound, direct );
     cursor += loaded;
     remainder -= loaded;
 
@@ -181,7 +185,7 @@ int SingleNZR::sendz( const uint8_t* const values, uint32_t const size )
         // refill memory
         half /= 8; // now in bytes of "values"
         uint32_t offset = ( ( size - remainder ) * 8  ) % allocated;
-        uint32_t loaded = loadBytes( cursor, std::min( remainder, half ), start + offset, bound, direct );
+        uint32_t loaded = loadBytes( cursor, std::min( remainder, half ), order, start + offset, bound, direct );
         cursor += loaded;
         remainder -= loaded;
 
