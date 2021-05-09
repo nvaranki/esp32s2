@@ -106,7 +106,7 @@ void fifo( RemoteControlController* const rmt, RemoteControlChannel* const rcc0,
     printf( "Address  RAM: R=%d W=%d\n", ram->addressRead->get(), ram->addressWrite->get() ); 
     cnt->reset->on();
     cnt->reset->off();
-    ram->resetRead->on(); // send goes from RAM
+    ram->resetRead->on(); // send goes from RAM, do not reset FIFO
     ram->resetRead->off();
     rct->send.on->on(); // required for both memory and FIFO
     // generating - counting ...
