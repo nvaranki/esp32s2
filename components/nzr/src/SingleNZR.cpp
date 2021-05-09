@@ -7,7 +7,6 @@
  * Author © 2021 Nikolai Varankine
  */
 
-#include <stdio.h>
 #include <initializer_list>
 #include <algorithm>
 #include "SingleNZR.hpp"
@@ -19,6 +18,7 @@ SingleNZR::SingleNZR( const RemoteControlController* const rmt, RemoteControlCha
         const uint16_t n1H, const uint16_t n1L, 
         const uint16_t nRST ) :
     rmt( rmt ), channel( channel ), pin( pin ), output( output ),
+    rct( channel->getTransmitter() ),
     DATA
     {  
         // data 0
@@ -39,7 +39,6 @@ SingleNZR::SingleNZR( const RemoteControlController* const rmt, RemoteControlCha
     channel->getClock()->setSource( RemoteControlClock::Source::APB );
     channel->getClock()->divider->set( 1 );
 
-    RemoteControlTransmitter* rct = channel->getTransmitter();
     rct->send.on->off();
     rct->send.off->off();
     rct->idle->level->low();
@@ -54,9 +53,6 @@ SingleNZR::SingleNZR( const RemoteControlController* const rmt, RemoteControlCha
 
     output->periphery->set( rct->index );
     output->enable.setSource( MatrixOutput::Enable::Source::PERIPHERY );
-    printf( "TX: %3d=%08x RAM\n", 0, DATA[0].val );
-    printf( "TX: %3d=%08x RAM\n", 1, DATA[1].val );
-    printf( "TX: RST=%08x RAM\n", RESET.val );
 }
     
     
@@ -119,7 +115,6 @@ int SingleNZR::transmit( const uint8_t* const values, uint32_t const size, const
     const uint32_t bound = 64 * ( channel->id + channel->memory->allocated->get() );
     const bool direct = rmt->memory->direct->get();
 
-
     // address reset is required
     ram->resetWrite->onOff();
     ram->resetRead->onOff();
@@ -136,9 +131,6 @@ int SingleNZR::transmit( const uint8_t* const values, uint32_t const size, const
         start = fifo->addressWrite->get();
     }
     
-    printf("\nsendz size=%d %s start=%d\n",size,rmt->memory->direct->get()?"ram":"fifo",start);
-    
-    RemoteControlTransmitter* rct = channel->getTransmitter();
     const uint8_t* cursor = &values[0]; //!< beginning of shrinking source
     uint32_t remainder = size;
 
@@ -176,7 +168,7 @@ int SingleNZR::transmit( const uint8_t* const values, uint32_t const size, const
     {
         // wait for refill request
         if( ! waitFor( rct->limit->interrupt ) ) 
-            return 0x84000000u | ( size - remainder ); //TODO ERROR
+            return abort( size - remainder, 0x04u );
 
         // move check point to next position
         uint32_t half = allocated / 2; // in 32 bit "pulse" words
@@ -198,7 +190,7 @@ int SingleNZR::transmit( const uint8_t* const values, uint32_t const size, const
     {
         // wait for refill request
         if( ! waitFor( rct->limit->interrupt ) ) 
-            return 0x82000000u | ( size - remainder ); //TODO ERROR
+            return abort( size - remainder, 0x02u );
         rct->limit->interrupt->enable->off();
     }
     // fill memory with terminator
@@ -207,14 +199,30 @@ int SingleNZR::transmit( const uint8_t* const values, uint32_t const size, const
 
     // wait for end of generation    
     if( ! waitFor( rct->interrupt ) ) 
-        return 0x81000000u | ( size - remainder ); //TODO ERROR
+        return abort( size - remainder, 0x01u );
     rct->interrupt->enable->off();
+    rct->interrupt->clear->onOff();
     rct->send.on->off();
 
-    // done; final cleanup and return
+    // done; final checks, cleanup and return
+    if( channel->interrupt->masked->get() )
+        return abort( size - remainder, 0x08u );
     channel->interrupt->enable->off();
+    channel->interrupt->clear->onOff();
     rct->limit->interrupt->enable->off();
     rct->limit->interrupt->clear->onOff();
-    printf("sendz done=%d\n",size - remainder);
     return size - remainder;
+}
+
+int SingleNZR::abort( uint32_t const size, uint8_t const reason )
+{
+    rct->send.off->on(); // enforced stop of transmission
+    rct->send.on->off(); // normal stop of transmission
+    rct->send.off->off();
+    //TODO send terminator or skip? rct is already configured to keep low when idle
+    channel->memory->fifo->reset->onOff();
+    channel->memory->ram->resetRead->onOff();
+    channel->memory->ram->resetWrite->onOff();
+    //TODO channel->status->get(); // 0x7 mask
+    return 0x80000000u | ( (uint32_t) ( reason & 0x7F ) << 24 ) | std::min( size, 0x00FFFFFFu );
 }

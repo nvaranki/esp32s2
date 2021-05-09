@@ -30,6 +30,8 @@ public:
     /** RMT channel output in GPIO Matrix */
     MatrixOutput* const output;
 private:
+    /** RMT transmitter of the channel */
+    RemoteControlTransmitter* const rct;
     /** 0 and 1 signal patterns, i.e. elements of "data refresh cycle" */
     const rmt_item32_t DATA[2];
     /** signal pattern of terminatot, i.e. a "reset code" */
@@ -83,6 +85,7 @@ private:
     void loadEntries( const rmt_item32_t& data, 
         uint32_t const start, uint32_t const bound, const bool direct );
     bool waitFor( InterruptController* const interrupt );
+    int abort( uint32_t const size, uint8_t const reason );
 };
 
 #endif
