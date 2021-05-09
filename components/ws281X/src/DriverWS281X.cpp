@@ -1,0 +1,47 @@
+/* 
+ * Single/pair/chain WS281* family LED driver. 
+ * Employs NZR communication mode through RMT output channel.
+ *
+ * Author © 2021 Nikolai Varankine
+ */
+
+#include <stdio.h>
+#include <initializer_list>
+#include "DriverWS281X.hpp"
+
+DriverWS281X::DriverWS281X( 
+        MicroControllerUnit* const mcu, const uint8_t ch, const uint8_t gpio,
+        const uint16_t T0H, const uint16_t T0L, const uint16_t T1H, const uint16_t T1L, 
+        const uint16_t RES ) :
+    SingleNZR( 
+        mcu->periphery.getRemoteControlController(), 
+        mcu->periphery.getRemoteControlController()->getChannel( ch ),
+        mcu->getControllerIO()->getExternalPin( gpio ), 
+        mcu->getControllerIO()->getMatrixOutput( gpio ),
+        // APB frequency 80 MHz -> 12.5 ns == 25/2 ns
+        T0H * 2 / 25, T0L * 2 / 25, T1H * 2 / 25, T1L * 2 / 25, RES * 2 / 25 + 1 )
+{
+}
+
+DriverWS281X::~DriverWS281X()
+{
+}
+
+int DriverWS281X::send( const uint8_t r, const uint8_t g, const uint8_t b )
+{
+    const uint8_t values[] { g, r, b };
+    return transmit( values, sizeof(values)/sizeof(uint8_t), SingleNZR::BitOrder::MSBF );
+}
+
+int DriverWS281X::send( 
+        const uint8_t r0, const uint8_t g0, const uint8_t b0, 
+        const uint8_t r1, const uint8_t g1, const uint8_t b1 )
+{
+    const uint8_t values[] { g0, r0, b0, g1, r1, b1 };
+    return transmit( values, sizeof(values)/sizeof(uint8_t), SingleNZR::BitOrder::MSBF );
+}
+
+int DriverWS281X::send( const uint8_t* const data, uint32_t const size )
+{
+    return transmit( data, size, SingleNZR::BitOrder::MSBF );
+}
