@@ -26,8 +26,14 @@ extern "C"
 void app_main( void )
 {
     MicroControllerUnit* const mcu = new MicroControllerUnit();
+
+    RemoteControlController* const rmt = mcu->periphery.getRemoteControlController();
+    rmt->reset->off();
+    rmt->clock->on();
+    rmt->enable->on();
+
     DriverWS2812* const drv = new DriverWS2812( mcu, 0, PIN_OUT );
-    drv->getPin()->setPull( ExternalPin::Pull::OPEN ); // driver keeps idle state as 0
+    drv->pin->setPull( ExternalPin::Pull::OPEN ); // driver keeps idle state as 0
     int dRGB = 30;
     
     // only red
@@ -47,7 +53,17 @@ void app_main( void )
     drv->send( 0, 0, 0xF0u ); vTaskDelay( dRGB );
     drv->send( 0, 0, 0x0Fu ); vTaskDelay( dRGB );
     drv->send( 0, 0, 0x00u ); vTaskDelay( dRGB );
-    
+
+    // long sequence in wrap mode, only first triple can be seen
+    const int cc = 5;
+    uint8_t led[cc][3];
+    for( int d = 0; d < cc; d++ )    
+        for( int i = 0; i < 3; i++ ) 
+            led[d][i] = d == 0 ? 0x40 : 0x10 * d + i;
+    printf( "sent=0x%-8x\n", drv->sendz( &led[0][0], cc*3 ) );
+    vTaskDelay( 100 );
+    drv->send( 0, 0, 0 );
+
     // full area, linear
     // uint8_t s = 4; // step 1 takes very long time (22+ minutes)
     // for( int r = 0; r <= UINT8_MAX; r += s )
@@ -79,12 +95,7 @@ void app_main( void )
         }   
         // vTaskDelay( 1 );
     }
-    drv->send( 10, 10, 10, 0xFFu, 0xFFu, 0xFFu ); // draft test for chain of two LEDs
-    vTaskDelay( 1000 );
-    drv->send( 0, 0, 0 );
 
-    drv->getController()->enable->off();
-    drv->getController()->clock->off();
     delete drv;
     delete mcu;
     printf( "Exit Xtensa program\n" );
