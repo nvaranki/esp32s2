@@ -32,6 +32,10 @@ public:
      * Sets current value to false.
      */
     inline void off() { set( false ); };
+    /**
+     * Sets current value to true momentarily, then back to false.
+     */
+    inline void onOff() { set( true ); set( false ); };
 };
 
 #endif
