@@ -14,7 +14,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_task_wdt.h"
-#include "ws2812x1.h"
+#include "ws281X.h"
 #include "mcu.h"
 
 #define PIN_OUT 18 /* Saola-1 pin for WS2812 */
@@ -31,6 +31,7 @@ void app_main( void )
     rmt->reset->off();
     rmt->clock->on();
     rmt->enable->on();
+    rmt->memory->wrap->on(); // some tests can use 3+ LEDs
 
     DriverWS2812* const drv = new DriverWS2812( mcu, 0, PIN_OUT );
     drv->pin->setPull( ExternalPin::Pull::OPEN ); // driver keeps idle state as 0
@@ -60,7 +61,7 @@ void app_main( void )
     for( int d = 0; d < cc; d++ )    
         for( int i = 0; i < 3; i++ ) 
             led[d][i] = d == 0 ? 0x40 : 0x10 * d + i;
-    printf( "sent=0x%-8x\n", drv->transmit( &led[0][0], cc*3, SingleNZR::BitOrder::MSBF ) );
+    printf( "sent=0x%-8x\n", drv->send( &led[0][0], cc*3 ) );
     vTaskDelay( 100 );
     drv->send( 0, 0, 0 );
 
@@ -95,6 +96,8 @@ void app_main( void )
         }   
         // vTaskDelay( 1 );
     }
+    vTaskDelay( 100 );
+    drv->send( 0, 0, 0 );
 
     delete drv;
     delete mcu;
