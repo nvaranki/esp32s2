@@ -71,8 +71,8 @@ public:
     /**
      * Transmits bit sequence to destination. Every bit is converted 
      * into two RMT entries comprizing on-off pair in output signal. 
-     * @param data bit sequence as byte array
-     * @param size of array
+     * @param data bit sequence as byte array; byte at index 0 goes out first, then at index 1, 2 an so on
+     * @param size number of bytes in array
      * @param order bit priority
      * @return number of actually processed bytes
      */
