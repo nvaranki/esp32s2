@@ -31,6 +31,7 @@ public:
      * @param r red color intensity, [0,255]
      * @param g green color intensity, [0,255]
      * @param b blue color intensity, [0,255]
+     * @return number of actually processed bytes; 3 in success
      */
     int send( const uint8_t r, const uint8_t g, const uint8_t b );
     /**
@@ -41,6 +42,7 @@ public:
      * @param r1 next LED red color intensity, [0,255]
      * @param g1 next LED green color intensity, [0,255]
      * @param b1 next LED blue color intensity, [0,255]
+     * @return number of actually processed bytes; 6 in success
      */
     int send( const uint8_t r0, const uint8_t g0, const uint8_t b0, 
                const uint8_t r1, const uint8_t g1, const uint8_t b1 );

@@ -32,7 +32,7 @@ DriverWS2812::~DriverWS2812()
 int DriverWS2812::send( const uint8_t r, const uint8_t g, const uint8_t b )
 {
     const uint8_t values[] { g, r, b };
-    return sendz( values, sizeof(values)/sizeof(uint8_t) );
+    return transmit( values, sizeof(values)/sizeof(uint8_t), SingleNZR::BitOrder::MSBF );
 }
 
 int DriverWS2812::send( 
@@ -40,5 +40,5 @@ int DriverWS2812::send(
         const uint8_t r1, const uint8_t g1, const uint8_t b1 )
 {
     const uint8_t values[] { g0, r0, b0, g1, r1, b1 };
-    return sendz( values, sizeof(values)/sizeof(uint8_t) );
+    return transmit( values, sizeof(values)/sizeof(uint8_t), SingleNZR::BitOrder::MSBF );
 }

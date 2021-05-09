@@ -60,7 +60,7 @@ void app_main( void )
     for( int d = 0; d < cc; d++ )    
         for( int i = 0; i < 3; i++ ) 
             led[d][i] = d == 0 ? 0x40 : 0x10 * d + i;
-    printf( "sent=0x%-8x\n", drv->sendz( &led[0][0], cc*3 ) );
+    printf( "sent=0x%-8x\n", drv->transmit( &led[0][0], cc*3, SingleNZR::BitOrder::MSBF ) );
     vTaskDelay( 100 );
     drv->send( 0, 0, 0 );
 
