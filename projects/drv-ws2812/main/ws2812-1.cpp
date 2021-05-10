@@ -33,9 +33,13 @@ void app_main( void )
     rmt->enable->on();
     rmt->memory->wrap->on(); // some tests can use 3+ LEDs
 
-    DriverWS2812* const drv = new DriverWS2812( mcu, 0, PIN_OUT );
-    drv->pin->setPull( ExternalPin::Pull::OPEN ); // driver keeps idle state as 0
-    int dRGB = 30;
+//  DriverWS2812* const drv = new DriverWS2812( mcu, 0, PIN_OUT ); // original Saola-1
+    DriverSK6812MINI* const drv = new DriverSK6812MINI( mcu, 0, PIN_OUT ); // clone of Saola-1
+    drv->pin->setPull( ExternalPin::Pull::OPEN ); // driver keeps idle state as 0, LED pulls up
+    
+    int dRGB = 30, dBlock = 50, dCycle = 5;
+
+    drv->send( 0, 0, 0 ); // fix: occasionally fires white after flash rewrite or system reset
     
     // only red
     drv->send( 0xFFu, 0, 0 ); vTaskDelay( dRGB );
@@ -55,15 +59,21 @@ void app_main( void )
     drv->send( 0, 0, 0x0Fu ); vTaskDelay( dRGB );
     drv->send( 0, 0, 0x00u ); vTaskDelay( dRGB );
 
-    // long sequence in wrap mode, only first triple can be seen
-    const int cc = 5;
-    uint8_t led[cc][3];
+    // long sequence in wrap mode
+    const int cc = 500;
+    union 
+    {
+        /** identified colors */
+        DriverWS2812::Color color;
+        /** raw data */
+        uint8_t triple[3];
+    } 
+    led[cc];
     for( int d = 0; d < cc; d++ )    
         for( int i = 0; i < 3; i++ ) 
-            led[d][i] = d == 0 ? 0x40 : 0x10 * d + i;
-    printf( "sent=0x%-8x\n", drv->send( &led[0][0], cc*3 ) );
-    vTaskDelay( 100 );
-    drv->send( 0, 0, 0 );
+            led[d].triple[i] = d == 0 ? 0x40 : ( 0x10 * d + i ) & 0xFF; // only first triple can be seen
+    drv->send( &led->color, cc );
+    vTaskDelay( dBlock );
 
     // full area, linear
     // uint8_t s = 4; // step 1 takes very long time (22+ minutes)
@@ -80,24 +90,28 @@ void app_main( void )
     //     }   
     //     vTaskDelay( 1 );
     // }
-    // drv->send( 0, 0, 0 );
+    // vTaskDelay( dBlock );
 
     // full area, log
-    for( int r = 1; r <= 256; r *= 2 )
+    int f = 4;//2;
+    for( int r = 1; r <= 256; r *= f )
     {
-        for( int g = 1; g <= 256; g *= 2 )
+        for( int g = 1; g <= 256; g *= f )
         {
-            for( int b = 1; b <= 256; b *= 2 )
+            for( int b = 1; b <= 256; b *= f )
             {
                 drv->send( r - 1, g - 1, b - 1 );
-                vTaskDelay( 5 );
+                vTaskDelay( dCycle );
             }
             // vTaskDelay( 1 );
         }   
         // vTaskDelay( 1 );
     }
-    vTaskDelay( 100 );
-    drv->send( 0, 0, 0 );
+    vTaskDelay( dBlock );
+    
+    // two LEDs, second is virtual 
+    drv->send( 0, 0, 0, 0xFFu, 0xFFu, 0xFFu ); 
+    vTaskDelay( dBlock );
 
     delete drv;
     delete mcu;
