@@ -6,7 +6,6 @@
  */
 
 #include <stdio.h>
-#include <initializer_list>
 #include "DriverWS281X.hpp"
 
 DriverWS281X::DriverWS281X( 
@@ -29,19 +28,33 @@ DriverWS281X::~DriverWS281X()
 
 int DriverWS281X::send( const uint8_t r, const uint8_t g, const uint8_t b )
 {
-    const uint8_t values[] { g, r, b };
-    return transmit( values, sizeof(values)/sizeof(uint8_t), SingleNZR::BitOrder::MSBF );
+    Color values;
+    values.r = r;
+    values.g = g;
+    values.b = b;
+    return transmit( &values.g, 3, SingleNZR::BitOrder::MSBF );
 }
 
 int DriverWS281X::send( 
         const uint8_t r0, const uint8_t g0, const uint8_t b0, 
         const uint8_t r1, const uint8_t g1, const uint8_t b1 )
 {
-    const uint8_t values[] { g0, r0, b0, g1, r1, b1 };
-    return transmit( values, sizeof(values)/sizeof(uint8_t), SingleNZR::BitOrder::MSBF );
+    Color values[2];
+    values[0].r = r0;
+    values[0].g = g0;
+    values[0].b = b0;
+    values[1].r = r1;
+    values[1].g = g1;
+    values[1].b = b1;
+    return transmit( &values[0].g, 6, SingleNZR::BitOrder::MSBF );
 }
 
 int DriverWS281X::send( const uint8_t* const data, uint32_t const size )
 {
     return transmit( data, size, SingleNZR::BitOrder::MSBF );
+}
+
+int DriverWS281X::send( const Color* const data, uint32_t const size )
+{
+    return transmit( &data->g, size * 3, SingleNZR::BitOrder::MSBF );
 }
