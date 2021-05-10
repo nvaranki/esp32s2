@@ -40,7 +40,7 @@ SingleNZR::SingleNZR( const RemoteControlController* const rmt, RemoteControlCha
     channel->getClock()->divider->set( 1 );
 
     rct->send.on->off();
-    rct->send.off->off();
+    rct->send.off->onOff();
     rct->idle->level->low();
     rct->idle->output->on();
     rct->interrupt->enable->off();
@@ -58,6 +58,13 @@ SingleNZR::SingleNZR( const RemoteControlController* const rmt, RemoteControlCha
     
 SingleNZR::~SingleNZR()
 {
+    // return to important defaults
+    channel->getClock()->reset->onOff();
+    rct->send.on->off();
+    rct->send.off->off();
+    pin->function->set( 0 ); //TODO mnemonic
+    output->periphery->set( MatrixOutput::PERIPHERY_BUFFER );
+    output->enable.setSource( MatrixOutput::Enable::Source::GPIO );
 }
 
 uint32_t SingleNZR::loadBytes( 

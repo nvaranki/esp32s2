@@ -13,6 +13,8 @@
 class MatrixOutput
 {
 public:
+    /** Special index of perpheral output, when MatrixBuffer serves as a "peripheral output" to GPIO pin  */
+    static constexpr uint32_t PERIPHERY_BUFFER = 0x100; 
     /** index of perpheral output, see "Table 22: GPIO Matrix" */
     SubValueRW* const periphery;
     class Enable
