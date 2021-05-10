@@ -27,8 +27,8 @@ protected:
      */
     DriverWS281X( 
         MicroControllerUnit* const mcu, const uint8_t ch, const uint8_t gpio,
-        const uint16_t T0H, const uint16_t T0L, const uint16_t T1H, const uint16_t T1L, 
-        const uint16_t RES );
+        const uint32_t T0H, const uint32_t T0L, const uint32_t T1H, const uint32_t T1L, 
+        const uint32_t RES );
     virtual ~DriverWS281X();
 public:
     /**

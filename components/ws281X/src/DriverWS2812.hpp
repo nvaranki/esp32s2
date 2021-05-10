@@ -15,11 +15,11 @@
 class DriverWS2812 final : public DriverWS281X
 {
 private:
-    static constexpr uint16_t T0H =   350u; //!< 0 code, high voltage time, ns
-    static constexpr uint16_t T0L =   800u; //!< 0 code,  low voltage time, ns
-    static constexpr uint16_t T1H =   700u; //!< 1 code, high voltage time, ns
-    static constexpr uint16_t T1L =   600u; //!< 1 code,  low voltage time, ns
-    static constexpr uint16_t RES = 50000u; //!< low voltage time, ns
+    static constexpr uint32_t T0H =   350u; //!< 0 code, high voltage time, ns
+    static constexpr uint32_t T0L =   800u; //!< 0 code,  low voltage time, ns
+    static constexpr uint32_t T1H =   700u; //!< 1 code, high voltage time, ns
+    static constexpr uint32_t T1L =   600u; //!< 1 code,  low voltage time, ns
+    static constexpr uint32_t RES = 50000u; //!< low voltage time, ns
 public:
     /**
      * @param mcu  microcontroller unit driver

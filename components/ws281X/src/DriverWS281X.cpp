@@ -10,15 +10,15 @@
 
 DriverWS281X::DriverWS281X( 
         MicroControllerUnit* const mcu, const uint8_t ch, const uint8_t gpio,
-        const uint16_t T0H, const uint16_t T0L, const uint16_t T1H, const uint16_t T1L, 
-        const uint16_t RES ) :
+        const uint32_t T0H, const uint32_t T0L, const uint32_t T1H, const uint32_t T1L, 
+        const uint32_t RES ) :
     SingleNZR( 
         mcu->periphery.getRemoteControlController(), 
         mcu->periphery.getRemoteControlController()->getChannel( ch ),
         mcu->getControllerIO()->getExternalPin( gpio ), 
         mcu->getControllerIO()->getMatrixOutput( gpio ),
         // APB frequency 80 MHz -> 12.5 ns == 25/2 ns
-        T0H * 2 / 25, T0L * 2 / 25, T1H * 2 / 25, T1L * 2 / 25, RES * 2 / 25 + 1 )
+        T0H * 2 / 25, T0L * 2 / 25, T1H * 2 / 25, T1L * 2 / 25, RES * 2 / 25 )
 {
 }
 
@@ -32,7 +32,9 @@ int DriverWS281X::send( const uint8_t r, const uint8_t g, const uint8_t b )
     values.r = r;
     values.g = g;
     values.b = b;
-    return transmit( &values.g, 3, SingleNZR::BitOrder::MSBF );
+    int rc = transmit( &values.g, 3, SingleNZR::BitOrder::MSBF );
+    // printf( "sent=0x%-8x\n", rc );
+    return rc;
 }
 
 int DriverWS281X::send( 
@@ -56,5 +58,7 @@ int DriverWS281X::send( const uint8_t* const data, uint32_t const size )
 
 int DriverWS281X::send( const Color* const data, uint32_t const size )
 {
-    return transmit( &data->g, size * 3, SingleNZR::BitOrder::MSBF );
+    int rc = transmit( &data->g, size * 3, SingleNZR::BitOrder::MSBF );
+    // printf( "sent=0x%-8x\n", rc );
+    return rc;
 }
