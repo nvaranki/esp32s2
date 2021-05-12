@@ -99,7 +99,7 @@ void printf( const PulseCountUnit* pcu, const char* comment )
 void printf( const MatrixInput* mi, const ExternalPin* p )
 {
     printf( "Peripheral input %d assigned to GPIO pin %02d %1s %s\n", 
-        mi->input, mi->source->get(), p == nullptr ? "F" : p->input->get() ? "R" : "W",
+        mi->periphery, mi->gpio->get(), p == nullptr ? "F" : p->input->get() ? "R" : "W",
         mi->matrix->get() ? "via matrix" : "directly" );
 }
 
@@ -172,22 +172,22 @@ void app_main( void )
 
     MatrixInput* mi0s = io->getMatrixInput( pcc0->signal.index );
     mi0s->matrix->off();
-    mi0s->source->set( p8->number );
+    mi0s->gpio->set( p8->number );
     printf( mi0s, p8 );
     
     MatrixInput* mi0c = io->getMatrixInput( pcc0->control.index );
     mi0c->matrix->on(); // as pictured (Figure 5-1. IO MUX, RTC IO MUX and GPIO Matrix Overview); really it doesn't matter, on() or off()
-    mi0c->source->set( MatrixInput::SOURCE_LOW );
+    mi0c->gpio->set( MatrixInput::SOURCE_LOW );
     printf( mi0c, nullptr );
     
     MatrixInput* mi1s = io->getMatrixInput( pcc1->signal.index ); // not in use
     mi1s->matrix->on();
-    mi1s->source->set( MatrixInput::SOURCE_LOW );
+    mi1s->gpio->set( MatrixInput::SOURCE_LOW );
     printf( mi1s, nullptr );
     
     MatrixInput* mi1c = io->getMatrixInput( pcc1->control.index ); // not in use
     mi1c->matrix->on();
-    mi1c->source->set( MatrixInput::SOURCE_LOW );
+    mi1c->gpio->set( MatrixInput::SOURCE_LOW );
     printf( mi1c, nullptr );
 
     runChTested( 4u, ch4, io->getDirectChannel( p8->number ), stm );
