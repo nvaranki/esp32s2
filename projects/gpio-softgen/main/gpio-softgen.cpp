@@ -274,8 +274,8 @@ void app_main( void )
     
     // 1 bit pipeline I/O
 
-    MatrixBuffer::Channel* chW = buf->getChannel( pW->number );
-    MatrixBuffer::Channel* chR = buf->getChannel( pR->number );
+    MatrixBuffer::Channel* chW = io->getDirectChannel( pW->number );
+    MatrixBuffer::Channel* chR = io->getDirectChannel( pR->number );
     chW->output( true  );
     chR->output( false );
 

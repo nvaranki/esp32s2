@@ -46,7 +46,7 @@ void runChannel( const uint32_t edges, MatrixBuffer::Channel* ch, SystemTimer* s
     // vTaskDelay( 1 ); //esp_task_wdt_reset();
     uint64_t t0 = stm->getValidValue( TIME_ATTEMPTS );
     // MicroControllerUnit* const mcu = new MicroControllerUnit();
-    // MatrixBuffer::Channel* ch8 = mcu->getControllerIO()->buffer->getChannel( PIN_INP );
+    // MatrixBuffer::Channel* ch8 = mcu->getControllerIO()->getDirectChannel( PIN_INP );
     // printf( "\n\t" );
     for( uint32_t i = 1; i <= edges; i++ )
     {
@@ -155,7 +155,7 @@ void app_main( void )
     p4->setDriveStrength( ExternalPin::DriveStrength::OUT5MA ); // the more the better form
     p4->sleep.enable->off();
 
-    MatrixBuffer::Channel* ch4 = io->buffer->getChannel( p4->number ); // direct 1 bit output to GPIO
+    MatrixBuffer::Channel* ch4 = io->getDirectChannel( p4->number ); // direct 1 bit output to GPIO
     ch4->output( true );
     printf( "Output channel assigned to GPIO %02d %1s%1s\n", ch4->id, ch4->output() ? "W" : "R", p4->input->get() ? "R" : "W" );
     
@@ -190,7 +190,7 @@ void app_main( void )
     mi1c->source->set( MatrixInput::SOURCE_LOW );
     printf( mi1c, nullptr );
 
-    runChTested( 4u, ch4, io->buffer->getChannel( p8->number ), stm );
+    runChTested( 4u, ch4, io->getDirectChannel( p8->number ), stm );
 
     // Unit tests
 
