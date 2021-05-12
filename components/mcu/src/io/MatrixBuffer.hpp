@@ -67,11 +67,13 @@ public:
     private:
         MatrixBuffer* const mb;
         uint32_t const mask;
+        /** index of GPIO Matrix perpheral output, used to regain access from it */
+        SubValueRW* const periphery;
     public:
         size_t const id;
     public:
-        Channel( MatrixBuffer* mb, const size_t id ) : mb( mb ), mask( BIT( id % 32 ) ), id( id ) {}
-        virtual ~Channel() {}
+        Channel( MatrixBuffer* mb, const size_t id );
+        virtual ~Channel();
     public:
         /** @return "true" when write is enabled to GPIO pin, "false" for read only */
         bool output() const;
@@ -81,6 +83,8 @@ public:
         void write( const bool v );
         /** @return current value of GPIO pin */
         bool read() const;
+        /** regain access back from GPIO Matrix */
+        void regain();
     }
     * channel[MAX_CHANNEL];
     Channel* getChannel( const size_t i );

@@ -1,5 +1,6 @@
 #include "soc/gpio_reg.h"
 #include "MatrixBuffer.hpp"
+#include "MatrixOutput.hpp"
 
 MatrixBuffer::MatrixBuffer() :
     inp0( new WordRO( GPIO_IN_REG ) ),
@@ -85,6 +86,18 @@ void MatrixBuffer::disableOutput( uint64_t m )
     enc1->set( (uint32_t) ( ( m >> 32 ) & MASK_H ) );
 }
 
+MatrixBuffer::Channel::Channel( MatrixBuffer* mb, const size_t id ) : 
+    mb( mb ), mask( BIT( id % 32 ) ), 
+    periphery( new SubValueRW( GPIO_FUNC0_OUT_SEL_CFG_REG + id * 0x4, GPIO_FUNC0_OUT_SEL_M, GPIO_FUNC0_OUT_SEL_S ) ),
+    id( id ) 
+{
+}
+    
+MatrixBuffer::Channel::~Channel() 
+{
+    delete periphery;
+}
+
 MatrixBuffer::Channel* MatrixBuffer::getChannel( const size_t i )
 {
     if( i >= MAX_CHANNEL ) return nullptr;
@@ -116,4 +129,9 @@ void MatrixBuffer::Channel::write( const bool v )
 bool MatrixBuffer::Channel::read() const
 {
     return ( id < 32 ? mb->inp0->get() : mb->inp1->get() ) & mask;
+}
+
+void MatrixBuffer::Channel::regain()
+{
+    periphery->set( MatrixOutput::PERIPHERY_BUFFER );
 }

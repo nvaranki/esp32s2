@@ -28,6 +28,11 @@ ControllerIO::~ControllerIO()
     for( int i = 0; i < MAX_OUTPUT; i++ ) if( output[i] != nullptr ) delete output[i];
     for( int i = 0; i < MAX_PAD;    i++ ) if( pins  [i] != nullptr ) delete pins  [i];
 }
+    
+MatrixBuffer::Channel* ControllerIO::getDirectChannel( const size_t i )
+{
+    return buffer->getChannel( i );
+}
 
 MatrixInput* ControllerIO::getMatrixInput( const size_t i )
 {

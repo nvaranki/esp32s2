@@ -43,13 +43,19 @@ public:
     virtual ~ControllerIO();
 public:
     /**
+     * @param i index of direct I/O channel bypassing GPIO Matrix, [0;MAX_OUTPUT).
+     * @return pointer to I/O channel (MCU<-->Buffer<-->GPIOn) controller or nullptr for wrong index; 
+     *          ensure to regain access from GPIO Matrix when necessary.
+     */
+    MatrixBuffer::Channel* getDirectChannel( const size_t i );
+    /**
      * @param i index of input channel of GPIO Matrix, [0;MAX_INPUT).
-     * @return pointer to input channel (GPIOn-->MCU) controller or nullptr for wrong index.
+     * @return pointer to input channel (GPIOn-->Matrix-->MCU) controller or nullptr for wrong index.
      */
     MatrixInput* getMatrixInput( const size_t i );
     /**
      * @param i index of output channel of GPIO Matrix, [0;MAX_OUTPUT).
-     * @return pointer to output channel (MCU-->GPIOn) controller or nullptr for wrong index.
+     * @return pointer to output channel (MCU-->Matrix-->GPIOn) controller or nullptr for wrong index.
      */
     MatrixOutput* getMatrixOutput( const size_t i );
     /**
