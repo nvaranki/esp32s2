@@ -56,7 +56,7 @@ void DataBuilderFloat2D::computeTestMatrix()
     
 uint64_t DataBuilderFloat2D::computeTestOutput( SystemTimer* const stm )
 {
-    double const LN2M = -std::log( 2. ), SIR = 1. / sizeInp;
+    float const LN2M = -std::log( 2. ), SIR = 1. / sizeInp;
     uint64_t t0 = stm->getValidValue( TIME_ATTEMPTS );
     for( int layer = 0; layer < n; layer++ )
         for( int o = 0; o < sizeOut; o++ )
@@ -69,11 +69,11 @@ uint64_t DataBuilderFloat2D::computeTestOutput( SystemTimer* const stm )
                         + i * 2; // 10.3% 13768/5/64/64=0.7 ns
                 float v = inpTest[layer * sizeInp + i];
                 //v = ( v - matrixTest[layer][o][i][0] ) / matrixTest[layer][o][i][1];
-                v = ( v - matrixTest[pos+0] ) / matrixTest[pos+1]; // 70.2% 94044/5/64/64=4.6 ns
-                //v = ( v - matrixTest[pos+0] ) * _matrixTest[pos+1]; // 46.6% 59351/5/64/64=2.9 ns
-                sum2 += v * v;
+                v = ( v - matrixTest[pos+0] ) / matrixTest[pos+1]; // 70.2% 978(2x2)?-=268? /=1200 ns
+                //v = ( v - matrixTest[pos+0] ) * matrixTest[pos+1]; // 46.6% 199 ns
+                sum2 += v * v; // *=214 ns
             }
-            outTest[layer * sizeOut + o] = (float) std::exp( LN2M * ( sum2 * SIR ) ); // 8.2% 11000/5/64=34 ns
+            outTest[layer * sizeOut + o] = std::exp( LN2M * ( sum2 * SIR ) ); // 8.2% 11000 (double), 8400 (float) ns
         }
     uint64_t t1 = stm->getValidValue( TIME_ATTEMPTS );
     printf( "Computed test output\n" );

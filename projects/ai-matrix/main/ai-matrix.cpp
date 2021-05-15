@@ -20,8 +20,9 @@ void app_main( void )
 {
     MicroControllerUnit* const mcu = new MicroControllerUnit();
     SystemTimer* stm = mcu->getSystemTimer();
-    
+    printf( "Clock SoC: %d %1d %d\n", (uint32_t) mcu->getClockSoC(), mcu->pllFreqHigh->get(), mcu->upraiseClockSoC->get() );
     printf( "Heap size=%d\n", heap_caps_get_free_size( MALLOC_CAP_32BIT ) );
+    
     DataBuilderFloat2D* db = new DataBuilderFloat2D( 5, 64, 64 ); // 5*64*64*2*4=163840 bytes
     printf( "Matrix data dimensions %ld*%d*%d*2*4=%ld bytes\n", 
             db->n, 
@@ -31,7 +32,7 @@ void app_main( void )
     printf( "Heap size=%d\n", heap_caps_get_free_size( MALLOC_CAP_32BIT ) );
     
     uint64_t tX = stm->getValidValue( DataBuilderFloat2D::TIME_ATTEMPTS );
-    vTaskDelay( 100 );//( 1000 ); // t0-tX=799937342, * 25/2 = 10s as observed
+    //vTaskDelay( 100 );//( 1000 ); // t0-tX=799937342, * 25/2 = 10s as observed
     uint64_t t0 = stm->getValidValue( DataBuilderFloat2D::TIME_ATTEMPTS );
     uint64_t t32 = db->fill( stm );
     uint64_t t1 = stm->getValidValue( DataBuilderFloat2D::TIME_ATTEMPTS );
