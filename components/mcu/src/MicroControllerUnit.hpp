@@ -30,7 +30,19 @@ private:
     ControllerIO* io;
     CoprocessorULP* ulp;
     SystemTimer* systemTimer;
+    /** clock selector for CPU, etc. */
+    SubValueRW* const clockSoC;
+    /** Registers that always are powered up */
     WordRW rr[8]; //TODO WordRW* const rr;
+public:
+    /** 0:320 / 1:480 MHz selector */
+    FlagRW* const pllFreqHigh;
+    /** PLL/APLL clock frequency upraiser for CPU, etc. 
+     * 0: PLL/6, APLL/4
+     * 1: PLL/3, APLL/2
+     * 2: PLL/2, -
+    */
+    SubValueRW* const upraiseClockSoC;
 public:
     class Periphery
     {
@@ -99,6 +111,15 @@ public:
     SystemTimer* getSystemTimer();
     WordRW* getRetentionRegister( size_t i );
     void command( Command c );
+    enum class ClockSoC : uint32_t //!< clock for CPU, etc.
+    {
+        XTAL  = DPORT_SOC_CLK_SEL_XTL, //!< 
+        PLL   = DPORT_SOC_CLK_SEL_PLL, //!< 
+        RTC8M = DPORT_SOC_CLK_SEL_8M, //!< 
+        APLL  = DPORT_SOC_CLK_SEL_APLL, //!< 
+    };
+    inline ClockSoC getClockSoC() const { return (ClockSoC) clockSoC->get(); }
+    inline void setClockSoC( const ClockSoC v ) { clockSoC->set( static_cast<uint32_t>( v ) ); }
 };
 
 //taken from #include "esp32s2/ulp.h"
