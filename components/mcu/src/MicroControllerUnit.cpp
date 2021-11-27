@@ -108,7 +108,8 @@ MicroControllerUnit::ConfigureCache::~ConfigureCache()
 
 MicroControllerUnit::Periphery::Periphery() :
     pcnt( nullptr ),
-    rmt ( nullptr )
+    rmt ( nullptr ),
+    spi ( nullptr )
 {
 }
     
@@ -116,6 +117,7 @@ MicroControllerUnit::Periphery::~Periphery()
 {
     if( pcnt != nullptr ) delete pcnt;
     if( rmt  != nullptr ) delete rmt;
+    if( spi  != nullptr ) delete spi;
 }
 
 PulseCountController* MicroControllerUnit::Periphery::getPulseCountController()
@@ -128,4 +130,10 @@ RemoteControlController* MicroControllerUnit::Periphery::getRemoteControlControl
 {
     if( rmt == nullptr ) rmt = new RemoteControlController();
     return rmt;
+}
+
+SerialPeripheralInterface* MicroControllerUnit::Periphery::getSerialPeripheralInterface()
+{
+    if( spi == nullptr ) spi = new SerialPeripheralInterface();
+    return spi;
 }

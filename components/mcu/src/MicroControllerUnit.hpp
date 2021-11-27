@@ -10,6 +10,7 @@
 #include "io/ControllerIO.hpp"
 #include "periphery/pcnt/PulseCountController.hpp"
 #include "periphery/rmt/RemoteControlController.hpp"
+#include "periphery/spi/SerialPeripheralInterface.hpp"
 #include "CoprocessorULP.hpp"
 #include "CoreLX7.hpp"
 #include "SystemTimer.hpp"
@@ -49,12 +50,14 @@ public:
     private:
         PulseCountController* pcnt;
         RemoteControlController* rmt;
+        SerialPeripheralInterface* spi;
     public:
         Periphery();
         virtual ~Periphery();
     public:
         PulseCountController* getPulseCountController();
         RemoteControlController* getRemoteControlController();
+        SerialPeripheralInterface* getSerialPeripheralInterface();
     }
     /*const*/ periphery;
     class Reset
