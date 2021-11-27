@@ -88,6 +88,12 @@ public:
     MicroControllerUnit();
     virtual ~MicroControllerUnit();
 public:
+    enum class Bus : uint32_t
+    {
+        PeriBus1 = 0x3F400000, //!< Refers to the address range 0x3F40_0000 ~ 0x3F4F_FFFF. 0x3F40_0000 is the base address.
+        PeriBus2 = 0x60000000, //!< Refers to the address ranges 0x6000_0000 ~ 0x600B_FFFF and 0x6180_0000 ~ 0x6180_3FFF on the bus. 0x6000_0000 is the base address.
+
+    };
     enum class Command : uint32_t
     {
         CLEAR = 0x0,
