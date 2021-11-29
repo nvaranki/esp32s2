@@ -13,7 +13,8 @@ SpiController::SpiController( const uint32_t i, const uint32_t rbo ) :
     conf( new SpiConfig( rbo ) ),
     prep( new SpiPrepare( rbo ) ),
     done( new SpiDone( rbo ) ),
-    dma( new SpiDMA( rbo ) )
+    dma( new SpiDMA( rbo ) ),
+    lcd( new SpiLCD( rbo ) )
 {
 }
 
@@ -24,4 +25,5 @@ SpiController::~SpiController()
     delete prep;
     delete done;
     delete dma;
+    delete lcd;
 }

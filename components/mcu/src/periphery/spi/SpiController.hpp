@@ -6,6 +6,7 @@
 #include "SpiPrepare.hpp"
 #include "SpiDone.hpp"
 #include "SpiDMA.hpp"
+#include "SpiLCD.hpp"
 #include "bits/FlagRW.hpp"
 #include "bits/SubValueRO.hpp"
 #include "bits/SubValueRW.hpp"
@@ -26,6 +27,8 @@ public:
     SpiDone* const done;
     /** DMA manager */
     SpiDMA* const dma;
+    /** LCD manager */
+    SpiLCD* const lcd;
 public:
     SpiController( const uint32_t i, const uint32_t registryBlockOffset );
     virtual ~SpiController();

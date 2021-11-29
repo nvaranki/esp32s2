@@ -74,14 +74,14 @@ SPI_DIN_MODE_REG SPI input delay mode configuration 0x00E0 R/W
 SPI_DIN_NUM_REG SPI input delay number configuration 0x00E4 R/W
 SPI_DOUT_MODE_REG SPI output delay mode configuration 0x00E8 R/W
 SPI_DOUT_NUM_REG SPI output delay number configuration 0x00EC R/W
-
-LCD control registers
-SPI_LCD_CTRL0_REG LCD frame control register 0x00F0 R/W
-SPI_LCD_CTRL1_REG LCD frame control register 1 0x00F4 R/W
-SPI_LCD_CTRL2_REG LCD frame control register 2 0x00F8 R/W
-SPI_LCD_D_MODE_REG LCD delay number 0x00FC R/W
-SPI_LCD_D_NUM_REG LCD delay mode 0x0100 R/W
-
+*/
+// LCD control registers
+#define SPI_LCD_CTRL0_REG_A  0x00F0 /* LCD frame control register 0 R/W */
+#define SPI_LCD_CTRL1_REG_A  0x00F4 /* LCD frame control register 1 R/W */
+#define SPI_LCD_CTRL2_REG_A  0x00F8 /* LCD frame control register 2 R/W */
+#define SPI_LCD_D_MODE_REG_A 0x00FC /* LCD delay number R/W */
+#define SPI_LCD_D_NUM_REG_A  0x0100 /* LCD delay mode R/W */
+/*
 Version register
 SPI_DATE_REG Version control register 0x03FC R/W
 */
