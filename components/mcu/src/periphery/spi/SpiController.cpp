@@ -14,7 +14,8 @@ SpiController::SpiController( const uint32_t i, const uint32_t rbo ) :
     prep( new SpiPrepare( rbo ) ),
     done( new SpiDone( rbo ) ),
     dma( new SpiDMA( rbo ) ),
-    lcd( new SpiLCD( rbo ) )
+    lcd( new SpiLCD( rbo ) ),
+    version( new SubValueRW( PeriBus1 + rbo + SPI_DATE_REG_A, SPI_DATE_M, SPI_DATE_S ) )
 {
 }
 
@@ -26,4 +27,5 @@ SpiController::~SpiController()
     delete done;
     delete dma;
     delete lcd;
+    delete version;
 }

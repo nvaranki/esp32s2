@@ -29,6 +29,8 @@ public:
     SpiDMA* const dma;
     /** LCD manager */
     SpiLCD* const lcd;
+    /** Version control register. */
+    SubValueRW* const version;
 public:
     SpiController( const uint32_t i, const uint32_t registryBlockOffset );
     virtual ~SpiController();

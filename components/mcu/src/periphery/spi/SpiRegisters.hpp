@@ -81,9 +81,9 @@ SPI_DOUT_NUM_REG SPI output delay number configuration 0x00EC R/W
 #define SPI_LCD_CTRL2_REG_A  0x00F8 /* LCD frame control register 2 R/W */
 #define SPI_LCD_D_MODE_REG_A 0x00FC /* LCD delay number R/W */
 #define SPI_LCD_D_NUM_REG_A  0x0100 /* LCD delay mode R/W */
-/*
-Version register
-SPI_DATE_REG Version control register 0x03FC R/W
-*/
+
+// Version register
+#define SPI_DATE_REG_A 0x03FC /* Version control register R/W */
+
 
 #endif
