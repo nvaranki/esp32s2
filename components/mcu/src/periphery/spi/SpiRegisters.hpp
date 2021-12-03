@@ -68,13 +68,13 @@ SPI_W14_REG Data buffer 14 0x00D0 R/W
 SPI_W15_REG Data buffer 15 0x00D4 R/W
 SPI_W16_REG Data buffer 16 0x00D8 R/W
 SPI_W17_REG Data buffer 17 0x00DC R/W
-
-Timing registers
-SPI_DIN_MODE_REG SPI input delay mode configuration 0x00E0 R/W
-SPI_DIN_NUM_REG SPI input delay number configuration 0x00E4 R/W
-SPI_DOUT_MODE_REG SPI output delay mode configuration 0x00E8 R/W
-SPI_DOUT_NUM_REG SPI output delay number configuration 0x00EC R/W
 */
+// Timing registers
+#define SPI_DIN_MODE_REG_A  0x00E0 /* SPI input delay mode configuration R/W */
+#define SPI_DIN_NUM_REG_A   0x00E4 /* SPI input delay number configuration R/W */
+#define SPI_DOUT_MODE_REG_A 0x00E8 /* SPI output delay mode configuration R/W */
+#define SPI_DOUT_NUM_REG_A  0x00EC /* SPI output delay number configuration R/W */
+
 // LCD control registers
 #define SPI_LCD_CTRL0_REG_A  0x00F0 /* LCD frame control register 0 R/W */
 #define SPI_LCD_CTRL1_REG_A  0x00F4 /* LCD frame control register 1 R/W */

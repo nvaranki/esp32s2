@@ -38,6 +38,26 @@ private:
     /** In write operations, mode of read-data phase: 1,2,4,8-bit. TODO enum */
     BitSetRW* const widthMISO;
 public:
+    class Delay
+    {
+    public:
+        class Descr
+        {
+        public:
+            SubValueRW* const edge;
+            SubValueRW* const value;
+        public:
+            Descr( const uint32_t aEdge,  const uint32_t mEdge,  const uint32_t sEdge, 
+                   const uint32_t aValue, const uint32_t mValue, const uint32_t sValue );
+            virtual ~Descr();
+        }
+        const inp, out;
+    public:
+        Delay( const uint32_t registryBlockOffset, const uint32_t i );
+        virtual ~Delay();
+    }
+    const delay[8];
+public:
     SpiConfig( const uint32_t registryBlockOffset );
     virtual ~SpiConfig();
 };
