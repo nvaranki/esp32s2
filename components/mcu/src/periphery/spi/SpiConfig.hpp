@@ -56,7 +56,7 @@ public:
         Delay( const uint32_t registryBlockOffset, const uint32_t i );
         virtual ~Delay();
     }
-    const delay[8];
+    const delay[8]; //!< FSPID, FSPIQ, FSPIWP, FSPIHD, FSPIIO4, ..., FSPIIO7
 public:
     SpiConfig( const uint32_t registryBlockOffset );
     virtual ~SpiConfig();
