@@ -37,6 +37,28 @@ private:
     FlagRW* const bitOrderMOSI;
     /** In write operations, mode of read-data phase: 1,2,4,8-bit. TODO enum */
     BitSetRW* const widthMISO;
+    
+    /** Byte view on data buffer */
+    uint8_t* const data8;
+    /** Double byte view on data buffer */
+    uint16_t* const data16;
+    /** Quad byte view on data buffer */
+    uint32_t* const data32;
+    /** Location and size of MOSI data buffer in CPU controlled mode:
+     * 0: full 72 bytes buffer;
+     * 1: short 40 bytes buffer (tail of full buffer).
+     */
+    FlagRW* const dataAreaMOSI;
+    /** Location and size of MISO data buffer in CPU controlled mode: 
+     * 0: full 72 bytes buffer;
+     * 1: short 40 bytes buffer (tail of full buffer).
+     */
+    FlagRW* const dataAreaMISO;
+    /** The index of last bit in write-data phase. The register value shall be (bit_num-1). */
+    SubValueRW* const lengthMOSI;
+    /** The index of last bit in read-data phase. The register value shall be (bit_num-1). */
+    SubValueRW* const lengthMISO;
+
 public:
     class Delay
     {
@@ -57,6 +79,26 @@ public:
         virtual ~Delay();
     }
     const delay[8]; //!< FSPID, FSPIQ, FSPIWP, FSPIHD, FSPIIO4, ..., FSPIIO7
+    
+    /** The value of command. */
+    SubValueRW* const commandValue;
+    /** The index of last bit of command phase. The register value shall be (bit_num-1). */
+    SubValueRW* const commandLength;
+
+    /** Disable SPI clock in DUMMY phase. */
+    FlagRW* const disableDummyClock;
+
+    /** Enable the command phase of an operation. */
+    FlagRW* const phaseCommand;
+    /** Enable the address phase of an operation. */
+    FlagRW* const phaseAddress;
+    /** Enable the dummy phase of an operation. */
+    FlagRW* const phaseDummy;
+    /** Enable the send data out phase of an operation. */
+    FlagRW* const phaseOutput;
+    /** Enable the reseive data in phase of an operation*/
+    FlagRW* const phaseInput;
+
 public:
     SpiConfig( const uint32_t registryBlockOffset );
     virtual ~SpiConfig();

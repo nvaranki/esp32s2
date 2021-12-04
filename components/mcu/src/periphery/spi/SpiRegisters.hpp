@@ -48,9 +48,10 @@ SPI_DMA_INT_ENA_REG SPI DMA interrupt enable register 0x0058 R/W
 SPI_DMA_INT_RAW_REG SPI DMA interrupt raw register 0x005C varies
 SPI_DMA_INT_ST_REG SPI DMA interrupt status register 0x0060 varies
 SPI_DMA_INT_CLR_REG SPI DMA interrupt clear register 0x0064 R/W
-
-CPU controlled data buffer
-SPI_W0_REG Data buffer 0 0x0098 R/W
+*/
+//CPU controlled data buffer
+#define SPI_W0_REG_A 0x0098 /* Data buffer 0 R/W */
+/*
 SPI_W1_REG Data buffer 1 0x009C R/W
 SPI_W2_REG Data buffer 2 0x00A0 R/W
 SPI_W3_REG Data buffer 3 0x00A4 R/W

@@ -18,8 +18,23 @@ SpiConfig::SpiConfig( const uint32_t rbo ) :
     bitOrderMISO( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_RD_BYTE_ORDER_S ) ),
     bitOrderMOSI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_WR_BYTE_ORDER_S ) ),
     widthMISO( new BitSetRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_FWRITE_DUAL_M | SPI_FWRITE_QUAD_M | SPI_FWRITE_OCT_M ) ),
+    data8(  (uint8_t* )( PeriBus1 + rbo + SPI_W0_REG_A ) ),
+    data16( (uint16_t*)( PeriBus1 + rbo + SPI_W0_REG_A ) ),
+    data32( (uint32_t*)( PeriBus1 + rbo + SPI_W0_REG_A ) ),
+    dataAreaMOSI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_USR_MOSI_HIGHPART_S ) ),
+    dataAreaMISO( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_USR_MISO_HIGHPART_S ) ),
+    lengthMOSI( new SubValueRW( PeriBus1 + rbo + SPI_MOSI_DLEN_REG_A, SPI_USR_MOSI_DBITLEN_M, SPI_USR_MOSI_DBITLEN_S ) ),
+    lengthMISO( new SubValueRW( PeriBus1 + rbo + SPI_MISO_DLEN_REG_A, SPI_USR_MISO_DBITLEN_M, SPI_USR_MISO_DBITLEN_S ) ),
     delay{ Delay( rbo, 0 ), Delay( rbo, 1 ), Delay( rbo, 2 ), Delay( rbo, 3 ),
-           Delay( rbo, 4 ), Delay( rbo, 5 ), Delay( rbo, 6 ), Delay( rbo, 7 ) }
+           Delay( rbo, 4 ), Delay( rbo, 5 ), Delay( rbo, 6 ), Delay( rbo, 7 ) },
+    commandValue(  new SubValueRW( PeriBus1 + rbo + SPI_USER2_REG_A, SPI_USR_COMMAND_VALUE_M,  SPI_USR_COMMAND_VALUE_S  ) ),
+    commandLength( new SubValueRW( PeriBus1 + rbo + SPI_USER2_REG_A, SPI_USR_COMMAND_BITLEN_M, SPI_USR_COMMAND_BITLEN_S ) ),
+    disableDummyClock( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_USR_DUMMY_IDLE_S ) ),
+    phaseCommand( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_USR_COMMAND_S ) ),
+    phaseAddress( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_USR_ADDR_S ) ),
+    phaseDummy(   new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_USR_DUMMY_S ) ),
+    phaseOutput(  new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_USR_MOSI_S ) ),
+    phaseInput(   new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_USR_MISO_S ) )
 {
 }
 
@@ -35,6 +50,18 @@ SpiConfig::~SpiConfig()
     delete bitOrderMISO;
     delete bitOrderMOSI;
     delete widthMISO;
+    delete dataAreaMOSI;
+    delete dataAreaMISO;
+    delete lengthMOSI;
+    delete lengthMISO;
+    delete commandValue;
+    delete commandLength;
+    delete disableDummyClock;
+    delete phaseCommand;
+    delete phaseAddress;
+    delete phaseDummy;
+    delete phaseOutput;
+    delete phaseInput;
 }
 
 SpiConfig::Delay::Delay( const uint32_t rbo, const uint32_t i ) :
