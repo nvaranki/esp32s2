@@ -9,23 +9,27 @@
 #include "bits/WordRW.hpp"
 
 /**
- * @brief Configuration (CONF) phase manager.
+ * @brief Configuration (DMA CONF) phase manager.
+ * Used in seg-trans operations only.
  */
 class SpiConfig
 {
-private:
-    /* data */
 public:
-    /** Number of SPI_CLK cycles of SPI_CONF state. Can be configured in CONF state. */
-    SubValueRW* const configLength;
+    /** Enable first configuration phase of an operation,
+        which means seg-trans will start. */
+    FlagRW* const enable;
+    /** Number of SPI_CLK cycles in configuration state. */
+    SubValueRW* const length;
+    /** Enable next configuration phase of an operation,
+        which means seg-trans will continue. */
+    FlagRW* const next;
+
     /** Full-duplex communication. */
     FlagRW* const fullDuplex;
     /** Set controller in QPI (quad parallel) mode. Both for master mode and slave mode. */
     FlagRW* const modeQPI;
     /** Set controller in OPI (octal parallel) mode. Both for master mode and slave mode. */
     FlagRW* const modeOPI;
-    /** Keep SPI CS low when SPI is in DONE phase. */
-    FlagRW* const holdCS;
     /** Enable SPI CS when SPI is in (PREP) prepare phase. */
     FlagRW* const setupCS;
     /** Together with SPI_DOUT_MODE is used to set MOSI signal delay mode. */
@@ -54,10 +58,6 @@ private:
      * 1: short 40 bytes buffer (tail of full buffer).
      */
     FlagRW* const dataAreaMISO;
-    /** The index of last bit in write-data phase. The register value shall be (bit_num-1). */
-    SubValueRW* const lengthMOSI;
-    /** The index of last bit in read-data phase. The register value shall be (bit_num-1). */
-    SubValueRW* const lengthMISO;
 
 public:
     class Delay
@@ -79,25 +79,6 @@ public:
         virtual ~Delay();
     }
     const delay[8]; //!< FSPID, FSPIQ, FSPIWP, FSPIHD, FSPIIO4, ..., FSPIIO7
-    
-    /** The value of command. */
-    SubValueRW* const commandValue;
-    /** The index of last bit of command phase. The register value shall be (bit_num-1). */
-    SubValueRW* const commandLength;
-
-    /** Disable SPI clock in DUMMY phase. */
-    FlagRW* const disableDummyClock;
-
-    /** Enable the command phase of an operation. */
-    FlagRW* const phaseCommand;
-    /** Enable the address phase of an operation. */
-    FlagRW* const phaseAddress;
-    /** Enable the dummy phase of an operation. */
-    FlagRW* const phaseDummy;
-    /** Enable the send data out phase of an operation. */
-    FlagRW* const phaseOutput;
-    /** Enable the reseive data in phase of an operation*/
-    FlagRW* const phaseInput;
 
 public:
     SpiConfig( const uint32_t registryBlockOffset );

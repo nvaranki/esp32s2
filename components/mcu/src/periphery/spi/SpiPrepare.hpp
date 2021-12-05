@@ -13,10 +13,11 @@
  */
 class SpiPrepare
 {
-private:
 public:
-    /** Enable SPI CS when SPI is in (PREP) prepare phase. */
-    FlagRO* const setupCS;
+    /** Enable prepare phase of an operation. */
+    FlagRW* const enable;
+    /** Duration of prepare phase in spi clock cycles (value+1). */
+    SubValueRW* const duration;
 public:
     SpiPrepare( const uint32_t registryBlockOffset );
     virtual ~SpiPrepare();

@@ -16,7 +16,10 @@ class SpiDone
 private:
 public:
     /** Keep SPI CS low when SPI is in DONE phase. */
-    FlagRO* const holdCS;
+    FlagRW* const holdCS;
+    /** delay cycles of cs pin by spi clock */
+    SubValueRW* const length;
+    
 public:
     SpiDone( const uint32_t registryBlockOffset );
     virtual ~SpiDone();

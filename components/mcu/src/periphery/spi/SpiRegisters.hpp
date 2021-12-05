@@ -9,18 +9,16 @@
 #define SPI_USER2_REG_A     0x0020 /* SPI USER control register 2 R/W */
 #define SPI_MOSI_DLEN_REG_A 0x0024 /* MOSI length R/W */
 #define SPI_MISO_DLEN_REG_A 0x0028 /* MISO length R/W */
+
+// Control and configuration registers
+#define SPI_CTRL0_REG_A 0x0008 /* SPI control register R/W */
+#define SPI_CTRL1_REG_A 0x000C /* SPI control register 1 R/W */
+#define SPI_CTRL2_REG_A 0x0010 /* SPI control register 2 R/W */
+#define SPI_CLOCK_REG_A 0x0014 /* SPI clock control register R/W */
+#define SPI_MISC_REG_A  0x002C /* SPI MISC register R/W */
+#define SPI_FSM_REG_A   0x0044 /* SPI master status and DMA read byte control register varies */
+#define SPI_HOLD_REG_A  0x0048 /* SPI hold register R/W */
 /*
-Name Description Address Access
-
-Control and configuration registers
-SPI_CTRL0_REG SPI control register 0x0008 R/W
-SPI_CTRL1_REG SPI control register 1 0x000C R/W
-SPI_CTRL2_REG SPI control register 2 0x0010 R/W
-SPI_CLOCK_REG SPI clock control register 0x0014 R/W
-SPI_MISC_REG SPI MISC register 0x002C R/W
-SPI_FSM_REG SPI master status and DMA read byte control register 0x0044 varies
-SPI_HOLD_REG SPI hold register 0x0048 R/W
-
 Slave mode configuration registers
 SPI_SLAVE0_REG SPI slave control register 0x0030 varies
 SPI_SLAVE1_REG SPI slave control register 1 0x0034 varies
