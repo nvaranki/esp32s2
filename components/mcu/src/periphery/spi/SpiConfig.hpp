@@ -24,8 +24,6 @@ public:
         which means seg-trans will continue. */
     FlagRW* const next;
 
-    /** Full-duplex communication. */
-    FlagRW* const fullDuplex;
     /** Set controller in QPI (quad parallel) mode. Both for master mode and slave mode. */
     FlagRW* const modeQPI;
     /** Set controller in OPI (octal parallel) mode. Both for master mode and slave mode. */
@@ -48,6 +46,7 @@ private:
     uint16_t* const data16;
     /** Quad byte view on data buffer */
     uint32_t* const data32;
+public:
     /** Location and size of MOSI data buffer in CPU controlled mode:
      * 0: full 72 bytes buffer;
      * 1: short 40 bytes buffer (tail of full buffer).

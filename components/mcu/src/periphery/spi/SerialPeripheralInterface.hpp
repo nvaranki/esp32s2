@@ -9,7 +9,7 @@ class SerialPeripheralInterface
 public:
     static constexpr uint32_t MAX_UNIT = 4;//TODO SOC_PCNT_UNIT_NUM;
 private:
-    static constexpr uint32_t BaseAddress[MAX_UNIT] = 
+    /*static constexpr*/ uint32_t BaseAddress[MAX_UNIT] = 
     {
         0x00003000, // SPI0
         0x00002000, // SPI1

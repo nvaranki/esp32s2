@@ -12,7 +12,6 @@ SpiConfig::SpiConfig( const uint32_t rbo ) :
     length( new SubValueRW( PeriBus1 + rbo + SPI_CMD_REG_A, SPI_CONF_BITLEN_M, SPI_CONF_BITLEN_S ) ),
     next( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_USR_CONF_NXT_S ) ),
 
-    fullDuplex( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_DOUTDIN_S ) ),
     modeQPI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_QPI_MODE_S ) ),
     modeOPI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_OPI_MODE_S ) ),
     setupCS( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_CS_SETUP_S ) ),
@@ -36,7 +35,6 @@ SpiConfig::~SpiConfig()
     delete length;
     delete next;
 
-    delete fullDuplex;
     delete modeQPI;
     delete modeOPI;
     delete setupCS;

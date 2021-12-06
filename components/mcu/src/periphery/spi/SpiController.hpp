@@ -56,6 +56,10 @@ public:
     SpiDMA* const dma;
     /** LCD manager */
     SpiLCD* const lcd;
+    /** SPI work mode. 1: slave mode 0: master mode. */
+    FlagRW* const slave;
+    /** Full-duplex communication. */
+    FlagRW* const fullDuplex;
     /** Version control register. */
     SubValueRW* const version;
 public:

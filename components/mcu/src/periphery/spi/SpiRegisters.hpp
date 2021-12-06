@@ -18,14 +18,14 @@
 #define SPI_MISC_REG_A  0x002C /* SPI MISC register R/W */
 #define SPI_FSM_REG_A   0x0044 /* SPI master status and DMA read byte control register varies */
 #define SPI_HOLD_REG_A  0x0048 /* SPI hold register R/W */
-/*
-Slave mode configuration registers
-SPI_SLAVE0_REG SPI slave control register 0x0030 varies
-SPI_SLAVE1_REG SPI slave control register 1 0x0034 varies
-SPI_SLV_WRBUF_DLEN_REG SPI slave Wr_BUF interrupt and CONF control register 0x0038 R/W
-SPI_SLV_RDBUF_DLEN_REG SPI magic error and slave control register 0x003C R/W
-SPI_SLV_RD_BYTE_REG SPI interrupt control register 0x0040 R/W
 
+// Slave mode configuration registers
+#define SPI_SLAVE0_REG_A 0x0030 /* SPI slave control register varies */
+#define SPI_SLAVE1_REG_A 0x0034 /* SPI slave control register 1 varies */
+#define SPI_SLV_WRBUF_DLEN_REG_A 0x0038 /* SPI slave Wr_BUF interrupt and CONF control register R/W */
+#define SPI_SLV_RDBUF_DLEN_REG_A 0x003C /* SPI magic error and slave control register R/W */
+#define SPI_SLV_RD_BYTE_REG_A    0x0040 /* SPI interrupt control register R/W */
+/*
 DMA configuration registers
 SPI_DMA_CONF_REG SPI DMA control register 0x004C R/W
 SPI_DMA_OUT_LINK_REG SPI DMA TX link configuration 0x0050 R/W
