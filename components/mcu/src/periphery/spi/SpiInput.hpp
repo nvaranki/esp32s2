@@ -18,6 +18,8 @@ public:
     FlagRW* const enable;
     /** The index of last bit in read-data phase. The register value shall be (bit_num-1). */
     SubValueRW* const length;
+    /** In read (MISO) phase, 1: big-endian, 0: little-endian. TODO enum */
+    FlagRW* const bitOrder;
 public:
     SpiInput( const uint32_t registryBlockOffset );
     virtual ~SpiInput();

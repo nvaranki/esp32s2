@@ -16,8 +16,6 @@ SpiConfig::SpiConfig( const uint32_t rbo ) :
     modeOPI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_OPI_MODE_S ) ),
     setupCS( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_CS_SETUP_S ) ),
     delayMOSI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_CK_OUT_EDGE_S ) ),
-    bitOrderMISO( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_RD_BYTE_ORDER_S ) ),
-    bitOrderMOSI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_WR_BYTE_ORDER_S ) ),
     widthMISO( new BitSetRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_FWRITE_DUAL_M | SPI_FWRITE_QUAD_M | SPI_FWRITE_OCT_M ) ),
     data8(  (uint8_t* )( PeriBus1 + rbo + SPI_W0_REG_A ) ),
     data16( (uint16_t*)( PeriBus1 + rbo + SPI_W0_REG_A ) ),
@@ -39,8 +37,6 @@ SpiConfig::~SpiConfig()
     delete modeOPI;
     delete setupCS;
     delete delayMOSI;
-    delete bitOrderMISO;
-    delete bitOrderMOSI;
     delete widthMISO;
     delete dataAreaMOSI;
     delete dataAreaMISO;

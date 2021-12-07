@@ -18,6 +18,8 @@ public:
     FlagRW* const enable;
     /** The index of last bit of command phase. The register value shall be (bit_num-1). */
     SubValueRW* const length;
+    /** In write (CMD, ADDRESS and MOSI) phase, 1: big-endian, 0: little-endian. TODO enum */
+    FlagRW* const bitOrder;
     /** The value of command. */
     SubValueRW* const value;
 public:
