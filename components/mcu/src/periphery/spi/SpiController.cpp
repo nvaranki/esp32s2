@@ -11,6 +11,7 @@ SpiController::SpiController( const uint32_t i, const uint32_t rbo ) :
     id( i ),
     userDefinedCommand( new FlagRW( PeriBus1 + rbo + SPI_CMD_REG_A, SPI_USR_S ) ),
     phase( rbo ),
+    clock( rbo ),
     dma( new SpiDMA( rbo ) ),
     lcd( new SpiLCD( rbo ) ),
     slave( new FlagRW( PeriBus1 + rbo + SPI_SLAVE0_REG_A, SPI_SLAVE_MODE_S ) ),
@@ -53,4 +54,22 @@ SpiController::Phase::~Phase()
     delete output;
     delete input;
     delete done;
+}
+    
+SpiController::Clock::Clock( const uint32_t rbo ) :
+    lock( new FlagRW( PeriBus1 + rbo + SPI_CLOCK_REG_A, SPI_CLK_EQU_SYSCLK_S ) ),
+    divider( new SubValueRW( PeriBus1 + rbo + SPI_CLOCK_REG_A, SPI_CLKDIV_PRE_M, SPI_CLKDIV_PRE_S ) ),
+    n( new SubValueRW( PeriBus1 + rbo + SPI_CLOCK_REG_A, SPI_CLKCNT_N_M, SPI_CLKCNT_N_S ) ),
+    l( new SubValueRW( PeriBus1 + rbo + SPI_CLOCK_REG_A, SPI_CLKCNT_L_M, SPI_CLKCNT_L_S ) ),
+    h( new SubValueRW( PeriBus1 + rbo + SPI_CLOCK_REG_A, SPI_CLKCNT_H_M, SPI_CLKCNT_H_S ) )
+{
+}
+    
+SpiController::Clock::~Clock()
+{
+    delete lock;
+    delete divider;
+    delete n;
+    delete l;
+    delete h;
 }

@@ -52,6 +52,25 @@ public:
         virtual ~Phase();
     }
     const phase;
+    /** SPI_CLK manager. */
+    class Clock
+    {
+    public:
+        /** 1: Lock CLK frequency equal to APB; 0: allow division of APB frequency. */
+        FlagRW* const lock;
+        /** Clock pre-divider by (value+1). Max 8191+1. */
+        SubValueRW* const divider;
+        /** Clock divider N by (n+1). Max 63+1. */
+        SubValueRW* const n;
+        /** Clock divider L. In master mode it must be equal to divider N. In slave mode it must be 0. */
+        SubValueRW* const l;
+        /** Clock divider H. In master mode it must be floor((N+1)/2-1). In slave mode it must be 0. */
+        SubValueRW* const h;
+    public:
+        Clock( const uint32_t registryBlockOffset );
+        virtual ~Clock();
+    }
+    const clock;
     /** DMA manager */
     SpiDMA* const dma;
     /** LCD manager */
