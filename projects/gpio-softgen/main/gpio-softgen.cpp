@@ -253,7 +253,9 @@ void app_main( void )
     pR->input->on();
     pR->function->set( FUNC_R );
     //TODO ? pR->setPull( ExternalPin::Pull::UP );
-    
+
+    printf( "From GPIO%d/%d to GPIO%d/%d\n", PIN_W, FUNC_W, PIN_R, FUNC_R );
+
     // esp_task_wdt_init( 100000u, false );
     // TaskHandle_t handle;
     // esp_task_wdt_add(handle);
