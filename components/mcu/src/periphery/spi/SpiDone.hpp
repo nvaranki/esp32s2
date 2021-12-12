@@ -7,6 +7,7 @@
 #include "bits/SubValueRO.hpp"
 #include "bits/SubValueRW.hpp"
 #include "bits/WordRW.hpp"
+#include "ChipSelect.hpp"
 
 /**
  * @brief Done (DONE) phase manager.
@@ -21,7 +22,7 @@ public:
     SubValueRW* const length;
     
 public:
-    SpiDone( const uint32_t registryBlockOffset );
+    SpiDone( const uint32_t registryBlockOffset, const ChipSelect* cs );
     virtual ~SpiDone();
 };
 

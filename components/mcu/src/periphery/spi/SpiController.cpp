@@ -10,12 +10,13 @@
 SpiController::SpiController( const uint32_t i, const uint32_t rbo ) :
     id( i ),
     userDefinedCommand( new FlagRW( PeriBus1 + rbo + SPI_CMD_REG_A, SPI_USR_S ) ),
-    phase( rbo ),
     clock( rbo ),
+    cs( rbo ),
     dma( new SpiDMA( rbo ) ),
     lcd( new SpiLCD( rbo ) ),
     slave( new FlagRW( PeriBus1 + rbo + SPI_SLAVE0_REG_A, SPI_SLAVE_MODE_S ) ),
     fullDuplex( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_DOUTDIN_S ) ),
+    phase( rbo, &cs ),
     version( new SubValueRW( PeriBus1 + rbo + SPI_DATE_REG_A, SPI_DATE_M, SPI_DATE_S ) )
 {
 }
@@ -30,16 +31,16 @@ SpiController::~SpiController()
     delete version;
 }
     
-SpiController::Phase::Phase( const uint32_t rbo ) :
+SpiController::Phase::Phase( const uint32_t rbo, const ChipSelect* cs ) :
     idle( new SpiIdle( rbo ) ),
     config( new SpiConfig( rbo ) ),
-    prepare( new SpiPrepare( rbo ) ),
+    prepare( new SpiPrepare( rbo, cs ) ),
     command( new SpiCommand( rbo ) ),
     address( new SpiAddress( rbo ) ),
     dummy( new SpiDummy( rbo ) ),
     output( new SpiOutput( rbo ) ),
     input( new SpiInput( rbo ) ),
-    done( new SpiDone( rbo ) )
+    done( new SpiDone( rbo, cs ) )
 {
 }
     

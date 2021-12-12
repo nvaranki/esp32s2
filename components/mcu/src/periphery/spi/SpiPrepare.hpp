@@ -7,6 +7,7 @@
 #include "bits/SubValueRO.hpp"
 #include "bits/SubValueRW.hpp"
 #include "bits/WordRW.hpp"
+#include "ChipSelect.hpp"
 
 /**
  * @brief Prepare (PREP) phase manager.
@@ -19,7 +20,7 @@ public:
     /** Duration of prepare phase in spi clock cycles (value+1). */
     SubValueRW* const duration;
 public:
-    SpiPrepare( const uint32_t registryBlockOffset );
+    SpiPrepare( const uint32_t registryBlockOffset, const ChipSelect* cs );
     virtual ~SpiPrepare();
 };
 
