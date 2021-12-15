@@ -58,6 +58,7 @@ SpiController::Phase::~Phase()
 }
     
 SpiController::Clock::Clock( const uint32_t rbo ) :
+    disable( new FlagRW( PeriBus1 + rbo + SPI_MISC_REG_A, SPI_CK_DIS_S ) ),
     lock( new FlagRW( PeriBus1 + rbo + SPI_CLOCK_REG_A, SPI_CLK_EQU_SYSCLK_S ) ),
     divider( new SubValueRW( PeriBus1 + rbo + SPI_CLOCK_REG_A, SPI_CLKDIV_PRE_M, SPI_CLKDIV_PRE_S ) ),
     n( new SubValueRW( PeriBus1 + rbo + SPI_CLOCK_REG_A, SPI_CLKCNT_N_M, SPI_CLKCNT_N_S ) ),
@@ -68,6 +69,7 @@ SpiController::Clock::Clock( const uint32_t rbo ) :
     
 SpiController::Clock::~Clock()
 {
+    delete disable;
     delete lock;
     delete divider;
     delete n;

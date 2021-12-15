@@ -14,7 +14,6 @@ SpiConfig::SpiConfig( const uint32_t rbo ) :
 
     modeQPI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_QPI_MODE_S ) ),
     modeOPI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_OPI_MODE_S ) ),
-    setupCS( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_CS_SETUP_S ) ),
     delayMOSI( new FlagRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_CK_OUT_EDGE_S ) ),
     widthMISO( new BitSetRW( PeriBus1 + rbo + SPI_USER0_REG_A, SPI_FWRITE_DUAL_M | SPI_FWRITE_QUAD_M | SPI_FWRITE_OCT_M ) ),
     data8(  (uint8_t* )( PeriBus1 + rbo + SPI_W0_REG_A ) ),
@@ -35,7 +34,6 @@ SpiConfig::~SpiConfig()
 
     delete modeQPI;
     delete modeOPI;
-    delete setupCS;
     delete delayMOSI;
     delete widthMISO;
     delete dataAreaMOSI;

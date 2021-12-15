@@ -13,8 +13,11 @@
  */
 class SpiDMA
 {
-private:
 public:
+    /** 1: enable DMA controlled RX mode. 0: enable CPU controlled RX mode. */
+    FlagRW* const receive;
+    /** 1: enable DMA controlled TX mode. 0: enable CPU controlled TX mode. */
+    FlagRW* const send;
 public:
     SpiDMA( const uint32_t registryBlockOffset );
     virtual ~SpiDMA();

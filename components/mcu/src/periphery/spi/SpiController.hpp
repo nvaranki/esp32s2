@@ -29,6 +29,8 @@ public:
     class Clock
     {
     public:
+        /** Disable output clock. */
+        FlagRW* const disable;
         /** 1: Lock CLK frequency equal to APB; 0: allow division of APB frequency. */
         FlagRW* const lock;
         /** Clock pre-divider by (value+1). Max 8191+1. */

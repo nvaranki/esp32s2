@@ -28,8 +28,6 @@ public:
     FlagRW* const modeQPI;
     /** Set controller in OPI (octal parallel) mode. Both for master mode and slave mode. */
     FlagRW* const modeOPI;
-    /** Enable SPI CS when SPI is in (PREP) prepare phase. */
-    FlagRW* const setupCS;
     /** Together with SPI_DOUT_MODE is used to set MOSI signal delay mode. */
     FlagRW* const delayMOSI;
 private:

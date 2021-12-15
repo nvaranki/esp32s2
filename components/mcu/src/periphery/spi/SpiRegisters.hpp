@@ -25,23 +25,23 @@
 #define SPI_SLV_WRBUF_DLEN_REG_A 0x0038 /* SPI slave Wr_BUF interrupt and CONF control register R/W */
 #define SPI_SLV_RDBUF_DLEN_REG_A 0x003C /* SPI magic error and slave control register R/W */
 #define SPI_SLV_RD_BYTE_REG_A    0x0040 /* SPI interrupt control register R/W */
-/*
-DMA configuration registers
-SPI_DMA_CONF_REG SPI DMA control register 0x004C R/W
-SPI_DMA_OUT_LINK_REG SPI DMA TX link configuration 0x0050 R/W
-SPI_IN_ERR_EOF_DES_ADDR_REG The latest SPI DMA RX descriptor address receiving error 0x0068 RO
-SPI_IN_SUC_EOF_DES_ADDR_REG The latest SPI DMA EOF RX descriptor address 0x006C RO
-SPI_INLINK_DSCR_REG Current SPI DMA RX descriptor pointer 0x0070 RO
-SPI_INLINK_DSCR_BF0_REG Next SPI DMA RX descriptor pointer 0x0074 RO
-SPI_OUT_EOF_BFR_DES_ADDR_REG The latest SPI DMA EOF TX buffer address 0x007C RO
-SPI_OUT_EOF_DES_ADDR_REG The latest SPI DMA EOF TX descriptor address 0x0080 RO
-SPI_OUTLINK_DSCR_REG Current SPI DMA TX descriptor pointer 0x0084 RO
-SPI_OUTLINK_DSCR_BF0_REG Next SPI DMA TX descriptor pointer 0x0088 RO
-SPI_DMA_OUTSTATUS_REG SPI DMA TX status 0x0090 RO
-SPI_DMA_INSTATUS_REG SPI DMA RX status 0x0094 RO
 
+// DMA configuration registers
+#define SPI_DMA_CONF_REG_A             0x004C /* SPI DMA control register R/W */
+#define SPI_DMA_OUT_LINK_REG_A         0x0050 /* SPI DMA TX link configuration R/W */
+#define SPI_DMA_IN_LINK_REG_A          0x0054 /* SPI DMA RX link configuration R/W */
+#define SPI_IN_ERR_EOF_DES_ADDR_REG_A  0x0068 /* The latest SPI DMA RX descriptor address receiving error RO */
+#define SPI_IN_SUC_EOF_DES_ADDR_REG_A  0x006C /* The latest SPI DMA EOF RX descriptor address RO */
+#define SPI_INLINK_DSCR_REG_A          0x0070 /* Current SPI DMA RX descriptor pointer RO */
+#define SPI_INLINK_DSCR_BF0_REG_A      0x0074 /* Next SPI DMA RX descriptor pointer RO */
+#define SPI_OUT_EOF_BFR_DES_ADDR_REG_A 0x007C /* The latest SPI DMA EOF TX buffer address RO */ 
+#define SPI_OUT_EOF_DES_ADDR_REG_A     0x0080 /* The latest SPI DMA EOF TX descriptor address RO */
+#define SPI_OUTLINK_DSCR_REG_A         0x0084 /* Current SPI DMA TX descriptor pointer RO */
+#define SPI_OUTLINK_DSCR_BF0_REG_A     0x0088 /* Next SPI DMA TX descriptor pointer RO */
+#define SPI_DMA_OUTSTATUS_REG_A        0x0090 /* SPI DMA TX status RO */
+#define SPI_DMA_INSTATUS_REG_A         0x0094 /* SPI DMA RX status RO */
+/*
 DMA interrupt registers
-SPI_DMA_IN_LINK_REG SPI DMA RX link configuration 0x0054 R/W
 SPI_DMA_INT_ENA_REG SPI DMA interrupt enable register 0x0058 R/W
 SPI_DMA_INT_RAW_REG SPI DMA interrupt raw register 0x005C varies
 SPI_DMA_INT_ST_REG SPI DMA interrupt status register 0x0060 varies
